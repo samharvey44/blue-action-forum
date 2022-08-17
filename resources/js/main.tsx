@@ -1,44 +1,37 @@
 import ThemeProvider from '@mui/material/styles/ThemeProvider';
+import { createInertiaApp } from '@inertiajs/inertia-react';
+import useInitializeTheme from './hooks/initializeTheme';
+import { InertiaProgress } from '@inertiajs/progress';
 import { SnackbarProvider } from 'notistack';
-import { RecoilRoot } from 'recoil';
-import Echo from 'laravel-echo';
+import { render } from 'react-dom';
 import React from 'react';
 
-import useInitializeTheme from './hooks/initializeTheme';
-import MainGate from './components/gates/MainGate';
-import Router from './router';
-
-const Main: React.FC = () => {
+const Main = (): null => {
     const theme = useInitializeTheme();
 
-    window.Pusher = require('pusher-js');
+    InertiaProgress.init();
 
-    window.Echo = new Echo({
-        broadcaster: 'pusher',
-        key: process.env.MIX_PUSHER_APP_KEY,
-        wsHost: window.location.hostname,
-        wsPort: 6001,
-        forceTLS: false,
-        disableStats: true,
+    createInertiaApp({
+        resolve: (name) => require(`./Pages/${name}`),
+        setup({ el, App, props }) {
+            render(
+                <SnackbarProvider
+                    maxSnack={3}
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'right',
+                    }}
+                >
+                    <ThemeProvider theme={theme}>
+                        <App {...props} />
+                    </ThemeProvider>
+                </SnackbarProvider>,
+                el,
+            );
+        },
     });
 
-    return (
-        <RecoilRoot>
-            <SnackbarProvider
-                maxSnack={3}
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'right',
-                }}
-            >
-                <ThemeProvider theme={theme}>
-                    <MainGate>
-                        {(ready) => (ready ? <Router /> : null)}
-                    </MainGate>
-                </ThemeProvider>
-            </SnackbarProvider>
-        </RecoilRoot>
-    );
+    return null;
 };
 
 export default Main;

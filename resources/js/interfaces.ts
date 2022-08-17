@@ -11,10 +11,3 @@ export interface IMeta {
     total: number;
     last_page: number;
 }
-
-declare global {
-    interface Window {
-        Pusher: NodeRequire;
-        Echo: Echo;
-    }
-}

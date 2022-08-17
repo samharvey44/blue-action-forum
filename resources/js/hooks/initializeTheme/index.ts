@@ -7,10 +7,7 @@ export default function useInitializeTheme() {
             createTheme({
                 palette: {
                     primary: {
-                        main: '#E54B4B',
-                    },
-                    secondary: {
-                        main: '#FFA987',
+                        main: '#00168a',
                     },
                 },
                 typography: {
