@@ -1,18 +1,17 @@
 <?php
 
-namespace App\Http\Requests\Auth;
+namespace App\Http\Requests\Login;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Auth;
 
-class LogoutRequest extends FormRequest {
+class IndexRequest extends FormRequest {
     /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
      */
-    public function authorize() {
-        return Auth::check();
+    public function authorize(): bool {
+        return !auth()->check();
     }
 
     /**
@@ -20,7 +19,7 @@ class LogoutRequest extends FormRequest {
      *
      * @return array
      */
-    public function rules() {
+    public function rules(): array {
         return [
             //
         ];

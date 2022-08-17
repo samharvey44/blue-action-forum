@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Role extends Model {
     /**
@@ -10,7 +11,7 @@ class Role extends Model {
      *
      * @var array<int, string>
      */
-    protected $fillable = [
+    protected array $fillable = [
         'name',
     ];
 
@@ -19,7 +20,7 @@ class Role extends Model {
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function users() {
+    public function users(): HasMany {
         return $this->hasMany(User::class, 'role_id');
     }
 }
