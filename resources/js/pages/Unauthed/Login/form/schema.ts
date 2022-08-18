@@ -5,4 +5,5 @@ export const formSchema = Yup.object().shape({
         .email('Email must be in valid format.')
         .required('Email is a required field.'),
     password: Yup.string().required('Password is a required field.'),
+    rememberMe: Yup.boolean().required('Remember me is a required field.'),
 });

@@ -67,5 +67,16 @@ export const useStyles = () => {
         loginButton: {
             marginLeft: 'auto',
         },
+
+        rememberMeContainer: {
+            display: 'flex',
+            alignItems: 'center',
+            marginTop: '5px',
+            width: '100%',
+        },
+
+        rememberMeCheckbox: {
+            marginLeft: 'auto',
+        },
     });
 };

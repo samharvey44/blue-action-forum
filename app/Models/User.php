@@ -35,7 +35,7 @@ class User extends Authenticatable {
     /**
      * The role this user has.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function role(): BelongsTo {
         return $this->belongsTo(Role::class, 'role_id');
@@ -44,7 +44,7 @@ class User extends Authenticatable {
     /**
      * This user's profile.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return HasOne
      */
     public function profile(): HasOne {
         return $this->hasOne(Profile::class, 'user_id');

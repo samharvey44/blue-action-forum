@@ -1,6 +1,8 @@
+import FormControlLabel from '@mui/material/FormControlLabel';
 import Typography from '@mui/material/Typography';
 import LoginIcon from '@mui/icons-material/Login';
 import TextField from '@mui/material/TextField';
+import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 import Paper from '@mui/material/Paper';
@@ -44,9 +46,15 @@ const Login: React.FC = () => {
 
                         <Typography variant="h3">The Collective</Typography>
 
-                        <form onSubmit={form.handleSubmit}>
+                        <form
+                            onSubmit={form.handleSubmit}
+                            style={{
+                                width: '100%',
+                            }}
+                        >
                             <TextField
                                 sx={styles.emailField}
+                                required
                                 variant="filled"
                                 label="Enter your email..."
                                 name="email"
@@ -62,6 +70,7 @@ const Login: React.FC = () => {
 
                             <TextField
                                 sx={styles.passwordField}
+                                required
                                 variant="filled"
                                 label="Enter your password..."
                                 name="password"
@@ -77,6 +86,24 @@ const Login: React.FC = () => {
                                     form.errors.password
                                 }
                             />
+
+                            <Box sx={styles.rememberMeContainer}>
+                                <FormControlLabel
+                                    sx={styles.rememberMeCheckbox}
+                                    control={
+                                        <Checkbox
+                                            checked={form.values.rememberMe}
+                                            onChange={(e) => {
+                                                form.setFieldValue(
+                                                    'rememberMe',
+                                                    e.target.checked,
+                                                );
+                                            }}
+                                        />
+                                    }
+                                    label="Remember Me"
+                                />
+                            </Box>
 
                             <Box sx={styles.signupContainer}>
                                 <Typography
