@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -13,9 +14,9 @@ class User extends Authenticatable {
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<int, string>
+     * @var array
      */
-    protected array $fillable = [
+    protected $fillable = [
         'name',
         'email',
         'password',
@@ -26,8 +27,9 @@ class User extends Authenticatable {
      *
      * @var array
      */
-    protected array $with = [
-        'role'
+    protected $with = [
+        'role',
+        'profile',
     ];
 
     /**
@@ -37,5 +39,14 @@ class User extends Authenticatable {
      */
     public function role(): BelongsTo {
         return $this->belongsTo(Role::class, 'role_id');
+    }
+
+    /**
+     * This user's profile.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function profile(): HasOne {
+        return $this->hasOne(Profile::class, 'user_id');
     }
 }

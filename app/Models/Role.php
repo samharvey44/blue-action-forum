@@ -9,9 +9,9 @@ class Role extends Model {
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<int, string>
+     * @var array
      */
-    protected array $fillable = [
+    protected $fillable = [
         'name',
     ];
 

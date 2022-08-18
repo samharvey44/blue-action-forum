@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\SignupController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,4 +16,10 @@ use App\Http\Controllers\LoginController;
 |
 */
 
-Route::get('/login', [LoginController::class, 'index']);
+Route::middleware('auth')->group(function () {
+});
+
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [LoginController::class, 'index'])->name('login');
+    Route::get('/signup', [SignupController::class, 'index'])->name('signup');
+});

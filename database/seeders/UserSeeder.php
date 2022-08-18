@@ -15,11 +15,11 @@ class UserSeeder extends Seeder {
     public function run() {
         $user = User::make([
             'name' => 'Sam Harvey',
-            'email' => 'sam@test.com',
+            'email' => 'samuelharvey15@hotmail.com',
             'password' => bcrypt('password'),
         ]);
 
-        $user->role()->associate(Role::where('name', 'User')->first());
+        $user->role()->associate(Role::where('name', 'Super Admin')->first());
 
         $user->save();
     }

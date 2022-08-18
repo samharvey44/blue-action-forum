@@ -1,15 +1,4 @@
-# Template SPA
+# Blue Action Forum
 
-SPA made with Laravel and React.
-
-## Description
-
-A template SPA to be used as a starting point for a new project.
-
-## Getting Started
-
-### Dependencies
-
-### Installing
-
-### Executing program
+Bespoke forum created for 'The Collective', a body of ITFC supporters group 'Blue Action'.
+The source code of this product is unlicensed and must NOT be used without permission from myself - samuelharvey15@hotmail.com

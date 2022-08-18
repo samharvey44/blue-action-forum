@@ -1,13 +1,15 @@
 import { createTheme } from '@mui/material';
 import { useMemo } from 'react';
 
+import { PRIMARY } from 'app/globals/colors';
+
 export default function useInitializeTheme() {
     return useMemo(
         () =>
             createTheme({
                 palette: {
                     primary: {
-                        main: '#00168a',
+                        main: PRIMARY,
                     },
                 },
                 typography: {

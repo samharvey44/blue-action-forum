@@ -1,37 +1,23 @@
-import ThemeProvider from '@mui/material/styles/ThemeProvider';
-import { createInertiaApp } from '@inertiajs/inertia-react';
-import useInitializeTheme from './hooks/initializeTheme';
-import { InertiaProgress } from '@inertiajs/progress';
+import { ThemeProvider } from '@mui/material';
 import { SnackbarProvider } from 'notistack';
-import { render } from 'react-dom';
 import React from 'react';
 
-const Main = (): null => {
+import useInitializeTheme from './hooks/initializeTheme';
+
+const Main: React.FC = ({ children }) => {
     const theme = useInitializeTheme();
 
-    InertiaProgress.init();
-
-    createInertiaApp({
-        resolve: (name) => require(`./Pages/${name}`),
-        setup({ el, App, props }) {
-            render(
-                <SnackbarProvider
-                    maxSnack={3}
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'right',
-                    }}
-                >
-                    <ThemeProvider theme={theme}>
-                        <App {...props} />
-                    </ThemeProvider>
-                </SnackbarProvider>,
-                el,
-            );
-        },
-    });
-
-    return null;
+    return (
+        <SnackbarProvider
+            maxSnack={3}
+            anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+            }}
+        >
+            <ThemeProvider theme={theme}>{children}</ThemeProvider>
+        </SnackbarProvider>
+    );
 };
 
 export default Main;
