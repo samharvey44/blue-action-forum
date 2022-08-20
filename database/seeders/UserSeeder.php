@@ -19,7 +19,7 @@ class UserSeeder extends Seeder {
             'password' => bcrypt('password'),
         ]);
 
-        $user->role()->associate(Role::where('name', 'Super Admin')->first());
+        $user->role()->associate(Role::firstWhere('name', 'Super Admin'));
 
         $user->save();
     }

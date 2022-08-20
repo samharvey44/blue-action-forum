@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Login\IndexRequest;
+use App\Http\Controllers\Controller;
+
 use Inertia\Response;
 use Inertia\Inertia;
 

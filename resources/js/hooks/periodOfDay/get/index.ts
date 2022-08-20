@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-export default function useGetTimeOfDay() {
+export default function useGetPeriodOfDay() {
     return useMemo(() => {
         const hours = new Date().getHours();
 
