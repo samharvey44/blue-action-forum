@@ -45,7 +45,7 @@ class EmailVerificationController extends Controller {
     public function verify(EmailVerificationRequest $request): RedirectResponse {
         $request->fulfill();
 
-        return redirect()->route('home')->with('message', 'Email was verified.');
+        return redirect()->route('home')->with('successMessage', 'Email was verified.');
     }
 
     /**
@@ -58,6 +58,6 @@ class EmailVerificationController extends Controller {
     public function resendEmail(ResendEmailRequest $request): RedirectResponse {
         auth()->user()->sendEmailVerificationNotification();
 
-        return back()->with('message', 'Verification link was resent.');
+        return back()->with('successMessage', 'Verification link was resent.');
     }
 }
