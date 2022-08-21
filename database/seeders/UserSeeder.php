@@ -13,6 +13,10 @@ class UserSeeder extends Seeder {
      * @return void
      */
     public function run() {
+        if (config('app.env') !== 'local') {
+            return;
+        }
+
         $user = User::make([
             'name' => 'Sam Harvey',
             'email' => 'samuelharvey15@hotmail.com',

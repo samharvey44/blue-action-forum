@@ -49,4 +49,15 @@ class User extends Authenticatable {
     public function profile(): HasOne {
         return $this->hasOne(Profile::class, 'user_id');
     }
+
+    /**
+     * Return whether or not this user has the provided role.
+     *
+     * @param  string $role The role name to be checked.
+     * 
+     * @return bool Whether or not this user has the given role.
+     */
+    public function hasRole(string $role): bool {
+        return $this->role->name === $role;
+    }
 }

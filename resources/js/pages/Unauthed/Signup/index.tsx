@@ -1,6 +1,8 @@
+import { usePage } from '@inertiajs/inertia-react';
+import { Inertia } from '@inertiajs/inertia';
 import { Add } from '@mui/icons-material';
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
-import React from 'react';
 import {
     Grid,
     Grow,
@@ -12,18 +14,40 @@ import {
     Button,
 } from '@mui/material';
 
+import useHandleInertiaErrors from 'app/hooks/request/handleInertiaErrors';
 import { formInitialValues } from './form/initialValues';
 import { useStyles } from './hooks/useStyles';
 import { formSchema } from './form/schema';
 
 const Signup: React.FC = () => {
+    const props = usePage().props;
     const styles = useStyles();
+
+    useHandleInertiaErrors(props);
+
+    const [submitting, setSubmitting] = useState(false);
 
     const form = useFormik({
         initialValues: formInitialValues,
         validationSchema: formSchema,
         onSubmit: (values) => {
-            console.log(values);
+            setSubmitting(true);
+
+            const { email, password, passwordConfirmation } = values;
+
+            Inertia.post(
+                '/signup',
+                {
+                    email,
+                    password,
+                    password_confirmation: passwordConfirmation,
+                },
+                {
+                    onFinish: () => {
+                        setSubmitting(false);
+                    },
+                },
+            );
         },
     });
 
@@ -142,8 +166,9 @@ const Signup: React.FC = () => {
 
                             <Box sx={styles.signupButtonContainer}>
                                 <Button
-                                    startIcon={<Add />}
                                     sx={styles.signupButton}
+                                    disabled={submitting}
+                                    startIcon={<Add />}
                                     variant="contained"
                                     color="primary"
                                     type="submit"

@@ -3,7 +3,9 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Auth\SignupController;
+use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,11 +19,27 @@ use App\Http\Controllers\Auth\LoginController;
 */
 
 Route::middleware('auth')->group(function () {
-    //
+    Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
+
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
 });
 
 Route::middleware('guest')->group(function () {
-    Route::get('/login', [LoginController::class, 'index'])->name('login');
+    Route::prefix('/login')->group(function () {
+        Route::get('/', [LoginController::class, 'index'])->name('login.show');
+    });
 
-    Route::get('/signup', [SignupController::class, 'index'])->name('signup');
+    Route::prefix('/signup')->group(function () {
+        Route::post('/', [SignupController::class, 'signup'])->name('signup.signup');
+        Route::get('/', [SignupController::class, 'index'])->name('signup.show');
+    });
 });
+
+Route::any(
+    '{query}',
+    function () {
+        abort_if(auth()->check(), 404);
+
+        return redirect()->route('login.show');
+    }
+)->where('query', '.*');
