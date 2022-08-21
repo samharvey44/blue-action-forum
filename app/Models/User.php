@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable {
+class User extends Authenticatable implements MustVerifyEmail {
     use HasApiTokens, Notifiable;
 
     /**
@@ -30,6 +31,15 @@ class User extends Authenticatable {
     protected $with = [
         'role',
         'profile',
+    ];
+
+    /**
+     * The attributes that are dates.
+     * 
+     * @var array
+     */
+    protected $dates = [
+        'email_verified_at',
     ];
 
     /**

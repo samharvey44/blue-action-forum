@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Requests\Signup\SignupRequest;
-use App\Http\Requests\Signup\IndexRequest;
-use App\Http\Controllers\Controller;
-
 use Illuminate\Http\RedirectResponse;
 use Inertia\Response;
 use Inertia\Inertia;
+
+use App\Http\Requests\Signup\SignupRequest;
+use App\Http\Requests\Signup\IndexRequest;
+use App\Http\Controllers\Controller;
 
 class SignupController extends Controller {
     /**
@@ -34,6 +34,6 @@ class SignupController extends Controller {
 
         auth()->login($user);
 
-        return redirect()->route('home');
+        return redirect()->route('verification.notice');
     }
 }

@@ -4,8 +4,10 @@ namespace App\Http\Requests\Signup;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-use App\Models\Role;
+use Illuminate\Auth\Events\Registered;
+
 use App\Models\User;
+use App\Models\Role;
 
 class SignupRequest extends FormRequest {
     /**
@@ -42,6 +44,8 @@ class SignupRequest extends FormRequest {
 
         $newUser->role()->associate(Role::firstWhere('name', Role::USER));
         $newUser->save();
+
+        event(new Registered($newUser));
 
         return $newUser;
     }

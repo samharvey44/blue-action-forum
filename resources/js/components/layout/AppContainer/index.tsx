@@ -16,6 +16,7 @@ const AppContainer: React.FC = ({ children }) => {
                 {!isLg && (
                     <Box
                         src="images/collective-banner.jpg"
+                        alt="The Collective logo"
                         sx={styles.bannerImage}
                         component="img"
                     />
