@@ -8,8 +8,6 @@ export default function useHandleInertiaMessages() {
     } = usePage();
     const { enqueueSnackbar } = useSnackbar();
 
-    console.log(errors);
-
     return useEffect(() => {
         const errorsArr = Object.values(errors);
 

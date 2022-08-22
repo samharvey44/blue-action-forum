@@ -6,11 +6,9 @@ import { Inertia } from '@inertiajs/inertia';
 import AuthedContainer from '../../components/AuthedContainer';
 import AppContainer from 'app/components/layout/AppContainer';
 import { useStyles } from './hooks/useStyles';
-import useHandleInertiaMessages from 'app/hooks/request/handleInertiaMessages';
 
 const NeedsVerification: React.FC = () => {
     const [linkResent, setLinkResent] = useState(false);
-    useHandleInertiaMessages();
 
     const {
         props: { email },

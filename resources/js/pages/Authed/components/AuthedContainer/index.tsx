@@ -1,9 +1,11 @@
 import { Box, Grow } from '@mui/material';
 import React from 'react';
 
+import useHandleInertiaMessages from 'app/hooks/request/handleInertiaMessages';
 import { useStyles } from './hooks/useStyles';
 
 const AuthedContainer: React.FC = ({ children }) => {
+    useHandleInertiaMessages();
     const styles = useStyles();
 
     return (

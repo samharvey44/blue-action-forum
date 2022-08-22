@@ -1,9 +1,11 @@
 import { Grid, Paper, Grow } from '@mui/material';
+import useHandleInertiaMessages from 'app/hooks/request/handleInertiaMessages';
 import React from 'react';
 
 import { useStyles } from './hooks/useStyles';
 
 const UnauthedContainer: React.FC = ({ children }) => {
+    useHandleInertiaMessages();
     const styles = useStyles();
 
     return (

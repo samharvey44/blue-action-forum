@@ -12,7 +12,6 @@ import Box from '@mui/material/Box';
 import { useFormik } from 'formik';
 import React from 'react';
 
-import useHandleInertiaMessages from 'app/hooks/request/handleInertiaMessages';
 import UnauthedContainer from '../components/UnauthedContainer';
 import { formInitialValues } from './form/initialValues';
 import { useStyles } from './hooks/useStyles';
@@ -20,7 +19,6 @@ import { formSchema } from './form/schema';
 
 const Login: React.FC = () => {
     const { enqueueSnackbar } = useSnackbar();
-    useHandleInertiaMessages();
     const styles = useStyles();
 
     const form = useFormik({

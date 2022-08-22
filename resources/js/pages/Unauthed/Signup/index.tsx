@@ -5,14 +5,12 @@ import { Add } from '@mui/icons-material';
 import React, { useState } from 'react';
 import { useFormik } from 'formik';
 
-import useHandleInertiaMessages from 'app/hooks/request/handleInertiaMessages';
 import UnauthedContainer from '../components/UnauthedContainer';
 import { formInitialValues } from './form/initialValues';
 import { useStyles } from './hooks/useStyles';
 import { formSchema } from './form/schema';
 
 const Signup: React.FC = () => {
-    useHandleInertiaMessages();
     const styles = useStyles();
 
     const [submitting, setSubmitting] = useState(false);
