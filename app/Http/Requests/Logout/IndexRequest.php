@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Login;
+namespace App\Http\Requests\Logout;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class LogoutRequest extends FormRequest {
+class IndexRequest extends FormRequest {
     /**
      * Determine if the user is authorized to make this request.
      *

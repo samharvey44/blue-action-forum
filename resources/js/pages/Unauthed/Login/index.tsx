@@ -4,25 +4,46 @@ import LoginIcon from '@mui/icons-material/Login';
 import TextField from '@mui/material/TextField';
 import { Link } from '@inertiajs/inertia-react';
 import Checkbox from '@mui/material/Checkbox';
+import { Inertia } from '@inertiajs/inertia';
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
+import { useSnackbar } from 'notistack';
 import Box from '@mui/material/Box';
 import { useFormik } from 'formik';
 import React from 'react';
 
+import useHandleInertiaMessages from 'app/hooks/request/handleInertiaMessages';
 import UnauthedContainer from '../components/UnauthedContainer';
 import { formInitialValues } from './form/initialValues';
 import { useStyles } from './hooks/useStyles';
 import { formSchema } from './form/schema';
 
 const Login: React.FC = () => {
+    const { enqueueSnackbar } = useSnackbar();
+    useHandleInertiaMessages();
     const styles = useStyles();
 
     const form = useFormik({
         initialValues: formInitialValues,
         validationSchema: formSchema,
         onSubmit: (values) => {
-            console.log(values);
+            const { email, password, rememberMe } = values;
+
+            Inertia.post(
+                '/login',
+                {
+                    email,
+                    password,
+                    rememberMe,
+                },
+                {
+                    onSuccess: () => {
+                        enqueueSnackbar('Logged in successfully.', {
+                            variant: 'success',
+                        });
+                    },
+                },
+            );
         },
     });
 

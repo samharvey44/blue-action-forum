@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Requests\Login\IndexRequest;
-use App\Http\Controllers\Controller;
-
+use Illuminate\Http\RedirectResponse;
 use Inertia\Response;
 use Inertia\Inertia;
+
+use App\Http\Requests\Login\IndexRequest;
+use App\Http\Requests\Login\LoginRequest;
+use App\Http\Controllers\Controller;
 
 class LoginController extends Controller {
     /**
@@ -18,5 +20,16 @@ class LoginController extends Controller {
      */
     public function index(IndexRequest $request): Response {
         return Inertia::render('Unauthed/Login/index');
+    }
+
+    /**
+     * Log a user in based on request parameters.
+     *
+     * @param LoginRequest $request
+     * 
+     * @return RedirectResponse
+     */
+    public function login(LoginRequest $request): RedirectResponse {
+        return $request->loginUser();
     }
 }

@@ -17,12 +17,12 @@ class EmailVerificationController extends Controller {
      *
      * @param IndexRequest $request
      * 
-     * @return Response
+     * @return Response|RedirectResponse
      */
     public function index(IndexRequest $request): Response|RedirectResponse {
         // If the user refreshes the page after verifying their email in
-        // another tab, we want to redirect to the home page rather than
-        // the alternative, which is failing with a 403.
+        // another tab, they'll hit this method despite being verified.
+        // If this happens, we want to redirect to the home page.
         if ((bool)auth()->user()->email_verified_at) {
             return redirect()->route('home');
         }
@@ -56,6 +56,7 @@ class EmailVerificationController extends Controller {
      * @return RedirectResponse
      */
     public function resendEmail(ResendEmailRequest $request): RedirectResponse {
+        // NOTE - Intelephense does not think this method exists, but it does.
         auth()->user()->sendEmailVerificationNotification();
 
         return back()->with('successMessage', 'Verification link was resent.');

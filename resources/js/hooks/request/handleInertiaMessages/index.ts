@@ -4,19 +4,17 @@ import { useEffect } from 'react';
 
 export default function useHandleInertiaMessages() {
     const {
-        props: { errors, successMessage, errorMessage },
+        props: { errors, successMessage },
     } = usePage();
     const { enqueueSnackbar } = useSnackbar();
+
+    console.log(errors);
 
     return useEffect(() => {
         const errorsArr = Object.values(errors);
 
-        // The error could be a custom error message, or from
-        // the errors object given to Inertia by default.
-        const hasError = errorsArr.length || errorMessage;
-
-        if (hasError) {
-            enqueueSnackbar(errorsArr[0] ?? (errorMessage as string), {
+        if (errorsArr.length) {
+            enqueueSnackbar(errorsArr[0], {
                 variant: 'error',
             });
 
@@ -27,8 +25,6 @@ export default function useHandleInertiaMessages() {
             enqueueSnackbar(successMessage as string, {
                 variant: 'success',
             });
-
-            return;
         }
-    }, [errors, successMessage, errorMessage, enqueueSnackbar]);
+    }, [errors, successMessage, enqueueSnackbar]);
 }
