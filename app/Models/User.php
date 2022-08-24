@@ -2,14 +2,17 @@
 
 namespace App\Models;
 
+use Illuminate\Auth\Passwords\CanResetPassword as CanResetPasswordTrait;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Contracts\Auth\CanResetPassword;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable {
-    use HasApiTokens, Notifiable;
+class User extends Authenticatable implements MustVerifyEmail, CanResetPassword {
+    use HasApiTokens, Notifiable, CanResetPasswordTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -19,7 +22,6 @@ class User extends Authenticatable {
     protected $fillable = [
         'name',
         'email',
-        'password',
     ];
 
     /**
@@ -30,6 +32,15 @@ class User extends Authenticatable {
     protected $with = [
         'role',
         'profile',
+    ];
+
+    /**
+     * The attributes that are dates.
+     * 
+     * @var array
+     */
+    protected $dates = [
+        'email_verified_at',
     ];
 
     /**
@@ -48,5 +59,16 @@ class User extends Authenticatable {
      */
     public function profile(): HasOne {
         return $this->hasOne(Profile::class, 'user_id');
+    }
+
+    /**
+     * Return whether or not this user has the provided role.
+     *
+     * @param  string $role The role name to be checked.
+     * 
+     * @return bool Whether or not this user has the given role.
+     */
+    public function hasRole(string $role): bool {
+        return $this->role->name === $role;
     }
 }

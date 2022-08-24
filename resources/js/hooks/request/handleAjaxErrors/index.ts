@@ -1,7 +1,7 @@
 import { useSnackbar } from 'notistack';
 import { useCallback } from 'react';
 
-export default function useHandleRequestErrors() {
+export default function useHandleAjaxErrors() {
     const { enqueueSnackbar } = useSnackbar();
 
     return useCallback(

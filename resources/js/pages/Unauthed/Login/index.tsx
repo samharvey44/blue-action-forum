@@ -2,145 +2,155 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Typography from '@mui/material/Typography';
 import LoginIcon from '@mui/icons-material/Login';
 import TextField from '@mui/material/TextField';
+import { Link } from '@inertiajs/inertia-react';
 import Checkbox from '@mui/material/Checkbox';
+import { Inertia } from '@inertiajs/inertia';
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
-import Paper from '@mui/material/Paper';
-import Grid from '@mui/material/Grid';
-import Grow from '@mui/material/Grow';
+import { useSnackbar } from 'notistack';
 import Box from '@mui/material/Box';
 import { useFormik } from 'formik';
 import React from 'react';
 
+import UnauthedContainer from '../components/UnauthedContainer';
 import { formInitialValues } from './form/initialValues';
 import { useStyles } from './hooks/useStyles';
 import { formSchema } from './form/schema';
 
 const Login: React.FC = () => {
+    const { enqueueSnackbar } = useSnackbar();
     const styles = useStyles();
 
     const form = useFormik({
         initialValues: formInitialValues,
         validationSchema: formSchema,
         onSubmit: (values) => {
-            console.log(values);
+            const { email, password, rememberMe } = values;
+
+            Inertia.post(
+                '/login',
+                {
+                    email,
+                    password,
+                    rememberMe,
+                },
+                {
+                    onSuccess: () => {
+                        enqueueSnackbar('Logged in successfully.', {
+                            variant: 'success',
+                        });
+                    },
+                },
+            );
         },
     });
 
     return (
-        <Grow in>
-            <Grid
-                container
-                direction="column"
-                alignItems="center"
-                justifyContent="center"
-                spacing={3}
-                sx={styles.rootGrid}
+        <UnauthedContainer>
+            <Avatar
+                src="/images/collective-rounded.jpg"
+                sx={styles.appLogo}
+                alt="Collective 6 logo"
+            />
+
+            <Typography variant="h3">Collective 6</Typography>
+
+            <Typography variant="subtitle2">
+                Bespoke forum created by{' '}
+                <a
+                    href="https://www.linkedin.com/in/sam-harvey-2978631b7/"
+                    style={styles.linkedinLink}
+                >
+                    Sam Harvey
+                </a>
+            </Typography>
+
+            <form
+                onSubmit={form.handleSubmit}
+                style={{
+                    width: '100%',
+                }}
             >
-                <Grid item xs={12}>
-                    <Paper sx={styles.loginPaper}>
-                        <Avatar
-                            src="/images/collective-rounded.jpg"
-                            sx={styles.appLogo}
-                        />
+                <TextField
+                    sx={styles.emailField}
+                    required
+                    variant="filled"
+                    label="Enter your email..."
+                    name="email"
+                    value={form.values.email}
+                    onChange={form.handleChange}
+                    error={form.touched.email && !!form.errors.email}
+                    helperText={form.touched.email && form.errors.email}
+                />
 
-                        <Typography variant="h3">The Collective</Typography>
+                <TextField
+                    sx={styles.passwordField}
+                    required
+                    variant="filled"
+                    label="Enter your password..."
+                    name="password"
+                    type="password"
+                    value={form.values.password}
+                    onChange={form.handleChange}
+                    error={form.touched.password && !!form.errors.password}
+                    helperText={form.touched.password && form.errors.password}
+                />
 
-                        <form
-                            onSubmit={form.handleSubmit}
-                            style={{
-                                width: '100%',
-                            }}
+                <Box sx={styles.rememberMeContainer}>
+                    <FormControlLabel
+                        sx={styles.rememberMeCheckbox}
+                        control={
+                            <Checkbox
+                                checked={form.values.rememberMe}
+                                onChange={(e) => {
+                                    form.setFieldValue(
+                                        'rememberMe',
+                                        e.target.checked,
+                                    );
+                                }}
+                            />
+                        }
+                        label="Remember Me"
+                    />
+                </Box>
+
+                <Box sx={styles.signupContainer}>
+                    <Typography variant="subtitle1" sx={styles.signupText}>
+                        {"Don't have an account?"}
+                    </Typography>
+
+                    <Link href="/signup" style={styles.textLinkExt}>
+                        <Typography sx={styles.signupTextLink}>
+                            &nbsp;Sign up here!
+                        </Typography>
+                    </Link>
+                </Box>
+
+                <Box sx={styles.loginButtonContainer}>
+                    <Button
+                        startIcon={<LoginIcon />}
+                        sx={styles.loginButton}
+                        variant="contained"
+                        color="primary"
+                        type="submit"
+                        size="large"
+                    >
+                        Login
+                    </Button>
+                </Box>
+
+                <Box sx={styles.forgotPasswordContainer}>
+                    <Link href="/password-reset" style={styles.textLinkExt}>
+                        <Typography
+                            variant="subtitle1"
+                            sx={styles.forgotPasswordText}
                         >
-                            <TextField
-                                sx={styles.emailField}
-                                required
-                                variant="filled"
-                                label="Enter your email..."
-                                name="email"
-                                value={form.values.email}
-                                onChange={form.handleChange}
-                                error={
-                                    form.touched.email && !!form.errors.email
-                                }
-                                helperText={
-                                    form.touched.email && form.errors.email
-                                }
-                            />
-
-                            <TextField
-                                sx={styles.passwordField}
-                                required
-                                variant="filled"
-                                label="Enter your password..."
-                                name="password"
-                                type="password"
-                                value={form.values.password}
-                                onChange={form.handleChange}
-                                error={
-                                    form.touched.password &&
-                                    !!form.errors.password
-                                }
-                                helperText={
-                                    form.touched.password &&
-                                    form.errors.password
-                                }
-                            />
-
-                            <Box sx={styles.rememberMeContainer}>
-                                <FormControlLabel
-                                    sx={styles.rememberMeCheckbox}
-                                    control={
-                                        <Checkbox
-                                            checked={form.values.rememberMe}
-                                            onChange={(e) => {
-                                                form.setFieldValue(
-                                                    'rememberMe',
-                                                    e.target.checked,
-                                                );
-                                            }}
-                                        />
-                                    }
-                                    label="Remember Me"
-                                />
-                            </Box>
-
-                            <Box sx={styles.signupContainer}>
-                                <Typography
-                                    variant="subtitle1"
-                                    sx={styles.signupText}
-                                >
-                                    {"Don't have an account?"}
-                                </Typography>
-
-                                <Typography
-                                    sx={styles.signupTextLink}
-                                    onClick={() => {
-                                        window.location.href =
-                                            window.location.origin + '/signup';
-                                    }}
-                                >
-                                    &nbsp;Sign up here!
-                                </Typography>
-                            </Box>
-
-                            <Box sx={styles.loginButtonContainer}>
-                                <Button
-                                    startIcon={<LoginIcon />}
-                                    sx={styles.loginButton}
-                                    variant="contained"
-                                    color="primary"
-                                    type="submit"
-                                    size="large"
-                                >
-                                    Login
-                                </Button>
-                            </Box>
-                        </form>
-                    </Paper>
-                </Grid>
-            </Grid>
-        </Grow>
+                            Forgotten your password?
+                        </Typography>
+                    </Link>
+                </Box>
+            </form>
+        </UnauthedContainer>
     );
 };
 

@@ -13,13 +13,18 @@ class UserSeeder extends Seeder {
      * @return void
      */
     public function run() {
+        if (config('app.env') !== 'local') {
+            return;
+        }
+
         $user = User::make([
-            'name' => 'Sam Harvey',
-            'email' => 'samuelharvey15@hotmail.com',
+            'name' => 'Super',
+            'email' => 'super@thecollective.com',
             'password' => bcrypt('password'),
+            'email_verified_at' => now(),
         ]);
 
-        $user->role()->associate(Role::firstWhere('name', 'Super Admin'));
+        $user->role()->associate(Role::firstWhere('name', Role::SUPER_ADMIN));
 
         $user->save();
     }
