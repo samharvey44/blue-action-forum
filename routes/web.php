@@ -53,9 +53,9 @@ Route::middleware('throttle:60,1')->group(function () {
         });
 
         Route::prefix('password-reset')->group(function () {
-            Route::middleware('throttle:1,1')->group(function () {
-                Route::post('/', [PasswordResetController::class, 'sendLink'])->name('password.email');
-            });
+            Route::post('/', [PasswordResetController::class, 'sendLink'])
+                ->middleware('throttle:1,1')
+                ->name('password.email');
 
             Route::get('/', [PasswordResetController::class, 'index'])->name('password.request');
 
