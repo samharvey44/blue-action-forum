@@ -16,12 +16,12 @@ export const useStyles = () => {
 
         paper: {
             padding: '20px',
-            marginTop: '100px',
+            marginTop: '50px',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            width: isMd ? 'auto' : '35vw',
+            width: isMd ? '95vw' : '35vw',
             textAlign: 'center',
         },
     });

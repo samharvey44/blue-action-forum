@@ -71,4 +71,13 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword 
     public function hasRole(string $role): bool {
         return $this->role->name === $role;
     }
+
+    /**
+     * Return whether or not this user has created a profile.
+     *
+     * @return bool Whether or not this user has created a profile.
+     */
+    public function hasCreatedProfile(): bool {
+        return (bool)$this->profile;
+    }
 }

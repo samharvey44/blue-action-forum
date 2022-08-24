@@ -11,6 +11,8 @@ use App\Http\Requests\EmailVerification\ResendEmailRequest;
 use App\Http\Requests\EmailVerification\IndexRequest;
 use App\Http\Controllers\Controller;
 
+use Auth;
+
 class EmailVerificationController extends Controller {
     /**
      * Show the notice informing of pending email verification.
@@ -45,7 +47,9 @@ class EmailVerificationController extends Controller {
     public function verify(EmailVerificationRequest $request): RedirectResponse {
         $request->fulfill();
 
-        return redirect()->route('home')->with('successMessage', 'Email was verified.');
+        return redirect()->route(
+            Auth::user()->hasCreatedProfile() ? 'home' : 'profile.create'
+        )->with('successMessage', 'Email was verified.');
     }
 
     /**
@@ -56,8 +60,7 @@ class EmailVerificationController extends Controller {
      * @return RedirectResponse
      */
     public function resendEmail(ResendEmailRequest $request): RedirectResponse {
-        // NOTE - Intelephense does not think this method exists, but it does.
-        auth()->user()->sendEmailVerificationNotification();
+        Auth::user()->sendEmailVerificationNotification();
 
         return back()->with('successMessage', 'Verification link was resent.');
     }

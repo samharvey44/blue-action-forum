@@ -39,8 +39,9 @@ class SignupRequest extends FormRequest {
     public function createUser(): User {
         $newUser = User::make([
             'email' => $this->get('email'),
-            'password' => bcrypt($this->get('password')),
         ]);
+
+        $newUser->forceFill(['password' => bcrypt('password')]);
 
         $newUser->role()->associate(Role::firstWhere('name', Role::USER));
         $newUser->save();

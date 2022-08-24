@@ -5,6 +5,8 @@ namespace App\Http\Middleware;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
+use App\Http\Resources\UserResource;
+
 class HandleInertiaRequests extends Middleware {
     /**
      * The root template that's loaded on the first page visit.
@@ -35,7 +37,7 @@ class HandleInertiaRequests extends Middleware {
     public function share(Request $request): array {
         return array_merge(parent::share($request), [
             'successMessage' => fn () => $request->session()->get('successMessage'),
-            'auth.user' => auth()->user(),
+            'auth.user' => UserResource::make(auth()->user()),
         ]);
     }
 }

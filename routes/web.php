@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\SignupController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 
 /*
@@ -37,7 +38,11 @@ Route::middleware('throttle:60,1')->group(function () {
         });
 
         Route::middleware('verified')->group(function () {
-            Route::get('/home', [HomeController::class, 'index'])->name('home');
+            Route::get('/create-profile', [ProfileController::class, 'index'])->name('profile.create');
+
+            Route::middleware('profile.created')->group(function () {
+                Route::get('/home', [HomeController::class, 'index'])->name('home');
+            });
         });
     });
 

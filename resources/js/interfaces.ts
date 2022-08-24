@@ -10,3 +10,24 @@ export interface IMeta {
     total: number;
     last_page: number;
 }
+
+export interface IProfile {
+    id: number;
+    username: string | null;
+    firstName: string | null;
+    lastName: string | null;
+    location: string | null;
+}
+
+export interface IRole {
+    id: number;
+    name: string;
+}
+
+export interface IAuthedUser {
+    id: number;
+    name: string | null;
+    email: string;
+    profile: IProfile;
+    role: IRole;
+}
