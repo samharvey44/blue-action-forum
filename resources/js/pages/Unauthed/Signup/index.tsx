@@ -44,13 +44,13 @@ const Signup: React.FC = () => {
             <Avatar
                 src="/images/collective-rounded.jpg"
                 sx={styles.appLogo}
-                alt="The Collective logo"
+                alt="Collective 6 logo"
             />
 
             <Typography variant="h3">Sign up</Typography>
 
             <Typography variant="subtitle1" sx={styles.collectiveSubtitle}>
-                <b>{"Sign up to The Collective's free forum."}</b>
+                <b>{'Sign up to the free Collective 6 forum.'}</b>
             </Typography>
 
             <Typography variant="subtitle1" sx={styles.collectiveSubtitle2}>

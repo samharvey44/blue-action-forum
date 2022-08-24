@@ -50,10 +50,20 @@ const Login: React.FC = () => {
             <Avatar
                 src="/images/collective-rounded.jpg"
                 sx={styles.appLogo}
-                alt="The Collective logo"
+                alt="Collective 6 logo"
             />
 
-            <Typography variant="h3">The Collective</Typography>
+            <Typography variant="h3">Collective 6</Typography>
+
+            <Typography variant="subtitle2">
+                Bespoke forum created by{' '}
+                <a
+                    href="https://www.linkedin.com/in/sam-harvey-2978631b7/"
+                    style={styles.linkedinLink}
+                >
+                    Sam Harvey
+                </a>
+            </Typography>
 
             <form
                 onSubmit={form.handleSubmit}
@@ -109,7 +119,7 @@ const Login: React.FC = () => {
                         {"Don't have an account?"}
                     </Typography>
 
-                    <Link href="/signup" style={styles.signupTextLinkExt}>
+                    <Link href="/signup" style={styles.textLinkExt}>
                         <Typography sx={styles.signupTextLink}>
                             &nbsp;Sign up here!
                         </Typography>
@@ -127,6 +137,17 @@ const Login: React.FC = () => {
                     >
                         Login
                     </Button>
+                </Box>
+
+                <Box sx={styles.forgotPasswordContainer}>
+                    <Link href="/password-reset" style={styles.textLinkExt}>
+                        <Typography
+                            variant="subtitle1"
+                            sx={styles.forgotPasswordText}
+                        >
+                            Forgotten your password?
+                        </Typography>
+                    </Link>
                 </Box>
             </form>
         </UnauthedContainer>

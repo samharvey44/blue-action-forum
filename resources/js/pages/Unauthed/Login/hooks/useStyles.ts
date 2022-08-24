@@ -57,7 +57,25 @@ export const useStyles = () =>
             marginLeft: 'auto',
         },
 
-        signupTextLinkExt: {
+        textLinkExt: {
+            textDecoration: 'none',
+        },
+
+        forgotPasswordContainer: {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+            marginTop: '10px',
+        },
+
+        forgotPasswordText: {
+            color: PRIMARY,
+            cursor: 'pointer',
+        },
+
+        linkedinLink: {
+            color: PRIMARY,
+            cursor: 'pointer',
             textDecoration: 'none',
         },
     });

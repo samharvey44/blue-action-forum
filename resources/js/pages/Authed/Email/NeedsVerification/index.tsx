@@ -34,7 +34,7 @@ const NeedsVerification: React.FC = () => {
 
                     <Typography variant="subtitle1">
                         <Fragment>
-                            {`We've sent a verification email to ${email}. You'll find a link in the email, which will activate your account and allow you to access The Collective.`}
+                            {`We've sent a verification email to ${email}. You'll find a link in the email, which will activate your account and allow you to access Collective 6.`}
                         </Fragment>
                     </Typography>
 
