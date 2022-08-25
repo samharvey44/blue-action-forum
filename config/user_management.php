@@ -12,4 +12,4 @@ return [
      */
     'ghost_user_email' => env('GHOST_USER_EMAIL'),
     'ghost_user_password' => env('GHOST_USER_PASSWORD'),
-]
+];
