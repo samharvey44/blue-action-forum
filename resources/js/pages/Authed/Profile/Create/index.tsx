@@ -19,7 +19,7 @@ const CreateProfile: React.FC = () => {
                     </Typography>
 
                     <Typography variant="subtitle1">
-                        {`We don't really want to keep having to call you ${authedUser.email}...`}
+                        {`We don't really want to keep having to call you ${authedUser?.email}...`}
                     </Typography>
                 </Paper>
             </AuthedContainer>

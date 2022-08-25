@@ -60,17 +60,14 @@ const Login: React.FC = () => {
                 <a
                     href="https://www.linkedin.com/in/sam-harvey-2978631b7/"
                     style={styles.linkedinLink}
+                    rel="noopener noreferrer"
+                    target="__blank"
                 >
                     Sam Harvey
                 </a>
             </Typography>
 
-            <form
-                onSubmit={form.handleSubmit}
-                style={{
-                    width: '100%',
-                }}
-            >
+            <form onSubmit={form.handleSubmit} style={styles.form}>
                 <TextField
                     sx={styles.emailField}
                     required
@@ -121,7 +118,7 @@ const Login: React.FC = () => {
 
                     <Link href="/signup" style={styles.textLinkExt}>
                         <Typography sx={styles.signupTextLink}>
-                            &nbsp;Sign up here!
+                            {' Sign up here!'}
                         </Typography>
                     </Link>
                 </Box>

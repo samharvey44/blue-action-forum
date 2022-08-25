@@ -58,12 +58,7 @@ const Signup: React.FC = () => {
                 other topics surrounding ITFC.
             </Typography>
 
-            <form
-                onSubmit={form.handleSubmit}
-                style={{
-                    width: '100%',
-                }}
-            >
+            <form onSubmit={form.handleSubmit} style={styles.form}>
                 <TextField
                     sx={styles.emailField}
                     required
@@ -115,7 +110,7 @@ const Signup: React.FC = () => {
 
                     <Link href="/login" style={styles.loginTextLinkExt}>
                         <Typography sx={styles.loginTextLink}>
-                            &nbsp;Sign in here!
+                            {' Sign in here!'}
                         </Typography>
                     </Link>
                 </Box>

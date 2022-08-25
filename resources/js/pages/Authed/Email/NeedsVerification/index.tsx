@@ -60,11 +60,11 @@ const NeedsVerification: React.FC = () => {
                             </Typography>
 
                             <Typography
-                                onClick={() => resendEmailVerification()}
+                                onClick={resendEmailVerification}
                                 sx={styles.resendEmailText}
                                 variant="subtitle1"
                             >
-                                &nbsp;Click here to send another!
+                                {' Click here to send another!'}
                             </Typography>
                         </Box>
                     )}

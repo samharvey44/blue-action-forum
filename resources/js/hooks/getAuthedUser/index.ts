@@ -6,5 +6,8 @@ import { IAuthedUser } from 'app/interfaces';
 export default function useGetAuthedUser() {
     const { props }: { [key: string]: any } = usePage();
 
-    return useMemo(() => props.auth.user.data as IAuthedUser, [props]);
+    return useMemo(
+        () => (props.auth.user.data ?? null) as IAuthedUser | null,
+        [props],
+    );
 }

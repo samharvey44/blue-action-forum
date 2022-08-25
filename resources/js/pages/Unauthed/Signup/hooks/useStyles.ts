@@ -60,4 +60,8 @@ export const useStyles = () =>
         loginTextLinkExt: {
             textDecoration: 'none',
         },
+
+        form: {
+            width: '100%',
+        },
     });

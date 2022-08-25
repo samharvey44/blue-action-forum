@@ -3,8 +3,8 @@
 namespace App\Http\Requests\Signup;
 
 use Illuminate\Foundation\Http\FormRequest;
-
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Hash;
 
 use App\Models\User;
 use App\Models\Role;
@@ -41,7 +41,7 @@ class SignupRequest extends FormRequest {
             'email' => $this->get('email'),
         ]);
 
-        $newUser->forceFill(['password' => bcrypt('password')]);
+        $newUser->forceFill(['password' => Hash::make('password')]);
 
         $newUser->role()->associate(Role::firstWhere('name', Role::USER));
         $newUser->save();

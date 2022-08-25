@@ -29,4 +29,8 @@ export const useStyles = () =>
             marginTop: '20px',
             width: '100%',
         },
+
+        form: {
+            width: '100%',
+        },
     });

@@ -2,17 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Auth\Passwords\CanResetPassword as CanResetPasswordTrait;
+use Illuminate\Contracts\Auth\CanResetPassword as ResettablePassword;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Contracts\Auth\CanResetPassword;
+use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable implements MustVerifyEmail, CanResetPassword {
-    use HasApiTokens, Notifiable, CanResetPasswordTrait;
+class User extends Authenticatable implements MustVerifyEmail, ResettablePassword {
+    use HasApiTokens, Notifiable, CanResetPassword;
 
     /**
      * The attributes that are mass assignable.
@@ -64,7 +64,7 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword 
     /**
      * Return whether or not this user has the provided role.
      *
-     * @param  string $role The role name to be checked.
+     * @param string $role The role name to be checked.
      * 
      * @return bool Whether or not this user has the given role.
      */
