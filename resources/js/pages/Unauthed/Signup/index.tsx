@@ -47,7 +47,7 @@ const Signup: React.FC = () => {
                 alt="Collective 6 logo"
             />
 
-            <Typography variant="h3">Sign up</Typography>
+            <Typography variant="h3">Sign Up</Typography>
 
             <Typography variant="subtitle1" sx={styles.collectiveSubtitle}>
                 <b>{'Sign up to the free Collective 6 forum.'}</b>

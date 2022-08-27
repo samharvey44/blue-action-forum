@@ -4,10 +4,8 @@ import { Logout } from '@mui/icons-material';
 import AppBar from '@mui/material/AppBar';
 import { useSnackbar } from 'notistack';
 import {
-    useMediaQuery,
     ListItemIcon,
     ListItemText,
-    useTheme,
     MenuItem,
     Avatar,
     Menu,
@@ -22,7 +20,6 @@ const AppContainer: React.FC = ({ children }) => {
 
     const authedUser = useGetAuthedUser();
     const styles = useStyles();
-    const theme = useTheme();
 
     const [profilePictureDropdownAnchor, setProfilePictureDropdownAnchor] =
         useState<HTMLDivElement | null>(null);
@@ -42,7 +39,7 @@ const AppContainer: React.FC = ({ children }) => {
             <AppBar position="static" sx={styles.appBar}>
                 <Box sx={styles.innerAppBar}>
                     <Box
-                        src="images/collective-banner.jpg"
+                        src="/images/collective-banner.jpg"
                         alt="Collective 6 logo"
                         sx={styles.bannerImage}
                         component="img"

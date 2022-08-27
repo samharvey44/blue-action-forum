@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Contracts\Auth\CanResetPassword as ResettablePassword;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -29,8 +30,8 @@ class User extends Authenticatable implements MustVerifyEmail, ResettablePasswor
      * @var array
      */
     protected $with = [
-        'role',
         'profile',
+        'role',
     ];
 
     /**
@@ -58,6 +59,33 @@ class User extends Authenticatable implements MustVerifyEmail, ResettablePasswor
      */
     public function profile(): HasOne {
         return $this->hasOne(Profile::class, 'user_id');
+    }
+
+    /**
+     * The threads this user has created.
+     *
+     * @return HasMany
+     */
+    public function threads(): HasMany {
+        return $this->hasMany(Thread::class, 'creator_id');
+    }
+
+    /**
+     * The comments this user has created.
+     *
+     * @return HasMany
+     */
+    public function comments(): HasMany {
+        return $this->hasMany(Comment::class, 'creator_id');
+    }
+
+    /**
+     * The read records for this user.
+     *
+     * @return HasMany
+     */
+    public function reads(): HasMany {
+        return $this->hasMany(Read::class, 'user_id');
     }
 
     /**

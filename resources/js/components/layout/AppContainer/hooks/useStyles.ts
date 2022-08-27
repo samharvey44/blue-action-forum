@@ -17,7 +17,6 @@ export const useStyles = () => {
         innerAppBar: {
             display: 'flex',
             alignItems: 'center',
-            padding: '5px',
         },
 
         profilePicture: {
