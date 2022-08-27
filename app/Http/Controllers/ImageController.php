@@ -8,7 +8,7 @@ use App\Models\Image;
 
 class ImageController extends Controller {
     /**
-     * Return the create profile page.
+     * Return the image.
      *
      * @param IndexRequest $request
      * @param Image $image
