@@ -78,11 +78,6 @@ class User extends Authenticatable implements MustVerifyEmail, ResettablePasswor
      * @return bool Whether or not this user has created a profile.
      */
     public function hasCreatedProfile(): bool {
-        // Admins and super admins do not need a profile, so we'll skip this check.
-        if ($this->hasRole(Role::SUPER_ADMIN) || $this->hasRole(Role::ADMIN)) {
-            return true;
-        }
-
         return (bool)$this->profile;
     }
 }
