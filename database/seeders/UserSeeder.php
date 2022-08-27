@@ -20,7 +20,6 @@ class UserSeeder extends Seeder {
         }
 
         $superUser = User::make([
-            'name' => 'Super',
             'email' => config('user_management.super_user_email'),
             'password' => Hash::make(config('user_management.super_user_password')),
             'email_verified_at' => now(),
@@ -30,7 +29,6 @@ class UserSeeder extends Seeder {
         $superUser->save();
 
         $ghostUser = User::make([
-            'name' => '[Deleted]',
             'email' => config('user_management.ghost_user_email'),
             'password' => Hash::make(config('user_management.ghost_user_password')),
             'email_verified_at' => now(),

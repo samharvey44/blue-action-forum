@@ -20,7 +20,6 @@ class User extends Authenticatable implements MustVerifyEmail, ResettablePasswor
      * @var array
      */
     protected $fillable = [
-        'name',
         'email',
     ];
 

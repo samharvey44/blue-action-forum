@@ -32,7 +32,6 @@ export interface IRole {
 
 export interface IAuthedUser {
     id: number;
-    name: string | null;
     email: string;
     profile: IProfile | null;
     role: IRole;
