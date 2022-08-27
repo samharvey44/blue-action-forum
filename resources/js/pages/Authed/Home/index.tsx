@@ -6,9 +6,7 @@ import AuthedContainer from '../components/AuthedContainer';
 const Home: React.FC = () => {
     return (
         <AppContainer>
-            <AuthedContainer>
-                <p>Home</p>
-            </AuthedContainer>
+            <AuthedContainer></AuthedContainer>
         </AppContainer>
     );
 };

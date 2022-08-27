@@ -18,6 +18,8 @@ class ProfileResource extends JsonResource {
             'firstName' => $this->first_name,
             'lastName' => $this->last_name,
             'location' => $this->location,
+
+            'profilePicture' => ImageResource::make($this->profilePicture),
         ];
     }
 }

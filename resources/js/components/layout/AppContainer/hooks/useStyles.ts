@@ -1,4 +1,5 @@
 import useMakeStyles from 'app/hooks/makeStyles';
+import { PRIMARY } from 'app/globals/colors';
 
 export const useStyles = () => {
     return useMakeStyles({
@@ -20,11 +21,12 @@ export const useStyles = () => {
         },
 
         profilePicture: {
-            height: '70px',
-            width: '70px',
+            height: '80px',
+            width: '80px',
             marginLeft: 'auto',
             marginRight: '10px',
             cursor: 'pointer',
+            border: `3px solid ${PRIMARY}`,
         },
     });
 };

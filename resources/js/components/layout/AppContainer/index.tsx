@@ -15,13 +15,14 @@ import {
 } from '@mui/material';
 
 import { useStyles } from './hooks/useStyles';
+import useGetAuthedUser from 'app/hooks/getAuthedUser';
 
 const AppContainer: React.FC = ({ children }) => {
     const { enqueueSnackbar } = useSnackbar();
+
+    const authedUser = useGetAuthedUser();
     const styles = useStyles();
     const theme = useTheme();
-
-    const isLg = useMediaQuery(theme.breakpoints.down('lg'));
 
     const [profilePictureDropdownAnchor, setProfilePictureDropdownAnchor] =
         useState<HTMLDivElement | null>(null);
@@ -40,20 +41,23 @@ const AppContainer: React.FC = ({ children }) => {
         <Fragment>
             <AppBar position="static" sx={styles.appBar}>
                 <Box sx={styles.innerAppBar}>
-                    {!isLg && (
-                        <Box
-                            src="images/collective-banner.jpg"
-                            alt="Collective 6 logo"
-                            sx={styles.bannerImage}
-                            component="img"
-                        />
-                    )}
+                    <Box
+                        src="images/collective-banner.jpg"
+                        alt="Collective 6 logo"
+                        sx={styles.bannerImage}
+                        component="img"
+                    />
 
                     <Avatar
                         sx={styles.profilePicture}
                         onClick={(e) => {
                             setProfilePictureDropdownAnchor(e.currentTarget);
                         }}
+                        src={
+                            authedUser?.profile?.profilePicture?.url ??
+                            undefined
+                        }
+                        alt="Profile picture and clickable menu"
                     />
 
                     <Menu

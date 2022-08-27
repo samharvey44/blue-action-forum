@@ -118,7 +118,7 @@ const Login: React.FC = () => {
 
                     <Link href="/signup" style={styles.textLinkExt}>
                         <Typography sx={styles.signupTextLink}>
-                            {' Sign up here!'}
+                            &nbsp;{'Sign up here!'}
                         </Typography>
                     </Link>
                 </Box>

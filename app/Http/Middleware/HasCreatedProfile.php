@@ -21,7 +21,7 @@ class HasCreatedProfile {
             return redirect()->route('login.show');
         }
 
-        if (!(bool)$user->profile) {
+        if (!$user->hasCreatedProfile()) {
             return redirect()->route('profile.create')->withErrors([
                 'profile' => 'You must create a profile before proceeding.',
             ]);

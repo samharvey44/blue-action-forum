@@ -17,10 +17,9 @@ return new class extends Migration {
             $table->timestamps();
 
             $table->string('username')->unique();
-
-            $table->string('first_name')->nullable();
-            $table->string('last_name')->nullable();
             $table->string('location')->nullable();
+
+            $table->text('bio')->nullable();
 
             $table->foreignIdFor(User::class);
         });

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Model;
 
 class Profile extends Model {
@@ -12,9 +13,17 @@ class Profile extends Model {
      * @var array
      */
     protected $fillable = [
-        'first_name',
-        'last_name',
         'location',
+        'bio',
+    ];
+
+    /**
+     * The relationships that should always be loaded.
+     *
+     * @var array
+     */
+    protected $with = [
+        'profilePicture',
     ];
 
     /**
@@ -24,5 +33,14 @@ class Profile extends Model {
      */
     public function user(): BelongsTo {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * This profile's profile picture.
+     *
+     * @return MorphOne
+     */
+    public function profilePicture(): MorphOne {
+        return $this->morphOne(Image::class, 'imageable');
     }
 }

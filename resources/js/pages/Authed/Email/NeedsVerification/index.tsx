@@ -64,7 +64,7 @@ const NeedsVerification: React.FC = () => {
                                 sx={styles.resendEmailText}
                                 variant="subtitle1"
                             >
-                                {' Click here to send another!'}
+                                &nbsp;{'Click here to send another!'}
                             </Typography>
                         </Box>
                     )}

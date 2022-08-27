@@ -11,12 +11,18 @@ export interface IMeta {
     last_page: number;
 }
 
+export interface IFile {
+    id: number;
+    url: string;
+}
+
 export interface IProfile {
     id: number;
     username: string | null;
     firstName: string | null;
     lastName: string | null;
     location: string | null;
+    profilePicture: IFile | null;
 }
 
 export interface IRole {
@@ -28,6 +34,6 @@ export interface IAuthedUser {
     id: number;
     name: string | null;
     email: string;
-    profile: IProfile;
+    profile: IProfile | null;
     role: IRole;
 }
