@@ -18,7 +18,7 @@ class Image extends Model {
     ];
 
     /**
-     * The polymorphic fileable relation.
+     * The polymorphic imageable relation.
      *
      * @return MorphTo
      */
