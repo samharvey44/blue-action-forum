@@ -78,4 +78,8 @@ export const useStyles = () =>
             cursor: 'pointer',
             textDecoration: 'none',
         },
+
+        form: {
+            width: '100%',
+        },
     });

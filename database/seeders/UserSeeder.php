@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Seeder;
+
 use App\Models\Role;
 use App\Models\User;
 
@@ -17,15 +19,22 @@ class UserSeeder extends Seeder {
             return;
         }
 
-        $user = User::make([
-            'name' => 'Super',
-            'email' => 'super@thecollective.com',
-            'password' => bcrypt('password'),
+        $superUser = User::make([
+            'email' => config('user_management.super_user_email'),
+            'password' => Hash::make(config('user_management.super_user_password')),
             'email_verified_at' => now(),
         ]);
 
-        $user->role()->associate(Role::firstWhere('name', Role::SUPER_ADMIN));
+        $superUser->role()->associate(Role::firstWhere('name', Role::SUPER_ADMIN));
+        $superUser->save();
 
-        $user->save();
+        $ghostUser = User::make([
+            'email' => config('user_management.ghost_user_email'),
+            'password' => Hash::make(config('user_management.ghost_user_password')),
+            'email_verified_at' => now(),
+        ]);
+
+        $ghostUser->role()->associate(Role::firstWhere('name', Role::USER));
+        $ghostUser->save();
     }
 }

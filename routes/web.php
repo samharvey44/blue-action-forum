@@ -7,7 +7,12 @@ use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\SignupController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ThreadController;
+use App\Http\Controllers\ImageController;
 use App\Http\Controllers\HomeController;
+
+use Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,7 +42,23 @@ Route::middleware('throttle:60,1')->group(function () {
         });
 
         Route::middleware('verified')->group(function () {
-            Route::get('/home', [HomeController::class, 'index'])->name('home');
+            Route::prefix('/create-profile')->group(function () {
+                Route::post('/', [ProfileController::class, 'store'])
+                    ->middleware('images.optimize')
+                    ->name('profile.store');
+
+                Route::get('/', [ProfileController::class, 'index'])->name('profile.create');
+            });
+
+            Route::middleware('profile.created')->group(function () {
+                Route::get('/images/{image}', [ImageController::class, 'index'])->name('image');
+
+                Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+                Route::prefix('/threads')->group(function () {
+                    Route::get('/create', [ThreadController::class, 'index'])->name('thread.create');
+                });
+            });
         });
     });
 
@@ -66,7 +87,7 @@ Route::middleware('throttle:60,1')->group(function () {
     });
 
     Route::get('/', function () {
-        return auth()->check()
+        return Auth::check()
             ? redirect()->route('home')
             : redirect()->route('login.show');
     });
@@ -74,7 +95,7 @@ Route::middleware('throttle:60,1')->group(function () {
     Route::any(
         '{query}',
         function () {
-            abort_if(auth()->check(), 404);
+            abort_if(Auth::check(), 404);
 
             return redirect()->route('login.show');
         }

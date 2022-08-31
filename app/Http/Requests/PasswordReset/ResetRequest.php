@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Hash;
 
+use Auth;
 use Str;
 
 class ResetRequest extends FormRequest {
@@ -17,7 +18,7 @@ class ResetRequest extends FormRequest {
      * @return bool
      */
     public function authorize(): bool {
-        return !auth()->check();
+        return !Auth::check();
     }
 
     /**

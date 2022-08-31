@@ -53,12 +53,7 @@ const PasswordResetReset: React.FC = () => {
 
             <Typography variant="h3">Set New Password</Typography>
 
-            <form
-                onSubmit={form.handleSubmit}
-                style={{
-                    width: '100%',
-                }}
-            >
+            <form onSubmit={form.handleSubmit} style={styles.form}>
                 <TextField
                     sx={styles.emailField}
                     required

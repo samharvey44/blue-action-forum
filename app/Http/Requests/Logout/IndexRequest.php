@@ -4,6 +4,8 @@ namespace App\Http\Requests\Logout;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+use Auth;
+
 class IndexRequest extends FormRequest {
     /**
      * Determine if the user is authorized to make this request.
@@ -11,7 +13,7 @@ class IndexRequest extends FormRequest {
      * @return bool
      */
     public function authorize(): bool {
-        return auth()->check();
+        return Auth::check();
     }
 
     /**
@@ -32,6 +34,6 @@ class IndexRequest extends FormRequest {
      */
     public function handleLogout(): void {
         session()->invalidate();
-        auth()->logout();
+        Auth::logout();
     }
 }

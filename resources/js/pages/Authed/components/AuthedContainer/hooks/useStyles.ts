@@ -18,12 +18,12 @@ export const useStyles = () => {
 
         centerContainer: {
             padding: '20px',
-            marginTop: '100px',
+            marginTop: '50px',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            width: isMd ? 'auto' : '65vw',
+            width: isMd ? '95vw' : '65vw',
             textAlign: 'center',
         },
     });

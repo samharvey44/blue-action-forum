@@ -4,6 +4,8 @@ namespace App\Http\Requests\PasswordReset;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+use Auth;
+
 class SendLinkRequest extends FormRequest {
     /**
      * Determine if the user is authorized to make this request.
@@ -11,7 +13,7 @@ class SendLinkRequest extends FormRequest {
      * @return bool
      */
     public function authorize(): bool {
-        return !auth()->check();
+        return !Auth::check();
     }
 
     /**

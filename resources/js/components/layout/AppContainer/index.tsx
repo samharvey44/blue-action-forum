@@ -1,27 +1,25 @@
 import React, { Fragment, useState } from 'react';
+import { Inertia } from '@inertiajs/inertia';
 import { Logout } from '@mui/icons-material';
 import AppBar from '@mui/material/AppBar';
 import { useSnackbar } from 'notistack';
 import {
-    useMediaQuery,
     ListItemIcon,
     ListItemText,
-    useTheme,
     MenuItem,
     Avatar,
     Menu,
     Box,
 } from '@mui/material';
 
+import useGetAuthedUser from 'app/hooks/getAuthedUser';
 import { useStyles } from './hooks/useStyles';
-import { Inertia } from '@inertiajs/inertia';
 
 const AppContainer: React.FC = ({ children }) => {
     const { enqueueSnackbar } = useSnackbar();
-    const styles = useStyles();
-    const theme = useTheme();
 
-    const isLg = useMediaQuery(theme.breakpoints.down('lg'));
+    const authedUser = useGetAuthedUser();
+    const styles = useStyles();
 
     const [profilePictureDropdownAnchor, setProfilePictureDropdownAnchor] =
         useState<HTMLDivElement | null>(null);
@@ -40,20 +38,23 @@ const AppContainer: React.FC = ({ children }) => {
         <Fragment>
             <AppBar position="static" sx={styles.appBar}>
                 <Box sx={styles.innerAppBar}>
-                    {!isLg && (
-                        <Box
-                            src="images/collective-banner.jpg"
-                            alt="Collective 6 logo"
-                            sx={styles.bannerImage}
-                            component="img"
-                        />
-                    )}
+                    <Box
+                        src="/images/collective-banner.jpg"
+                        alt="Collective 6 logo"
+                        sx={styles.bannerImage}
+                        component="img"
+                    />
 
                     <Avatar
                         sx={styles.profilePicture}
                         onClick={(e) => {
                             setProfilePictureDropdownAnchor(e.currentTarget);
                         }}
+                        src={
+                            authedUser?.profile?.profilePicture?.url ??
+                            undefined
+                        }
+                        alt="Profile picture and clickable menu"
                     />
 
                     <Menu

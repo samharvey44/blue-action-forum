@@ -6,6 +6,7 @@ import { useStyles } from './hooks/useStyles';
 
 const AuthedContainer: React.FC = ({ children }) => {
     useHandleInertiaMessages();
+
     const styles = useStyles();
 
     return (

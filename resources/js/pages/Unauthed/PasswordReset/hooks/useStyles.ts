@@ -36,4 +36,8 @@ export const useStyles = () =>
             marginLeft: 'auto',
             marginTop: '10px',
         },
+
+        form: {
+            width: '100%',
+        },
     });

@@ -25,6 +25,7 @@ export const useStyles = () =>
         verifyPaper: {
             padding: '20px',
             textAlign: 'center',
+            width: '100%',
         },
 
         verifyTitle: {

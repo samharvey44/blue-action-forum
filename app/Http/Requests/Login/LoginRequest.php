@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Hash;
 
 use App\Models\User;
+use Auth;
 
 class LoginRequest extends FormRequest {
     /**
@@ -15,7 +16,7 @@ class LoginRequest extends FormRequest {
      * @return bool
      */
     public function authorize(): bool {
-        return !auth()->check();
+        return !Auth::check();
     }
 
     /**
@@ -45,7 +46,10 @@ class LoginRequest extends FormRequest {
             ]);
         }
 
-        auth()->login($matchingUser, $this->get('rememberMe'));
-        return redirect()->route('home');
+        Auth::login($matchingUser, $this->get('rememberMe'));
+
+        return Auth::user()->hasCreatedProfile()
+            ? redirect()->route('home')
+            : redirect()->route('profile.create');
     }
 }

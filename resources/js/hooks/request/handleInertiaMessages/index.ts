@@ -3,12 +3,12 @@ import { useSnackbar } from 'notistack';
 import { useEffect } from 'react';
 
 export default function useHandleInertiaMessages() {
+    const { enqueueSnackbar } = useSnackbar();
     const {
         props: { errors, successMessage },
     } = usePage();
-    const { enqueueSnackbar } = useSnackbar();
 
-    return useEffect(() => {
+    useEffect(() => {
         const errorsArr = Object.values(errors);
 
         if (errorsArr.length) {
