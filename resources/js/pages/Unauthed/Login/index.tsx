@@ -61,7 +61,7 @@ const Login: React.FC = () => {
                     href="https://www.linkedin.com/in/sam-harvey-2978631b7/"
                     style={styles.linkedinLink}
                     rel="noopener noreferrer"
-                    target="__blank"
+                    target="_blank"
                 >
                     Sam Harvey
                 </a>

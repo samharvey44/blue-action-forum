@@ -4,6 +4,8 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
+use Auth;
+
 class UserResource extends JsonResource {
     /**
      * Transform the resource into an array.
@@ -14,7 +16,7 @@ class UserResource extends JsonResource {
     public function toArray($request): array {
         return [
             'id' => $this->id,
-            'email' => $this->when($this->id === auth()->id(), $this->email),
+            'email' => $this->when($this->id === Auth::id(), $this->email),
 
             'role' => RoleResource::make($this->role),
             'profile' => ProfileResource::make($this->profile),

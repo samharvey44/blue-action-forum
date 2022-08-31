@@ -7,6 +7,8 @@ use Inertia\Middleware;
 
 use App\Http\Resources\UserResource;
 
+use Auth;
+
 class HandleInertiaRequests extends Middleware {
     /**
      * The root template that's loaded on the first page visit.
@@ -37,7 +39,7 @@ class HandleInertiaRequests extends Middleware {
     public function share(Request $request): array {
         return array_merge(parent::share($request), [
             'successMessage' => fn () => $request->session()->get('successMessage'),
-            'auth.user' => auth()->check() ? UserResource::make(auth()->user()) : null,
+            'auth.user' => Auth::check() ? UserResource::make(Auth::user()) : null,
         ]);
     }
 }

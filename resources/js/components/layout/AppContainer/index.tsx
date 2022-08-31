@@ -12,8 +12,8 @@ import {
     Box,
 } from '@mui/material';
 
-import { useStyles } from './hooks/useStyles';
 import useGetAuthedUser from 'app/hooks/getAuthedUser';
+import { useStyles } from './hooks/useStyles';
 
 const AppContainer: React.FC = ({ children }) => {
     const { enqueueSnackbar } = useSnackbar();

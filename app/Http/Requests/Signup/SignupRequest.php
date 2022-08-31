@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Role;
 
+use Auth;
+
 class SignupRequest extends FormRequest {
     /**
      * Determine if the user is authorized to make this request.
@@ -16,7 +18,7 @@ class SignupRequest extends FormRequest {
      * @return bool
      */
     public function authorize(): bool {
-        return !auth()->check();
+        return !Auth::check();
     }
 
     /**

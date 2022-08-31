@@ -10,6 +10,8 @@ use App\Http\Requests\Signup\SignupRequest;
 use App\Http\Requests\Signup\IndexRequest;
 use App\Http\Controllers\Controller;
 
+use Auth;
+
 class SignupController extends Controller {
     /**
      * Return the signup view.
@@ -32,7 +34,7 @@ class SignupController extends Controller {
     public function signup(SignupRequest $request): RedirectResponse {
         $user = $request->createUser();
 
-        auth()->login($user);
+        Auth::login($user);
 
         return redirect()->route('verification.notice');
     }

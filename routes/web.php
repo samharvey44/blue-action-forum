@@ -12,6 +12,8 @@ use App\Http\Controllers\ThreadController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\HomeController;
 
+use Auth;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -85,7 +87,7 @@ Route::middleware('throttle:60,1')->group(function () {
     });
 
     Route::get('/', function () {
-        return auth()->check()
+        return Auth::check()
             ? redirect()->route('home')
             : redirect()->route('login.show');
     });
@@ -93,7 +95,7 @@ Route::middleware('throttle:60,1')->group(function () {
     Route::any(
         '{query}',
         function () {
-            abort_if(auth()->check(), 404);
+            abort_if(Auth::check(), 404);
 
             return redirect()->route('login.show');
         }

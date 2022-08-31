@@ -23,11 +23,11 @@ const CreateProfile: React.FC = () => {
     const { enqueueSnackbar } = useSnackbar();
 
     const fileUploadRef = useRef<HTMLInputElement | null>(null);
+    const [submitting, setSubmitting] = useState(false);
     const styles = useStyles();
 
     const [uploadedProfilePicture, setUploadedProfilePicture] =
         useState<File | null>(null);
-    const [submitting, setSubmitting] = useState(false);
 
     const form = useFormik({
         initialValues: formInitialValues,
@@ -63,7 +63,7 @@ const CreateProfile: React.FC = () => {
     const handleProfilePictureUpload = (
         event: React.ChangeEvent<HTMLInputElement>,
     ) => {
-        if (!event.target.files) {
+        if (!event.target.files?.length) {
             setUploadedProfilePicture(null);
 
             return;

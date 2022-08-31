@@ -13,7 +13,7 @@ class IndexRequest extends FormRequest {
      * @return bool
      */
     public function authorize(): bool {
-        return auth()->check() && !Auth::user()->hasCreatedProfile();
+        return Auth::check() && !Auth::user()->hasCreatedProfile();
     }
 
     /**

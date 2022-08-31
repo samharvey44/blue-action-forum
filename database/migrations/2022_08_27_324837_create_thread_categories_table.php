@@ -18,8 +18,8 @@ return new class extends Migration {
             $table->id();
             $table->timestamps();
 
-            $table->foreignIdFor(Category::class);
             $table->foreignIdFor(Thread::class);
+            $table->foreignIdFor(Category::class);
         });
     }
 

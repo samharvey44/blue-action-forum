@@ -16,7 +16,7 @@ class LoginRequest extends FormRequest {
      * @return bool
      */
     public function authorize(): bool {
-        return !auth()->check();
+        return !Auth::check();
     }
 
     /**
@@ -46,7 +46,8 @@ class LoginRequest extends FormRequest {
             ]);
         }
 
-        auth()->login($matchingUser, $this->get('rememberMe'));
+        Auth::login($matchingUser, $this->get('rememberMe'));
+
         return Auth::user()->hasCreatedProfile()
             ? redirect()->route('home')
             : redirect()->route('profile.create');

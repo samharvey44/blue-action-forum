@@ -25,14 +25,14 @@ class EmailVerificationController extends Controller {
         // If the user refreshes the page after verifying their email in
         // another tab, they'll hit this method despite being verified.
         // If this happens, we want to redirect to the home page.
-        if ((bool)auth()->user()->email_verified_at) {
+        if (Auth::user()->email_verified_at) {
             return redirect()->route('home');
         }
 
         return Inertia::render(
             'Authed/Email/NeedsVerification/index',
             [
-                'email' => auth()->user()->email,
+                'email' => Auth::user()->email,
             ]
         );
     }

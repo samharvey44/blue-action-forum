@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+
 use App\Http\Requests\Image\IndexRequest;
 use App\Models\Image;
 

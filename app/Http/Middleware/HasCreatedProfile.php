@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Illuminate\Http\Request;
 
 use Closure;
+use Auth;
 
 class HasCreatedProfile {
     /**
@@ -15,13 +16,11 @@ class HasCreatedProfile {
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
     public function handle(Request $request, Closure $next) {
-        $user = auth()->user();
-
-        if (!(bool)$user) {
+        if (!Auth::check()) {
             return redirect()->route('login.show');
         }
 
-        if (!$user->hasCreatedProfile()) {
+        if (!Auth::user()->hasCreatedProfile()) {
             return redirect()->route('profile.create')->withErrors([
                 'profile' => 'You must create a profile before proceeding.',
             ]);

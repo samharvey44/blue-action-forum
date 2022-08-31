@@ -16,7 +16,7 @@ class StoreRequest extends FormRequest {
      * @return bool
      */
     public function authorize(): bool {
-        return auth()->check() && !Auth::user()->hasCreatedProfile();
+        return Auth::check() && !Auth::user()->hasCreatedProfile();
     }
 
     /**
@@ -47,7 +47,7 @@ class StoreRequest extends FormRequest {
                 'username' => strtolower($this->get('username')),
             ]);
 
-            $newProfile->user()->associate(auth()->user());
+            $newProfile->user()->associate(Auth::user());
             $newProfile->save();
 
             $profilePicture = $this->file('profilePicture');
