@@ -56,7 +56,15 @@ Route::middleware('throttle:60,1')->group(function () {
                 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
                 Route::prefix('/threads')->group(function () {
-                    Route::get('/create', [ThreadController::class, 'index'])->name('thread.create');
+                    Route::prefix('/create')->group(function () {
+                        Route::post('/', [ThreadController::class, 'store'])
+                            ->middleware('images.optimize')
+                            ->name('thread.store');
+
+                        Route::get('/', [ThreadController::class, 'index'])->name('thread.create');
+                    });
+
+                    Route::get('/{thread}', [ThreadController::class, 'show'])->name('thread.show');
                 });
             });
         });

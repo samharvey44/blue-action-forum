@@ -4,10 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Model;
+
+use App\Models\Traits\HasCreator;
 
 class Comment extends Model {
+    use HasCreator;
+
     /**
      * The relationships that should always be loaded.
      *
@@ -26,15 +30,6 @@ class Comment extends Model {
     protected $fillable = [
         'content',
     ];
-
-    /**
-     * The user who created this comment.
-     *
-     * @return BelongsTo
-     */
-    public function creator(): BelongsTo {
-        return $this->belongsTo(User::class, 'creator_id');
-    }
 
     /**
      * The thread this comment is for.

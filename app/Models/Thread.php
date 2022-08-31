@@ -3,19 +3,22 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Models\Traits\HasCreator;
+
 class Thread extends Model {
+    use HasCreator;
+
     /**
      * The attributes that are mass assignable.
      * 
      * @param array
      */
     protected $fillable = [
-        'name',
+        'title',
     ];
 
     /**
@@ -27,15 +30,6 @@ class Thread extends Model {
         'category',
         'reads',
     ];
-
-    /**
-     * The user who created this thread.
-     *
-     * @return BelongsTo
-     */
-    public function creator(): BelongsTo {
-        return $this->belongsTo(User::class, 'creator_id');
-    }
 
     /**
      * The comments within this thread.

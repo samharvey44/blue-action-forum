@@ -36,3 +36,9 @@ export interface IAuthedUser {
     profile: IProfile | null;
     role: IRole;
 }
+
+export interface IPreviewableFile {
+    file: File;
+    key: number;
+    displayUrl: string;
+}
