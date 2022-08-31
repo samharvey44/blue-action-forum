@@ -12,7 +12,7 @@ use App\Http\Controllers\ThreadController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\HomeController;
 
-use Auth;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
