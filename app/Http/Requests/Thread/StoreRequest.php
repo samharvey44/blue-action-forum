@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Thread;
 
+use App\Models\Category;
 use Illuminate\Foundation\Http\FormRequest;
 
 use App\Models\Comment;
@@ -32,7 +33,37 @@ class StoreRequest extends FormRequest {
             'content' => 'required|string|max:600',
             'images' => 'sometimes|nullable|array',
             'images.*' => 'required|' . Image::getValidationString(),
+            'categories' => 'required|array|min:1',
+            // We won't check whether the id exists, since we are going to do this later on.
+            'categories.*' => 'required|numeric|distinct'
         ];
+    }
+
+    /**
+     * Validate the provided category ids.
+     *
+     * @param array $categoryIds
+     * 
+     * @return bool
+     */
+    private function validateCategories(array $categoryIds): bool {
+        $requestedCategories = Category::whereIn('id', $categoryIds)->with('roles')->get();
+
+        $passed = true;
+
+        foreach ($categoryIds as $id) {
+            $matchingCategory = $requestedCategories->filter(fn ($category) => $category->id === $id)->first();
+
+            $passed = (bool)$matchingCategory
+                ? $matchingCategory->roles->map(fn ($role) => $role->id)->contains(Auth::user()->role->id)
+                : false;
+
+            if (!$passed) {
+                break;
+            }
+        }
+
+        return $passed;
     }
 
     /**
@@ -66,11 +97,26 @@ class StoreRequest extends FormRequest {
     }
 
     /**
+     * Associate categories to the thread.
+     *
+     * @param array $categoryIds
+     * 
+     * @return void
+     */
+    private function associateCategories(Thread $thread): void {
+        $thread->categories()->attach($this->get('categories'));
+    }
+
+    /**
      * Create a new thread.
      *
      * @return Thread
      */
     public function createThread(): Thread {
+        $categoriesValidated = $this->validateCategories($this->get('categories'));
+
+        abort_if(!$categoriesValidated, 422, 'Invalid categories provided.');
+
         $thread = Thread::make([
             'title' => $this->get('title'),
         ]);
@@ -79,6 +125,7 @@ class StoreRequest extends FormRequest {
             $thread->storeCreator(Auth::user());
             $thread->save();
 
+            $this->associateCategories($thread);
             $this->storeComment($thread);
             $this->storeImages($thread);
         });

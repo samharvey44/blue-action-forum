@@ -9,7 +9,9 @@ use Inertia\Inertia;
 use App\Http\Requests\Thread\IndexRequest;
 use App\Http\Requests\Thread\StoreRequest;
 use App\Http\Requests\Thread\ShowRequest;
+use App\Http\Resources\CategoryResource;
 use App\Http\Resources\ThreadResource;
+use App\Models\Category;
 use App\Models\Thread;
 
 class ThreadController extends Controller {
@@ -21,7 +23,9 @@ class ThreadController extends Controller {
      * @return Response
      */
     public function index(IndexRequest $request): Response {
-        return Inertia::render('Authed/Thread/Create/index');
+        return Inertia::render('Authed/Thread/Create/index', [
+            'categories' => CategoryResource::collection(Category::assignableByUser()),
+        ]);
     }
 
     /**

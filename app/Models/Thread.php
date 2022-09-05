@@ -55,6 +55,6 @@ class Thread extends Model {
      * @return BelongsToMany
      */
     public function categories(): BelongsToMany {
-        return $this->belongsToMany(Category::class, 'thread_categories', 'thread_id', 'category_id');
+        return $this->belongsToMany(Category::class, 'thread_categories', 'thread_id', 'category_id')->withTimestamps();
     }
 }

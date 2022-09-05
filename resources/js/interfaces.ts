@@ -51,6 +51,12 @@ export interface IThread {
     creator: IUser;
 }
 
+export interface ICategory {
+    id: number;
+    name: string;
+    displayColor: string;
+}
+
 export interface IInertiaProps extends Page<PageProps> {
     props: {
         errors: Errors & ErrorBag;

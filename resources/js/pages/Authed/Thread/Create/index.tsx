@@ -1,25 +1,36 @@
-import { Button, Grid, Paper, TextField, Typography } from '@mui/material';
-import { Add, Clear, FileUpload } from '@mui/icons-material';
-import React, { useRef, useState } from 'react';
+import { Add, Circle, Clear, FileUpload } from '@mui/icons-material';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { Inertia } from '@inertiajs/inertia';
 import { useSnackbar } from 'notistack';
 import { useFormik } from 'formik';
 import { Box } from '@mui/system';
+import {
+    Button,
+    Grid,
+    Paper,
+    TextField,
+    Typography,
+    Chip,
+} from '@mui/material';
 
+import { IInertiaProps, IPreviewableFile } from 'app/interfaces';
 import AuthedContainer from '../../components/AuthedContainer';
 import AppContainer from 'app/components/layout/AppContainer';
 import { formInitialValues } from './form/initialValues';
-import { IPreviewableFile } from 'app/interfaces';
+import { usePage } from '@inertiajs/inertia-react';
 import { useStyles } from './hooks/useStyles';
 import { formSchema } from './form/schema';
+import { IProps } from './interfaces';
 
 const CreateThread: React.FC = () => {
+    const { categories } = usePage<IInertiaProps & IProps>().props;
     const { enqueueSnackbar } = useSnackbar();
 
     const fileUploadRef = useRef<HTMLInputElement | null>(null);
     const styles = useStyles();
 
     const [uploadedFiles, setUploadedFiles] = useState<IPreviewableFile[]>([]);
+    const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
     const [submitting, setSubmitting] = useState(false);
 
     const form = useFormik({
@@ -38,6 +49,7 @@ const CreateThread: React.FC = () => {
                     images: uploadedFiles.map(
                         (uploadedFile) => uploadedFile.file,
                     ),
+                    categories: selectedCategories,
                 },
                 {
                     onSuccess: () => {
@@ -89,15 +101,84 @@ const CreateThread: React.FC = () => {
         });
     };
 
-    const handleFileRemove = (key: number) => {
-        setUploadedFiles((currFiles) =>
-            currFiles.filter((file) => file.key !== key),
-        );
+    const handleFileRemove = useCallback(
+        (key: number) => {
+            setUploadedFiles((currFiles) =>
+                currFiles.filter((file) => file.key !== key),
+            );
 
-        enqueueSnackbar('Removed file successfully.', {
-            variant: 'success',
-        });
-    };
+            enqueueSnackbar('Removed file successfully.', {
+                variant: 'success',
+            });
+        },
+        [enqueueSnackbar],
+    );
+
+    const mappedCategories = useMemo(() => {
+        return categories.map(({ id, name, displayColor }) => (
+            <Chip
+                icon={
+                    <Circle
+                        sx={{
+                            color: `${displayColor} !important`,
+                        }}
+                    />
+                }
+                onClick={() => {
+                    setSelectedCategories((selected) => {
+                        return selected.find((c) => c === id)
+                            ? selected.filter((c) => c !== id)
+                            : [...selected, id];
+                    });
+                }}
+                variant={
+                    selectedCategories.find((c) => c === id)
+                        ? 'filled'
+                        : 'outlined'
+                }
+                sx={styles.category}
+                label={name}
+                key={id}
+            />
+        ));
+    }, [categories, selectedCategories, styles.category]);
+
+    const mappedFiles = useMemo(() => {
+        return uploadedFiles.map(({ displayUrl, key }, index, self) => (
+            <Box
+                key={key}
+                sx={
+                    index === self.length - 1
+                        ? styles.uploadedImageContainerEnd
+                        : styles.uploadedImageContainer
+                }
+            >
+                <Box
+                    component="img"
+                    sx={styles.uploadedFile}
+                    src={displayUrl}
+                    alt="Uploaded file"
+                />
+
+                <Box
+                    sx={styles.badge}
+                    onClick={() => {
+                        handleFileRemove(key);
+                    }}
+                >
+                    <Clear sx={styles.deleteIcon} />
+                </Box>
+            </Box>
+        ));
+    }, [
+        handleFileRemove,
+        styles.badge,
+        styles.deleteIcon,
+        styles.uploadedFile,
+        styles.uploadedImageContainer,
+        styles.uploadedImageContainerEnd,
+        uploadedFiles,
+    ]);
 
     return (
         <AppContainer>
@@ -161,43 +242,28 @@ const CreateThread: React.FC = () => {
                             </Grid>
 
                             <Grid item xs={12}>
+                                <Typography
+                                    variant="h6"
+                                    sx={styles.categoryHeader}
+                                >
+                                    Select Categories:
+                                </Typography>
+
                                 <Box sx={styles.categoriesContainer}>
-                                    {/* todo */}
+                                    {mappedCategories}
                                 </Box>
+
+                                <Typography
+                                    variant="subtitle1"
+                                    sx={styles.categorySubHeader}
+                                >
+                                    {`${selectedCategories.length} categories selected.`}
+                                </Typography>
                             </Grid>
 
                             <Grid item xs={12}>
                                 <Box sx={styles.endAlignContainer}>
-                                    {uploadedFiles.map(
-                                        ({ displayUrl, key }, index, self) => (
-                                            <Box
-                                                key={key}
-                                                sx={
-                                                    index === self.length - 1
-                                                        ? styles.uploadedImageContainerEnd
-                                                        : styles.uploadedImageContainer
-                                                }
-                                            >
-                                                <Box
-                                                    component="img"
-                                                    sx={styles.uploadedFile}
-                                                    src={displayUrl}
-                                                    alt="Uploaded file"
-                                                />
-
-                                                <Box
-                                                    sx={styles.badge}
-                                                    onClick={() => {
-                                                        handleFileRemove(key);
-                                                    }}
-                                                >
-                                                    <Clear
-                                                        sx={styles.deleteIcon}
-                                                    />
-                                                </Box>
-                                            </Box>
-                                        ),
-                                    )}
+                                    {mappedFiles}
                                 </Box>
 
                                 <Box sx={styles.imageUploadsInfoContainer}>

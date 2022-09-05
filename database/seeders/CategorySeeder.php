@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 
 use App\Models\Category;
+use App\Models\Role;
 
 class CategorySeeder extends Seeder {
     /**
@@ -17,13 +18,32 @@ class CategorySeeder extends Seeder {
             [
                 'name' => 'General',
                 'display_color' => '#C4D6B0',
+                'roles' => [
+                    Role::SUPER_ADMIN,
+                    Role::ADMIN,
+                    Role::USER,
+                ],
             ],
             [
-                'name' => 'Chants',
+                'name' => 'New Chants',
                 'display_color' => '#F64740',
+                'roles' => [
+                    Role::SUPER_ADMIN,
+                    Role::ADMIN,
+                    Role::USER,
+                ],
             ]
         ] as $category) {
-            Category::create($category);
+            $roles = Role::all();
+
+            $newCategory = Category::create([
+                'name' => $category['name'],
+                'display_color' => $category['display_color'],
+            ]);
+
+            $newCategory->roles()->attach(
+                $roles->filter(fn ($role) => in_array($role->name, $category['roles']))->map->id
+            );
         }
     }
 }

@@ -72,5 +72,19 @@ export const useStyles = () => {
             alignItems: 'center',
             flexWrap: 'wrap',
         },
+
+        category: {
+            marginRight: '10px',
+        },
+
+        categoryHeader: {
+            textAlign: 'left',
+            marginBottom: '10px',
+        },
+
+        categorySubHeader: {
+            textAlign: 'left',
+            marginTop: '10px',
+        },
     });
 };
