@@ -27,8 +27,8 @@ class Thread extends Model {
      * @var array
      */
     protected $with = [
-        'category',
-        'reads',
+        'categories',
+        'creator',
     ];
 
     /**

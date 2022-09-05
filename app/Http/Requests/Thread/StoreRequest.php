@@ -60,7 +60,7 @@ class StoreRequest extends FormRequest {
      * @return void
      */
     private function storeImages(Thread $thread): void {
-        foreach ($this->file('images') as $image) {
+        foreach ($this->file('images') ?? [] as $image) {
             Image::storeAndAssociate($image, $thread);
         }
     }

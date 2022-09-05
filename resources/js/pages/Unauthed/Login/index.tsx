@@ -14,6 +14,7 @@ import React from 'react';
 
 import UnauthedContainer from '../components/UnauthedContainer';
 import { formInitialValues } from './form/initialValues';
+import { linkedInLink } from 'app/globals/config';
 import { useStyles } from './hooks/useStyles';
 import { formSchema } from './form/schema';
 
@@ -58,9 +59,9 @@ const Login: React.FC = () => {
             <Typography variant="subtitle2">
                 Bespoke forum created by{' '}
                 <a
-                    href="https://www.linkedin.com/in/sam-harvey-2978631b7/"
                     style={styles.linkedinLink}
                     rel="noopener noreferrer"
+                    href={linkedInLink}
                     target="_blank"
                 >
                     Sam Harvey

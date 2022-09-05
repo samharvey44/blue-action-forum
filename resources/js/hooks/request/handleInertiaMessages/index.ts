@@ -1,4 +1,5 @@
 import { usePage } from '@inertiajs/inertia-react';
+import { IInertiaProps } from 'app/interfaces';
 import { useSnackbar } from 'notistack';
 import { useEffect } from 'react';
 
@@ -6,7 +7,7 @@ export default function useHandleInertiaMessages() {
     const { enqueueSnackbar } = useSnackbar();
     const {
         props: { errors, successMessage },
-    } = usePage();
+    } = usePage<IInertiaProps>();
 
     useEffect(() => {
         const errorsArr = Object.values(errors);

@@ -15,8 +15,7 @@ class ProfileResource extends JsonResource {
         return [
             'id' => $this->id,
             'username' => $this->username,
-            'firstName' => $this->first_name,
-            'lastName' => $this->last_name,
+            'bio' => $this->bio,
             'location' => $this->location,
 
             'profilePicture' => ImageResource::make($this->profilePicture),

@@ -20,11 +20,14 @@ const CreateThread: React.FC = () => {
     const styles = useStyles();
 
     const [uploadedFiles, setUploadedFiles] = useState<IPreviewableFile[]>([]);
+    const [submitting, setSubmitting] = useState(false);
 
     const form = useFormik({
         initialValues: formInitialValues,
         validationSchema: formSchema,
         onSubmit: (values) => {
+            setSubmitting(true);
+
             const { title, content } = values;
 
             Inertia.post(
@@ -41,6 +44,9 @@ const CreateThread: React.FC = () => {
                         enqueueSnackbar('Thread created successfully.', {
                             variant: 'success',
                         });
+                    },
+                    onFinish: () => {
+                        setSubmitting(false);
                     },
                 },
             );
@@ -155,6 +161,12 @@ const CreateThread: React.FC = () => {
                             </Grid>
 
                             <Grid item xs={12}>
+                                <Box sx={styles.categoriesContainer}>
+                                    {/* todo */}
+                                </Box>
+                            </Grid>
+
+                            <Grid item xs={12}>
                                 <Box sx={styles.endAlignContainer}>
                                     {uploadedFiles.map(
                                         ({ displayUrl, key }, index, self) => (
@@ -211,6 +223,7 @@ const CreateThread: React.FC = () => {
 
                                     <Button
                                         sx={styles.createButton}
+                                        disabled={submitting}
                                         startIcon={<Add />}
                                         variant="contained"
                                         color="primary"

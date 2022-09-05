@@ -10,10 +10,12 @@ import {
     Avatar,
     Menu,
     Box,
+    Typography,
 } from '@mui/material';
 
 import useGetAuthedUser from 'app/hooks/getAuthedUser';
 import { useStyles } from './hooks/useStyles';
+import { linkedInLink } from 'app/globals/config';
 
 const AppContainer: React.FC = ({ children }) => {
     const { enqueueSnackbar } = useSnackbar();
@@ -82,6 +84,22 @@ const AppContainer: React.FC = ({ children }) => {
             </AppBar>
 
             {children}
+
+            <Box sx={styles.footer}>
+                <Box sx={styles.innerFooterContainer}>
+                    <Typography variant="subtitle1">
+                        Created by{' '}
+                        <a
+                            style={styles.linkedinLink}
+                            rel="noopener noreferrer"
+                            href={linkedInLink}
+                            target="_blank"
+                        >
+                            Sam Harvey
+                        </a>
+                    </Typography>
+                </Box>
+            </Box>
         </Fragment>
     );
 };

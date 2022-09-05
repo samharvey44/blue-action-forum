@@ -1,13 +1,10 @@
 import { usePage } from '@inertiajs/inertia-react';
 import { useMemo } from 'react';
 
-import { IAuthedUser } from 'app/interfaces';
+import { IUser, IInertiaProps } from 'app/interfaces';
 
 export default function useGetAuthedUser() {
-    const { props }: { [key: string]: any } = usePage();
+    const { props }: IInertiaProps = usePage();
 
-    return useMemo(
-        () => (props.auth.user.data ?? null) as IAuthedUser | null,
-        [props],
-    );
+    return useMemo(() => props.auth.user as IUser | null, [props]);
 }

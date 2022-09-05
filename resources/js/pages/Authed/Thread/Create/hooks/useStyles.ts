@@ -66,5 +66,11 @@ export const useStyles = () => {
         deleteIcon: {
             color: 'white',
         },
+
+        categoriesContainer: {
+            display: 'flex',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+        },
     });
 };

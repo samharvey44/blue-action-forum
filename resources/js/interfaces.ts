@@ -1,5 +1,6 @@
 import { SxProps } from '@mui/system/styleFunctionSx/styleFunctionSx';
 import { Theme } from '@mui/system/createTheme/createTheme';
+import { ErrorBag, Errors, Page, PageProps } from '@inertiajs/inertia';
 
 export interface IStyles {
     [name: string]: SxProps<Theme>;
@@ -30,9 +31,9 @@ export interface IRole {
     name: string;
 }
 
-export interface IAuthedUser {
+export interface IUser {
     id: number;
-    email: string;
+    email?: string;
     profile: IProfile | null;
     role: IRole;
 }
@@ -41,4 +42,23 @@ export interface IPreviewableFile {
     file: File;
     key: number;
     displayUrl: string;
+}
+
+export interface IThread {
+    id: number;
+    createdAt: string;
+    title: string;
+    creator: IUser;
+}
+
+export interface IInertiaProps extends Page<PageProps> {
+    props: {
+        errors: Errors & ErrorBag;
+        auth: {
+            user?: IUser;
+        };
+        successMessage?: string;
+        laravelVersion: string;
+        phpVersion: string;
+    };
 }

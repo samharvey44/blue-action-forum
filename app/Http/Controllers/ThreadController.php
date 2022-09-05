@@ -9,6 +9,8 @@ use Inertia\Inertia;
 use App\Http\Requests\Thread\IndexRequest;
 use App\Http\Requests\Thread\StoreRequest;
 use App\Http\Requests\Thread\ShowRequest;
+use App\Http\Resources\ThreadResource;
+use App\Models\Thread;
 
 class ThreadController extends Controller {
     /**
@@ -39,7 +41,9 @@ class ThreadController extends Controller {
      * 
      * @return Response
      */
-    public function show(ShowRequest $request): Response {
-        return Inertia::render('Authed/Thread/View/index');
+    public function show(ShowRequest $request, Thread $thread): Response {
+        return Inertia::render('Authed/Thread/View/index', [
+            'thread' => ThreadResource::make($thread->load('comments'))
+        ]);
     }
 }
