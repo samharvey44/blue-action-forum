@@ -3,14 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Models\Traits\HasReadReceipts;
 use App\Models\Traits\HasCreator;
 
 class Thread extends Model {
-    use HasCreator;
+    use HasCreator, HasReadReceipts;
 
     /**
      * The attributes that are mass assignable.
@@ -38,15 +38,6 @@ class Thread extends Model {
      */
     public function comments(): HasMany {
         return $this->hasMany(Comment::class, 'thread_id');
-    }
-
-    /**
-     * The reads of this thread.
-     *
-     * @return MorphMany
-     */
-    public function reads(): MorphMany {
-        return $this->morphMany(Read::class, 'readable');
     }
 
     /**

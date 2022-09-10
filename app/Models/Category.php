@@ -15,8 +15,17 @@ class Category extends Model {
      * @var array
      */
     protected $fillable = [
-        'name',
         'display_color',
+        'name',
+    ];
+
+    /**
+     * The relationships that should always be loaded.
+     *
+     * @var array
+     */
+    protected $with = [
+        'roles',
     ];
 
     /**

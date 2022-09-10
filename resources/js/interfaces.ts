@@ -19,10 +19,8 @@ export interface IFile {
 
 export interface IProfile {
     id: number;
-    username: string | null;
-    firstName: string | null;
-    lastName: string | null;
-    location: string | null;
+    username: string;
+    location?: string;
     profilePicture: IFile | null;
 }
 
@@ -33,6 +31,7 @@ export interface IRole {
 
 export interface IUser {
     id: number;
+    createdAt: string;
     email?: string;
     profile: IProfile | null;
     role: IRole;
@@ -49,12 +48,22 @@ export interface IThread {
     createdAt: string;
     title: string;
     creator: IUser;
+    categories: ICategory[];
+    comments?: IComment[];
 }
 
 export interface ICategory {
     id: number;
     name: string;
     displayColor: string;
+}
+
+export interface IComment {
+    id: number;
+    createdAt: string;
+    content: string;
+    images: IFile[];
+    creator: IUser;
 }
 
 export interface IInertiaProps extends Page<PageProps> {

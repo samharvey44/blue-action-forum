@@ -58,7 +58,7 @@ Route::middleware('throttle:60,1')->group(function () {
                 Route::prefix('/threads')->group(function () {
                     Route::prefix('/create')->group(function () {
                         Route::post('/', [ThreadController::class, 'store'])
-                            ->middleware('images.optimize', 'throttle:3,1')
+                            ->middleware('images.optimize')
                             ->name('thread.store');
 
                         Route::get('/', [ThreadController::class, 'index'])->name('thread.create');

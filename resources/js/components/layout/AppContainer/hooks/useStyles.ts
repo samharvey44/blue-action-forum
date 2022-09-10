@@ -31,10 +31,7 @@ export const useStyles = () => {
         footer: {
             marginTop: 'auto',
             width: '100%',
-            bottom: 0,
-            left: 0,
             backgroundColor: 'white',
-            position: 'fixed',
             padding: '20px',
             boxShadow: '0px 0px 15px 9px rgba(0,0,0,0.1)',
         },
@@ -49,6 +46,12 @@ export const useStyles = () => {
             color: PRIMARY,
             cursor: 'pointer',
             textDecoration: 'none',
+        },
+
+        bodyContainer: {
+            height: '100vh',
+            display: 'flex',
+            flexDirection: 'column',
         },
     });
 };

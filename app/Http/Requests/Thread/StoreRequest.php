@@ -47,23 +47,15 @@ class StoreRequest extends FormRequest {
      * @return bool
      */
     private function validateCategories(array $categoryIds): bool {
-        $requestedCategories = Category::whereIn('id', $categoryIds)->with('roles')->get();
+        $userRoleId = Auth::user()->role->id;
 
-        $passed = true;
+        $categoryRoles = Category::whereIn('id', $categoryIds)
+            ->get()
+            ->map(fn ($category) => $category->roles->map(fn ($role) => $role->id));
 
-        foreach ($categoryIds as $id) {
-            $matchingCategory = $requestedCategories->filter(fn ($category) => $category->id === $id)->first();
-
-            $passed = (bool)$matchingCategory
-                ? $matchingCategory->roles->map(fn ($role) => $role->id)->contains(Auth::user()->role->id)
-                : false;
-
-            if (!$passed) {
-                break;
-            }
-        }
-
-        return $passed;
+        return $categoryRoles->filter(
+            fn ($categoryRoleColl) => $categoryRoleColl->contains($userRoleId)
+        )->count() === $categoryRoles->count();
     }
 
     /**
@@ -71,9 +63,9 @@ class StoreRequest extends FormRequest {
      *
      * @param Thread $thread The thread to store the comment against.
      * 
-     * @return void
+     * @return Comment
      */
-    private function storeComment(Thread $thread): void {
+    private function storeComment(Thread $thread): Comment {
         $comment = Comment::make([
             'content' => $this->get('content'),
         ]);
@@ -81,18 +73,20 @@ class StoreRequest extends FormRequest {
         $comment->storeCreator(Auth::user());
         $comment->thread()->associate($thread);
         $comment->save();
+
+        return $comment;
     }
 
     /**
-     * Store the requested images to the created thread.
+     * Store the requested images to the created thread comment.
      *
-     * @param Thread $thread The thread to associate images to.
+     * @param Comment $thread The comment to associate images to.
      * 
      * @return void
      */
-    private function storeImages(Thread $thread): void {
+    private function storeImages(Comment $comment): void {
         foreach ($this->file('images') ?? [] as $image) {
-            Image::storeAndAssociate($image, $thread);
+            Image::storeAndAssociate($image, $comment);
         }
     }
 
@@ -126,8 +120,9 @@ class StoreRequest extends FormRequest {
             $thread->save();
 
             $this->associateCategories($thread);
-            $this->storeComment($thread);
-            $this->storeImages($thread);
+
+            $comment = $this->storeComment($thread);
+            $this->storeImages($comment);
         });
 
         return $thread;

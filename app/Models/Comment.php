@@ -2,15 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Models\Traits\HasReadReceipts;
 use App\Models\Traits\HasCreator;
 
 class Comment extends Model {
-    use HasCreator;
+    use HasCreator, HasReadReceipts;
 
     /**
      * The relationships that should always be loaded.
@@ -19,7 +20,9 @@ class Comment extends Model {
      */
     protected $with = [
         'commentReactions',
+        'creator',
         'reads',
+        'images',
     ];
 
     /**
@@ -41,20 +44,20 @@ class Comment extends Model {
     }
 
     /**
-     * The reads of this comment.
-     *
-     * @return MorphMany
-     */
-    public function reads(): MorphMany {
-        return $this->morphMany(Read::class, 'readable');
-    }
-
-    /**
      * The comment reactions.
      *
      * @return HasMany
      */
     public function commentReactions(): HasMany {
         return $this->hasMany(CommentReaction::class, 'comment_id');
+    }
+
+    /**
+     * The images attached to this comment.
+     * 
+     * @return MorphMany
+     */
+    public function images(): MorphMany {
+        return $this->morphMany(Image::class, 'imageable');
     }
 }
