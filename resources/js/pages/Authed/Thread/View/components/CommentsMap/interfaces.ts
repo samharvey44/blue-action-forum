@@ -1,5 +1,7 @@
-import { IComment } from 'app/interfaces';
+import { IPaginatedComments, IReaction } from 'app/interfaces';
 
 export interface IProps {
-    comments: IComment[];
+    threadId: number;
+    comments: IPaginatedComments;
+    reactions: IReaction[];
 }

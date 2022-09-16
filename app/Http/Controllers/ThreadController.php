@@ -10,8 +10,11 @@ use App\Http\Requests\Thread\IndexRequest;
 use App\Http\Requests\Thread\StoreRequest;
 use App\Http\Requests\Thread\ShowRequest;
 use App\Http\Resources\CategoryResource;
+use App\Http\Resources\CommentResource;
+use App\Http\Resources\ReactionResource;
 use App\Http\Resources\ThreadResource;
 use App\Models\Category;
+use App\Models\Reaction;
 use App\Models\Thread;
 
 class ThreadController extends Controller {
@@ -32,6 +35,7 @@ class ThreadController extends Controller {
      * Store a new thread.
      *
      * @param StoreRequest
+     * 
      * @return Response
      */
     public function store(StoreRequest $request): RedirectResponse {
@@ -42,12 +46,16 @@ class ThreadController extends Controller {
      * Return the requested thread.
      *
      * @param ShowRequest $request
+     * @param Thread $thread
+     * @param ?string $page
      * 
      * @return Response
      */
-    public function show(ShowRequest $request, Thread $thread): Response {
+    public function show(ShowRequest $request, Thread $thread, ?string $page = '1'): Response {
         return Inertia::render('Authed/Thread/View/index', [
-            'thread' => ThreadResource::make($thread->load('comments'))
+            'comments' => CommentResource::collection($thread->comments()->paginate(Thread::$commentsPerPage, page: $page)),
+            'reactions' => ReactionResource::collection(Reaction::all()),
+            'thread' => ThreadResource::make($thread),
         ]);
     }
 }

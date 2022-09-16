@@ -182,7 +182,7 @@ const CreateThread: React.FC = () => {
 
     return (
         <AppContainer>
-            <AuthedContainer>
+            <AuthedContainer withBackButton>
                 <form onSubmit={form.handleSubmit}>
                     <Paper sx={styles.createPaper}>
                         <Typography variant="h3">

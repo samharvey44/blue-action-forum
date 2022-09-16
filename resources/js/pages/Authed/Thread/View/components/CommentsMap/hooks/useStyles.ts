@@ -109,5 +109,36 @@ export const useStyles = () => {
             width: '40px',
             objectFit: 'contain',
         },
+
+        reactionsMapContainer: {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+        },
+
+        reactionIcon: {
+            height: '30px',
+            width: '30px',
+            marginBottom: '5px',
+            cursor: 'pointer',
+        },
+
+        reactionIconNoCursor: {
+            height: '30px',
+            width: '30px',
+            marginBottom: '5px',
+        },
+
+        reactionAndCountContainer: {
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginRight: '5px',
+        },
+
+        reactionActive: {
+            cursor: 'pointer',
+        },
     });
 };

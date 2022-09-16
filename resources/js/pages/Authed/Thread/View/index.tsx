@@ -1,20 +1,20 @@
-import { usePage } from '@inertiajs/inertia-react';
 import { Chip, Paper, Typography } from '@mui/material';
+import { usePage } from '@inertiajs/inertia-react';
+import { Circle } from '@mui/icons-material';
 import { Box } from '@mui/system';
 import moment from 'moment';
 import React from 'react';
 
 import AuthedContainer from '../../components/AuthedContainer';
 import AppContainer from 'app/components/layout/AppContainer';
+import CommentsMap from './components/CommentsMap';
 import { IInertiaProps } from 'app/interfaces';
 import { useStyles } from './hooks/useStyles';
 import { IProps } from './interfaces';
-import { Circle } from '@mui/icons-material';
-import CommentsMap from './components/CommentsMap';
 
 const ViewThread: React.FC = () => {
     const {
-        props: { thread },
+        props: { thread, reactions, comments },
     } = usePage<IInertiaProps & IProps>();
 
     const styles = useStyles();
@@ -60,7 +60,13 @@ const ViewThread: React.FC = () => {
                 </Paper>
 
                 <Box sx={styles.commentsMapContainer}>
-                    {<CommentsMap comments={thread.comments ?? []} />}
+                    {
+                        <CommentsMap
+                            threadId={thread.id}
+                            reactions={reactions}
+                            comments={comments}
+                        />
+                    }
                 </Box>
             </AuthedContainer>
         </AppContainer>

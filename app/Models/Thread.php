@@ -32,6 +32,13 @@ class Thread extends Model {
     ];
 
     /**
+     * The number of comments to display per page within a thread.
+     * 
+     * @var int
+     */
+    public static int $commentsPerPage = 15;
+
+    /**
      * The comments within this thread.
      *
      * @return HasMany

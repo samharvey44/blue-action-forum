@@ -16,22 +16,22 @@ class ReactionSeeder extends Seeder {
         $reactions = [
             [
                 'name' => 'Like',
-                'icon_name' => 'ThumbUp',
+                'icon_path' => 'thumbup.svg',
             ],
 
             [
                 'name' => 'Dislike',
-                'icon_name' => 'ThumbDown',
+                'icon_path' => 'thumbdown.svg',
             ],
 
             [
-                'name' => 'Funny',
-                'icon_name' => 'Mood',
+                'name' => 'Laugh',
+                'icon_path' => 'laugh.svg',
             ],
 
             [
                 'name' => 'Interesting',
-                'icon_name' => 'Lightbulb',
+                'icon_path' => 'lightbulb.svg',
             ],
         ];
 

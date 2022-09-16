@@ -12,7 +12,7 @@ class Reaction extends Model {
      * @var array
      */
     protected $fillable = [
-        'icon_name',
+        'icon_path',
         'name',
     ];
 

@@ -1,6 +1,6 @@
+import { ErrorBag, Errors, Page, PageProps } from '@inertiajs/inertia';
 import { SxProps } from '@mui/system/styleFunctionSx/styleFunctionSx';
 import { Theme } from '@mui/system/createTheme/createTheme';
-import { ErrorBag, Errors, Page, PageProps } from '@inertiajs/inertia';
 
 export interface IStyles {
     [name: string]: SxProps<Theme>;
@@ -64,6 +64,29 @@ export interface IComment {
     content: string;
     images: IFile[];
     creator: IUser;
+    commentReactions: ICommentReaction[];
+}
+
+export interface IReaction {
+    id: number;
+    name: string;
+    iconPath: string;
+}
+
+export interface IPaginatedComments {
+    data: IComment[];
+    meta: {
+        current_page: number;
+        last_page: number;
+        per_page: number;
+        total: number;
+    };
+}
+
+export interface ICommentReaction {
+    id: number;
+    user: IUser;
+    reaction: IReaction;
 }
 
 export interface IInertiaProps extends Page<PageProps> {
