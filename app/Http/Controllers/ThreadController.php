@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
 use Inertia\Response;
 use Inertia\Inertia;
 
@@ -13,7 +14,6 @@ use App\Http\Resources\CategoryResource;
 use App\Http\Resources\CommentResource;
 use App\Http\Resources\ReactionResource;
 use App\Http\Resources\ThreadResource;
-use Illuminate\Http\RedirectResponse;
 use App\Models\Category;
 use App\Models\Reaction;
 use App\Models\Thread;
