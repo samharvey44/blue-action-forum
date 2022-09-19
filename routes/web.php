@@ -56,7 +56,27 @@ Route::middleware('throttle:60,1')->group(function () {
                 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
                 Route::prefix('/threads')->group(function () {
-                    Route::get('/create', [ThreadController::class, 'index'])->name('thread.create');
+                    Route::get('/', [ThreadController::class, 'getPaginated']);
+
+                    Route::prefix('/create')->group(function () {
+                        Route::post('/', [ThreadController::class, 'store'])
+                            ->middleware('images.optimize')
+                            ->name('thread.store');
+
+                        Route::get('/', [ThreadController::class, 'index'])->name('thread.create');
+                    });
+
+                    Route::prefix('/{thread}')->group(function () {
+                        Route::post('/comment', [CommentController::class, 'store']);
+
+                        Route::get('/{page?}', [ThreadController::class, 'show'])->name('thread.show');
+                    });
+                });
+
+                Route::prefix('/comments')->group(function () {
+                    Route::prefix('/{comment}')->group(function () {
+                        Route::put('/react', [CommentController::class, 'react']);
+                    });
                 });
             });
         });

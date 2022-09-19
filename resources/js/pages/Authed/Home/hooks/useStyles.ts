@@ -37,5 +37,42 @@ export const useStyles = () => {
         createThreadLink: {
             textDecoration: 'none',
         },
+
+        filtersPaper: {
+            padding: '20px',
+            width: '100%',
+        },
+
+        searchContainer: {
+            display: 'flex',
+            alignItems: 'center',
+            height: '100%',
+        },
+
+        searchField: {
+            width: '100%',
+        },
+
+        buttonGroupContainer: {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+            height: '100%',
+        },
+
+        searchButton: {
+            marginLeft: 'auto',
+        },
+
+        loadingContainer: {
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexDirection: 'column',
+        },
+
+        threadsLoadingText: {
+            marginTop: '10px',
+        },
     });
 };
