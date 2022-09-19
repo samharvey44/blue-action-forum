@@ -10,10 +10,12 @@ import {
     Avatar,
     Menu,
     Box,
+    Typography,
 } from '@mui/material';
 
 import useGetAuthedUser from 'app/hooks/getAuthedUser';
 import { useStyles } from './hooks/useStyles';
+import { linkedInLink } from 'app/globals/config';
 
 const AppContainer: React.FC = ({ children }) => {
     const { enqueueSnackbar } = useSnackbar();
@@ -36,52 +38,72 @@ const AppContainer: React.FC = ({ children }) => {
 
     return (
         <Fragment>
-            <AppBar position="static" sx={styles.appBar}>
-                <Box sx={styles.innerAppBar}>
-                    <Box
-                        src="/images/collective-banner.jpg"
-                        alt="Collective 6 logo"
-                        sx={styles.bannerImage}
-                        component="img"
-                    />
+            <Box sx={styles.bodyContainer}>
+                <AppBar position="static" sx={styles.appBar}>
+                    <Box sx={styles.innerAppBar}>
+                        <Box
+                            src="/images/collective-banner.jpg"
+                            alt="Collective 6 logo"
+                            sx={styles.bannerImage}
+                            component="img"
+                        />
 
-                    <Avatar
-                        sx={styles.profilePicture}
-                        onClick={(e) => {
-                            setProfilePictureDropdownAnchor(e.currentTarget);
-                        }}
-                        src={
-                            authedUser?.profile?.profilePicture?.url ??
-                            undefined
-                        }
-                        alt="Profile picture and clickable menu"
-                    />
+                        <Avatar
+                            sx={styles.profilePicture}
+                            onClick={(e) => {
+                                setProfilePictureDropdownAnchor(
+                                    e.currentTarget,
+                                );
+                            }}
+                            src={
+                                authedUser?.profile?.profilePicture?.url ??
+                                undefined
+                            }
+                            alt="Profile picture and clickable menu"
+                        />
 
-                    <Menu
-                        anchorEl={profilePictureDropdownAnchor}
-                        open={!!profilePictureDropdownAnchor}
-                        onClose={() => {
-                            setProfilePictureDropdownAnchor(null);
-                        }}
-                        MenuListProps={{
-                            'aria-labelledby': 'basic-button',
-                        }}
-                    >
-                        <MenuItem
-                            onClick={() => {
-                                handleLogout();
+                        <Menu
+                            anchorEl={profilePictureDropdownAnchor}
+                            open={!!profilePictureDropdownAnchor}
+                            onClose={() => {
+                                setProfilePictureDropdownAnchor(null);
+                            }}
+                            MenuListProps={{
+                                'aria-labelledby': 'basic-button',
                             }}
                         >
-                            <ListItemIcon>
-                                <Logout fontSize="small" />
-                            </ListItemIcon>
-                            <ListItemText>Logout</ListItemText>
-                        </MenuItem>
-                    </Menu>
-                </Box>
-            </AppBar>
+                            <MenuItem
+                                onClick={() => {
+                                    handleLogout();
+                                }}
+                            >
+                                <ListItemIcon>
+                                    <Logout fontSize="small" />
+                                </ListItemIcon>
+                                <ListItemText>Logout</ListItemText>
+                            </MenuItem>
+                        </Menu>
+                    </Box>
+                </AppBar>
 
-            {children}
+                {children}
+
+                <Box sx={styles.footer}>
+                    <Box sx={styles.innerFooterContainer}>
+                        <Typography variant="subtitle1">
+                            Created by{' '}
+                            <a
+                                style={styles.linkedinLink}
+                                rel="noopener noreferrer"
+                                href={linkedInLink}
+                                target="_blank"
+                            >
+                                Sam Harvey
+                            </a>
+                        </Typography>
+                    </Box>
+                </Box>
+            </Box>
         </Fragment>
     );
 };

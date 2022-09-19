@@ -21,8 +21,16 @@ export const useStyles = () => {
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            width: isMd ? '95vw' : '35vw',
             textAlign: 'center',
+            width: isMd ? '95vw' : '35vw',
+            marginBottom: '50px',
+        },
+
+        centerContainer: {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%',
         },
     });
 };

@@ -26,5 +26,17 @@ export const useStyles = () => {
             width: isMd ? '95vw' : '65vw',
             textAlign: 'center',
         },
+
+        backButtonContainer: {
+            width: '100%',
+            display: 'flex',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+            marginBottom: '15px',
+        },
+
+        customLink: {
+            textDecoration: 'none',
+        },
     });
 };

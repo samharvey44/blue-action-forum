@@ -8,7 +8,6 @@ use Inertia\Inertia;
 
 use App\Http\Requests\Profile\IndexRequest;
 use App\Http\Requests\Profile\StoreRequest;
-use App\Models\File;
 
 class ProfileController extends Controller {
     /**

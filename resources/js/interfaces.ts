@@ -1,3 +1,4 @@
+import { ErrorBag, Errors, Page, PageProps } from '@inertiajs/inertia';
 import { SxProps } from '@mui/system/styleFunctionSx/styleFunctionSx';
 import { Theme } from '@mui/system/createTheme/createTheme';
 
@@ -18,10 +19,8 @@ export interface IFile {
 
 export interface IProfile {
     id: number;
-    username: string | null;
-    firstName: string | null;
-    lastName: string | null;
-    location: string | null;
+    username: string;
+    location?: string;
     profilePicture: IFile | null;
 }
 
@@ -30,9 +29,74 @@ export interface IRole {
     name: string;
 }
 
-export interface IAuthedUser {
+export interface IUser {
     id: number;
-    email: string;
+    createdAt: string;
+    email?: string;
     profile: IProfile | null;
     role: IRole;
+}
+
+export interface IPreviewableFile {
+    file: File;
+    key: number;
+    displayUrl: string;
+}
+
+export interface IThread {
+    id: number;
+    createdAt: string;
+    title: string;
+    creator: IUser;
+    categories: ICategory[];
+    comments?: IComment[];
+}
+
+export interface ICategory {
+    id: number;
+    name: string;
+    displayColor: string;
+}
+
+export interface IComment {
+    id: number;
+    createdAt: string;
+    content: string;
+    images: IFile[];
+    creator: IUser;
+    commentReactions: ICommentReaction[];
+}
+
+export interface IReaction {
+    id: number;
+    name: string;
+    iconPath: string;
+}
+
+export interface IPaginatedComments {
+    data: IComment[];
+    meta: {
+        current_page: number;
+        last_page: number;
+        per_page: number;
+        total: number;
+    };
+}
+
+export interface ICommentReaction {
+    id: number;
+    user: IUser;
+    reaction: IReaction;
+}
+
+export interface IInertiaProps extends Page<PageProps> {
+    props: {
+        errors: Errors & ErrorBag;
+        auth: {
+            user?: IUser;
+        };
+        successMessage?: string;
+        laravelVersion: string;
+        phpVersion: string;
+    };
 }

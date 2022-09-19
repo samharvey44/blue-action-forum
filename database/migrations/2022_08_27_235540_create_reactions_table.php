@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->id();
             $table->timestamps();
 
-            $table->string('icon_name');
+            $table->string('icon_path');
             $table->string('name');
         });
     }

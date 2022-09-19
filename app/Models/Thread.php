@@ -3,19 +3,22 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Models\Traits\HasReadReceipts;
+use App\Models\Traits\HasCreator;
+
 class Thread extends Model {
+    use HasCreator, HasReadReceipts;
+
     /**
      * The attributes that are mass assignable.
      * 
      * @param array
      */
     protected $fillable = [
-        'name',
+        'title',
     ];
 
     /**
@@ -24,18 +27,16 @@ class Thread extends Model {
      * @var array
      */
     protected $with = [
-        'category',
-        'reads',
+        'categories',
+        'creator',
     ];
 
     /**
-     * The user who created this thread.
-     *
-     * @return BelongsTo
+     * The number of comments to display per page within a thread.
+     * 
+     * @var int
      */
-    public function creator(): BelongsTo {
-        return $this->belongsTo(User::class, 'creator_id');
-    }
+    public static int $commentsPerPage = 10;
 
     /**
      * The comments within this thread.
@@ -47,20 +48,11 @@ class Thread extends Model {
     }
 
     /**
-     * The reads of this thread.
-     *
-     * @return MorphMany
-     */
-    public function reads(): MorphMany {
-        return $this->morphMany(Read::class, 'readable');
-    }
-
-    /**
      * The categories for this thread.
      *
      * @return BelongsToMany
      */
     public function categories(): BelongsToMany {
-        return $this->belongsToMany(Category::class, 'thread_categories', 'thread_id', 'category_id');
+        return $this->belongsToMany(Category::class, 'thread_categories', 'thread_id', 'category_id')->withTimestamps();
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Model;
 
@@ -21,6 +22,8 @@ class AppServiceProvider extends ServiceProvider {
      * @return void
      */
     public function boot() {
+        JsonResource::withoutWrapping();
+
         Model::preventLazyLoading(!app()->isProduction());
     }
 }
