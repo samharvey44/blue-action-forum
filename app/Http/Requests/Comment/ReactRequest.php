@@ -3,9 +3,10 @@
 namespace App\Http\Requests\Comment;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\Comment;
 
 use App\Models\CommentReaction;
+use App\Models\Reaction;
+use App\Models\Comment;
 
 use Auth;
 
@@ -36,11 +37,27 @@ class ReactRequest extends FormRequest {
      * @return ?CommentReaction
      */
     public function findExistingReaction(Comment $comment): ?CommentReaction {
-        // We only want to allow the user to leave one reaction per comment.
         $commentReaction = CommentReaction::whereHas('user', fn ($sq) => $sq->where('id', Auth::id()))
             ->whereHas('comment', fn ($sq) => $sq->where('id', $comment->id))
             ->first();
 
         return $commentReaction;
+    }
+
+    /**
+     * Store the comment reaction to the given comment.
+     * 
+     * @param Comment $comment The comment we are storing the comment reaction against.
+     * 
+     * @return void
+     */
+    public function storeCommentReaction(Comment $comment): void {
+        $commentReaction = CommentReaction::make();
+
+        $commentReaction->reaction()->associate(Reaction::find($this->get('reaction')));
+        $commentReaction->user()->associate(Auth::user());
+        $commentReaction->comment()->associate($comment);
+
+        $commentReaction->save();
     }
 }

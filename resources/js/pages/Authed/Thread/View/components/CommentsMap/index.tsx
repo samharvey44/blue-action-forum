@@ -16,14 +16,12 @@ import {
 import PaginationContainer from './components/PaginationContainer';
 import AddCommentContainer from './components/AddCommentContainer';
 import { ICommentReaction, IFile } from 'app/interfaces';
-import useGetAuthedUser from 'app/hooks/getAuthedUser';
 import { useStyles } from './hooks/useStyles';
 import { IProps } from './interfaces';
 
 const CommentsMap: React.FC<IProps> = ({ threadId, comments, reactions }) => {
     const [viewingImage, setViewingImage] = useState<IFile | null>(null);
     const [leavingReaction, setLeavingReaction] = useState(false);
-    const user = useGetAuthedUser();
 
     const styles = useStyles();
     const theme = useTheme();
@@ -198,19 +196,6 @@ const CommentsMap: React.FC<IProps> = ({ threadId, comments, reactions }) => {
                                                                         reaction.id,
                                                                 );
 
-                                                            const canReact =
-                                                                !commentReactions.filter(
-                                                                    (cr) =>
-                                                                        // Filter out the current reaction first, since we want to be able to unreact.
-                                                                        cr
-                                                                            .reaction
-                                                                            .id !==
-                                                                            reaction.id &&
-                                                                        cr.user
-                                                                            .id ===
-                                                                            user?.id,
-                                                                ).length;
-
                                                             return (
                                                                 <Box
                                                                     sx={
@@ -222,17 +207,14 @@ const CommentsMap: React.FC<IProps> = ({ threadId, comments, reactions }) => {
                                                                 >
                                                                     <Box
                                                                         sx={
-                                                                            canReact
-                                                                                ? styles.reactionIcon
-                                                                                : styles.reactionIconNoCursor
+                                                                            styles.reactionIcon
                                                                         }
                                                                         alt={`Reaction for ${reaction.name}`}
                                                                         src={`/images/${reaction.iconPath}`}
                                                                         component="img"
                                                                         onClick={() => {
                                                                             if (
-                                                                                leavingReaction ||
-                                                                                !canReact
+                                                                                leavingReaction
                                                                             ) {
                                                                                 return;
                                                                             }
@@ -316,7 +298,7 @@ const CommentsMap: React.FC<IProps> = ({ threadId, comments, reactions }) => {
                 ),
             )}
 
-            <Grid item xs={12}>
+            <Grid item xs={12} style={styles.addCommentGridItem}>
                 <AddCommentContainer threadId={threadId} />
             </Grid>
 

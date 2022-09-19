@@ -31,6 +31,9 @@ const AddCommentContainer: React.FC<IProps> = ({ threadId }) => {
                 `/threads/${threadId}/comment`,
                 {
                     content,
+                    images: uploadedFiles.map(
+                        (uploadedFile) => uploadedFile.file,
+                    ),
                 },
                 {
                     onSuccess: () => {
@@ -133,69 +136,71 @@ const AddCommentContainer: React.FC<IProps> = ({ threadId }) => {
     ]);
 
     return (
-        <Paper sx={styles.paper}>
-            <Typography variant="h6">
-                Get involved with the discussion!
-            </Typography>
+        <form onSubmit={form.handleSubmit}>
+            <Paper sx={styles.paper}>
+                <Typography variant="h6">
+                    Get involved with the discussion!
+                </Typography>
 
-            <Box sx={styles.commentFormContainer}>
-                <TextField
-                    label="Leave a comment..."
-                    variant="filled"
-                    name="content"
-                    value={form.values.content}
-                    onChange={form.handleChange}
-                    error={form.touched.content && !!form.errors.content}
-                    helperText={form.touched.content && form.errors.content}
-                    sx={styles.commentField}
-                    rows={8}
-                    multiline
-                    required
+                <Box sx={styles.commentFormContainer}>
+                    <TextField
+                        label="Leave a comment..."
+                        variant="filled"
+                        name="content"
+                        value={form.values.content}
+                        onChange={form.handleChange}
+                        error={form.touched.content && !!form.errors.content}
+                        helperText={form.touched.content && form.errors.content}
+                        sx={styles.commentField}
+                        rows={8}
+                        multiline
+                        required
+                    />
+
+                    <Box sx={styles.endAlignContainer}>{mappedFiles}</Box>
+
+                    <Box sx={styles.imageUploadsInfoContainer}>
+                        <Typography variant="subtitle1">
+                            {`${uploadedFiles.length} file(s) uploaded.`}
+                        </Typography>
+                    </Box>
+
+                    <Box sx={styles.endAlignContainer}>
+                        <Button
+                            disabled={uploadedFiles.length === 5}
+                            onClick={() => {
+                                fileUploadRef.current?.click();
+                            }}
+                            startIcon={<FileUpload />}
+                            variant="contained"
+                            color="primary"
+                        >
+                            Upload Images
+                        </Button>
+
+                        <Button
+                            sx={styles.createButton}
+                            disabled={submitting}
+                            startIcon={<Add />}
+                            variant="contained"
+                            color="primary"
+                            type="submit"
+                        >
+                            Create
+                        </Button>
+                    </Box>
+                </Box>
+
+                <input
+                    style={styles.hiddenImageUpload}
+                    onChange={handleFileUpload}
+                    ref={fileUploadRef}
+                    accept="image/*"
+                    type="file"
+                    multiple
                 />
-
-                <Box sx={styles.endAlignContainer}>{mappedFiles}</Box>
-
-                <Box sx={styles.imageUploadsInfoContainer}>
-                    <Typography variant="subtitle1">
-                        {`${uploadedFiles.length} file(s) uploaded.`}
-                    </Typography>
-                </Box>
-
-                <Box sx={styles.endAlignContainer}>
-                    <Button
-                        disabled={uploadedFiles.length === 5}
-                        onClick={() => {
-                            fileUploadRef.current?.click();
-                        }}
-                        startIcon={<FileUpload />}
-                        variant="contained"
-                        color="primary"
-                    >
-                        Upload Images
-                    </Button>
-
-                    <Button
-                        sx={styles.createButton}
-                        disabled={submitting}
-                        startIcon={<Add />}
-                        variant="contained"
-                        color="primary"
-                        type="submit"
-                    >
-                        Create
-                    </Button>
-                </Box>
-            </Box>
-
-            <input
-                style={styles.hiddenImageUpload}
-                onChange={handleFileUpload}
-                ref={fileUploadRef}
-                accept="image/*"
-                type="file"
-                multiple
-            />
-        </Paper>
+            </Paper>
+        </form>
     );
 };
 

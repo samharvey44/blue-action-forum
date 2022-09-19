@@ -65,7 +65,11 @@ Route::middleware('throttle:60,1')->group(function () {
                         Route::get('/', [ThreadController::class, 'index'])->name('thread.create');
                     });
 
-                    Route::get('/{thread}/{page?}', [ThreadController::class, 'show'])->name('thread.show');
+                    Route::prefix('/{thread}')->group(function () {
+                        Route::post('/comment', [CommentController::class, 'store']);
+
+                        Route::get('/{page?}', [ThreadController::class, 'show'])->name('thread.show');
+                    });
                 });
 
                 Route::prefix('/comments')->group(function () {

@@ -34,5 +34,9 @@ export const useStyles = () => {
             alignItems: 'center',
             marginBottom: '15px',
         },
+
+        customLink: {
+            textDecoration: 'none',
+        },
     });
 };

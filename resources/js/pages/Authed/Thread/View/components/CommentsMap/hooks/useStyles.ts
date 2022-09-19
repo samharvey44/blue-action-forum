@@ -1,7 +1,14 @@
+import { useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/system';
+
 import useMakeStyles from 'app/hooks/makeStyles';
 import { PRIMARY } from 'app/globals/colors';
 
 export const useStyles = () => {
+    const theme = useTheme();
+
+    const isMd = useMediaQuery(theme.breakpoints.down('md'));
+
     return useMakeStyles({
         commentContainer: {
             marginBottom: '10px',
@@ -123,12 +130,6 @@ export const useStyles = () => {
             cursor: 'pointer',
         },
 
-        reactionIconNoCursor: {
-            height: '30px',
-            width: '30px',
-            marginBottom: '5px',
-        },
-
         reactionAndCountContainer: {
             display: 'flex',
             flexDirection: 'column',
@@ -139,6 +140,10 @@ export const useStyles = () => {
 
         reactionActive: {
             cursor: 'pointer',
+        },
+
+        addCommentGridItem: {
+            marginTop: isMd ? '60px' : undefined,
         },
     });
 };

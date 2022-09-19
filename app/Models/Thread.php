@@ -36,7 +36,7 @@ class Thread extends Model {
      * 
      * @var int
      */
-    public static int $commentsPerPage = 15;
+    public static int $commentsPerPage = 10;
 
     /**
      * The comments within this thread.

@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 use App\Http\Requests\Comment\ReactRequest;
+use App\Http\Requests\Comment\StoreRequest;
 use App\Models\CommentReaction;
 use App\Models\Reaction;
 use App\Models\Comment;
+use App\Models\Thread;
 
 class CommentController extends Controller {
     /**
@@ -21,25 +24,31 @@ class CommentController extends Controller {
     public function react(ReactRequest $request, Comment $comment): void {
         $existingReaction = $request->findExistingReaction($comment);
 
-        if ($existingReaction?->reaction?->id === $request->get('reaction')) {
+        if ($existingReaction) {
+            $isRemovingReaction = $existingReaction->reaction->id === (int)$request->get('reaction');
+
             $existingReaction->delete();
 
-            return;
+            if ($isRemovingReaction) {
+                return;
+            }
         }
 
-        // If we've reached this point and have an existing reaction, it means
-        // the user is trying to react more than once to a comment, which is 
-        // not allowed.
-        if ((bool)$existingReaction) {
-            abort(422, 'Leaving this reaction is forbidden.');
-        }
+        $request->storeCommentReaction($comment);
+    }
 
-        $commentReaction = CommentReaction::make();
-
-        $commentReaction->reaction()->associate(Reaction::find($request->get('reaction')));
-        $commentReaction->user()->associate(Auth::user());
-        $commentReaction->comment()->associate($comment);
-
-        $commentReaction->save();
+    /**
+     * Store a new comment.
+     * 
+     * @param StoreRequest $request
+     * @param Thread $thread
+     * 
+     * @return void
+     */
+    public function store(StoreRequest $request, Thread $thread): void {
+        DB::transaction(function () use ($request, $thread) {
+            $comment = $request->storeComment($thread);
+            $request->storeImages($comment);
+        });
     }
 }

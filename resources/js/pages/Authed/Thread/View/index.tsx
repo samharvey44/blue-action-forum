@@ -1,9 +1,9 @@
 import { Chip, Paper, Typography } from '@mui/material';
 import { usePage } from '@inertiajs/inertia-react';
 import { Circle } from '@mui/icons-material';
+import React, { useEffect } from 'react';
 import { Box } from '@mui/system';
 import moment from 'moment';
-import React from 'react';
 
 import AuthedContainer from '../../components/AuthedContainer';
 import AppContainer from 'app/components/layout/AppContainer';
@@ -19,9 +19,17 @@ const ViewThread: React.FC = () => {
 
     const styles = useStyles();
 
+    useEffect(() => {
+        // Allow the 'Grow' animation to occur and page length be fully
+        // defined before scrolling to the top of the page.
+        setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 300);
+    }, []);
+
     return (
         <AppContainer>
-            <AuthedContainer withBackButton>
+            <AuthedContainer withBackButton customReturnLink="/home">
                 <Paper sx={styles.titlePaper}>
                     <Typography variant="h3">{thread.title}</Typography>
 

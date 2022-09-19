@@ -53,7 +53,7 @@ class ThreadController extends Controller {
      */
     public function show(ShowRequest $request, Thread $thread, ?string $page = '1'): Response {
         return Inertia::render('Authed/Thread/View/index', [
-            'comments' => CommentResource::collection($thread->comments()->paginate(Thread::$commentsPerPage, page: $page)),
+            'comments' => CommentResource::collection($thread->comments()->orderBy('id')->paginate(Thread::$commentsPerPage, page: $page)),
             'reactions' => ReactionResource::collection(Reaction::all()),
             'thread' => ThreadResource::make($thread),
         ]);

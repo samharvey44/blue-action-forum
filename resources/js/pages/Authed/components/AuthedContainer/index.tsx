@@ -4,9 +4,12 @@ import React from 'react';
 
 import useHandleInertiaMessages from 'app/hooks/request/handleInertiaMessages';
 import { useStyles } from './hooks/useStyles';
+import { IProps } from './interfaces';
+import { Link } from '@inertiajs/inertia-react';
 
-const AuthedContainer: React.FC<{ withBackButton?: boolean }> = ({
+const AuthedContainer: React.FC<IProps> = ({
     withBackButton,
+    customReturnLink,
     children,
 }) => {
     useHandleInertiaMessages();
@@ -19,17 +22,34 @@ const AuthedContainer: React.FC<{ withBackButton?: boolean }> = ({
                 <Box sx={styles.centerContainer}>
                     {withBackButton && (
                         <Box sx={styles.backButtonContainer}>
-                            <Button
-                                disabled={!history.length}
-                                variant="contained"
-                                color="primary"
-                                onClick={() => {
-                                    history.back();
-                                }}
-                                startIcon={<KeyboardReturn />}
-                            >
-                                Return
-                            </Button>
+                            {customReturnLink ? (
+                                // If we have a custom return link, we'll redirect to that
+                                // rather than to the last browser history entry.
+                                <Link
+                                    href={customReturnLink}
+                                    style={styles.customLink}
+                                >
+                                    <Button
+                                        startIcon={<KeyboardReturn />}
+                                        variant="contained"
+                                        color="primary"
+                                    >
+                                        Return
+                                    </Button>
+                                </Link>
+                            ) : (
+                                <Button
+                                    startIcon={<KeyboardReturn />}
+                                    disabled={!history.length}
+                                    onClick={() => {
+                                        history.back();
+                                    }}
+                                    variant="contained"
+                                    color="primary"
+                                >
+                                    Return
+                                </Button>
+                            )}
                         </Box>
                     )}
 
