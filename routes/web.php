@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\SignupController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ThreadController;
 use App\Http\Controllers\ImageController;

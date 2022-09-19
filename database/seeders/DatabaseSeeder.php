@@ -15,6 +15,8 @@ class DatabaseSeeder extends Seeder {
             RoleSeeder::class,
             UserSeeder::class,
             ProfileSeeder::class,
+            CategorySeeder::class,
+            ReactionSeeder::class,
         ]);
     }
 }

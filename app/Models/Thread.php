@@ -3,8 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -23,7 +21,7 @@ class Thread extends Model {
      * @param array
      */
     protected $fillable = [
-        'name',
+        'title',
     ];
 
     /**
@@ -32,8 +30,8 @@ class Thread extends Model {
      * @var array
      */
     protected $with = [
-        'category',
-        'reads',
+        'categories',
+        'creator',
     ];
 
     /**
@@ -50,16 +48,6 @@ class Thread extends Model {
      */
     public static int $commentsPerPage = 15;
 
-
-    /**
-     * The number of comments to display per page within a thread.
-     * 
-     * @var int
-     */
-    public function creator(): BelongsTo {
-        return $this->belongsTo(User::class, 'creator_id');
-    }
-
     /**
      * The comments within this thread.
      *
@@ -70,18 +58,11 @@ class Thread extends Model {
     }
 
     /**
-     * The reads of this thread.
-     *
-     * @return MorphMany
-     */
-    public function reads(): MorphMany {
-        return $this->morphMany(Read::class, 'readable');
-    }
-
-    /**
-     * The categories for this thread.
-     *
-     * @return BelongsToMany
+     * Get a query builder of threads based on the current filter.
+     * 
+     * @param string $filter The filter to retrieve threads by.
+     * 
+     * @return Builder The filtered query builder instance.
      */
     public function categories(): BelongsToMany {
         return $this->belongsToMany(Category::class, 'thread_categories', 'thread_id', 'category_id')->withTimestamps();
