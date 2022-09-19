@@ -57,6 +57,8 @@ Route::middleware('throttle:60,1')->group(function () {
                 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
                 Route::prefix('/threads')->group(function () {
+                    Route::get('/', [ThreadController::class, 'getPaginated']);
+
                     Route::prefix('/create')->group(function () {
                         Route::post('/', [ThreadController::class, 'store'])
                             ->middleware('images.optimize')

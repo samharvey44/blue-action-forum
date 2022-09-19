@@ -22,7 +22,7 @@ const AddCommentContainer: React.FC<IProps> = ({ threadId }) => {
     const form = useFormik({
         initialValues: formInitialValues,
         validationSchema: formSchema,
-        onSubmit: (values) => {
+        onSubmit: (values, { resetForm }) => {
             setSubmitting(true);
 
             const { content } = values;
@@ -40,6 +40,9 @@ const AddCommentContainer: React.FC<IProps> = ({ threadId }) => {
                         enqueueSnackbar('Comment created successfully.', {
                             variant: 'success',
                         });
+
+                        setUploadedFiles([]);
+                        resetForm();
                     },
                     onFinish: () => {
                         setSubmitting(false);
