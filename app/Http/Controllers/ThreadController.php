@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Thread\IndexRequest;
 use Inertia\Response;
 use Inertia\Inertia;
 
@@ -14,6 +13,7 @@ use App\Http\Resources\CategoryResource;
 use App\Http\Resources\CommentResource;
 use App\Http\Resources\ReactionResource;
 use App\Http\Resources\ThreadResource;
+use Illuminate\Http\RedirectResponse;
 use App\Models\Category;
 use App\Models\Reaction;
 use App\Models\Thread;
