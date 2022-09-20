@@ -52,8 +52,6 @@ class Category extends Model {
      * @return Collection
      */
     public static function assignableByUser(): Collection {
-        return self::whereHas('roles', function ($sq) {
-            $sq->where('roles.id', Auth::user()->role->id);
-        })->get();
+        return self::whereRelation('roles', 'roles.id', Auth::user()->role->id)->get();
     }
 }

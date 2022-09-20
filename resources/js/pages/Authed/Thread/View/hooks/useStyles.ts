@@ -1,7 +1,7 @@
 import useMakeStyles from 'app/hooks/makeStyles';
 
-export const useStyles = () => {
-    return useMakeStyles({
+export const useStyles = () =>
+    useMakeStyles({
         titlePaper: {
             padding: '20px',
             textAlign: 'center',
@@ -36,4 +36,3 @@ export const useStyles = () => {
             width: '100%',
         },
     });
-};

@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Thread;
 
-use App\Models\Category;
 use Illuminate\Foundation\Http\FormRequest;
 
+use App\Models\Category;
 use App\Models\Comment;
 use App\Models\Thread;
 use App\Models\Image;
@@ -93,7 +93,7 @@ class StoreRequest extends FormRequest {
     /**
      * Associate categories to the thread.
      *
-     * @param array $categoryIds
+     * @param Thread $thread
      * 
      * @return void
      */
@@ -122,6 +122,7 @@ class StoreRequest extends FormRequest {
             $this->associateCategories($thread);
 
             $comment = $this->storeComment($thread);
+
             $this->storeImages($comment);
         });
 

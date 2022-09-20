@@ -37,7 +37,7 @@ class ThreadController extends Controller {
      *
      * @param StoreRequest
      * 
-     * @return Response
+     * @return RedirectResponse
      */
     public function store(StoreRequest $request): RedirectResponse {
         return redirect()->route('thread.show', ['thread' => $request->createThread()->id]);
@@ -54,7 +54,7 @@ class ThreadController extends Controller {
      */
     public function show(ShowRequest $request, Thread $thread, ?string $page = '1'): Response {
         return Inertia::render('Authed/Thread/View/index', [
-            'comments' => CommentResource::collection($thread->comments()->orderBy('id')->paginate(Thread::$commentsPerPage, page: $page)),
+            'comments' => CommentResource::collection($thread->comments()->orderBy('id')->paginate(Thread::COMMENTS_PER_PAGE, page: $page)),
             'reactions' => ReactionResource::collection(Reaction::all()),
             'thread' => ThreadResource::make($thread),
         ]);
@@ -69,7 +69,7 @@ class ThreadController extends Controller {
      */
     public function getPaginated(GetPaginatedRequest $request) {
         return ThreadResource::collection(
-            Thread::getFiltered($request->get('filter'))->paginate(Thread::$threadsPerPage)
+            Thread::getFiltered($request->get('filter'))->paginate(Thread::THREADS_PER_PAGE)
         );
     }
 }

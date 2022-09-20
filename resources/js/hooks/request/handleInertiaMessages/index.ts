@@ -1,7 +1,8 @@
 import { usePage } from '@inertiajs/inertia-react';
-import { IInertiaProps } from 'app/interfaces';
 import { useSnackbar } from 'notistack';
 import { useEffect } from 'react';
+
+import { IInertiaProps } from 'app/interfaces';
 
 export default function useHandleInertiaMessages() {
     const { enqueueSnackbar } = useSnackbar();

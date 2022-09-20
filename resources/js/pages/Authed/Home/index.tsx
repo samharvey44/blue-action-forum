@@ -1,8 +1,8 @@
 import { Add, History, Search, Whatshot } from '@mui/icons-material';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Link } from '@inertiajs/inertia-react';
-import { Inertia } from '@inertiajs/inertia';
 import { useSnackbar } from 'notistack';
+import axios from 'axios';
 import {
     ButtonGroup,
     Typography,
@@ -18,9 +18,9 @@ import AppContainer from 'app/components/layout/AppContainer';
 import AuthedContainer from '../components/AuthedContainer';
 import useGetPeriodOfDay from 'app/hooks/periodOfDay/get';
 import useGetAuthedUser from 'app/hooks/getAuthedUser';
+import { IPaginatedThreads } from 'app/interfaces';
 import { useStyles } from './hooks/useStyles';
 import { EFIlter } from './enums';
-import { IThread } from 'app/interfaces';
 
 const Home: React.FC = () => {
     const { enqueueSnackbar } = useSnackbar();
@@ -29,31 +29,30 @@ const Home: React.FC = () => {
     const styles = useStyles();
 
     const [currentFilter, setCurrentFilter] = useState<EFIlter>(EFIlter.Hot);
-    const [currentThreads, setCurrentThreads] = useState<IThread[]>([]);
     const [threadsLoading, setThreadsLoading] = useState(true);
     const [threadSearch, setThreadSearch] = useState('');
-
     const [currentPage, setCurrentPage] = useState(1);
+    const [currentThreads, setCurrentThreads] =
+        useState<IPaginatedThreads | null>(null);
 
     const handleGetThreads = useCallback(() => {
-        Inertia.get(
-            '/threads',
-            {
-                page: currentPage,
-                filter: currentFilter,
-            },
-            {
-                onSuccess: (data) => {
-                    console.log(data);
+        axios
+            .get('/threads', {
+                params: {
+                    page: currentPage,
+                    filter: currentFilter,
                 },
+            })
+            .then(({ data }) => {
+                setCurrentThreads(data);
 
-                onError: () => {
-                    enqueueSnackbar('Failed to get threads!', {
-                        variant: 'error',
-                    });
-                },
-            },
-        );
+                setThreadsLoading(false);
+            })
+            .catch(() => {
+                enqueueSnackbar('Failed to get threads!', {
+                    variant: 'error',
+                });
+            });
     }, [enqueueSnackbar, currentPage, currentFilter]);
 
     useEffect(() => {

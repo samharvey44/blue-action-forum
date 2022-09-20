@@ -37,8 +37,8 @@ class ReactRequest extends FormRequest {
      * @return ?CommentReaction
      */
     public function findExistingReaction(Comment $comment): ?CommentReaction {
-        $commentReaction = CommentReaction::whereHas('user', fn ($sq) => $sq->where('id', Auth::id()))
-            ->whereHas('comment', fn ($sq) => $sq->where('id', $comment->id))
+        $commentReaction = CommentReaction::whereRelation('user', 'id', Auth::id())
+            ->whereRelation('comment', 'id', $comment->id)
             ->first();
 
         return $commentReaction;

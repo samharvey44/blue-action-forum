@@ -15,6 +15,7 @@ use InvalidArgumentException;
 
 class Thread extends Model {
     use HasReadReceipts, HasCreator;
+
     /**
      * The attributes that are mass assignable.
      * 
@@ -39,14 +40,14 @@ class Thread extends Model {
      * 
      * @var int
      */
-    public static int $threadsPerPage = 20;
+    public const THREADS_PER_PAGE = 15;
 
     /**
      * The number of comments to display per page.
      * 
      * @var int
      */
-    public static int $commentsPerPage = 15;
+    public const COMMENTS_PER_PAGE = 10;
 
     /**
      * The comments within this thread.
@@ -58,11 +59,9 @@ class Thread extends Model {
     }
 
     /**
-     * Get a query builder of threads based on the current filter.
-     * 
-     * @param string $filter The filter to retrieve threads by.
-     * 
-     * @return Builder The filtered query builder instance.
+     * The categories for this thread.
+     *
+     * @return BelongsToMany
      */
     public function categories(): BelongsToMany {
         return $this->belongsToMany(Category::class, 'thread_categories', 'thread_id', 'category_id')->withTimestamps();
