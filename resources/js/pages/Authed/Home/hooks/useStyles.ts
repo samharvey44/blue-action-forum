@@ -64,6 +64,10 @@ export const useStyles = () => {
             marginLeft: 'auto',
         },
 
+        clearButton: {
+            marginLeft: '10px',
+        },
+
         loadingContainer: {
             display: 'flex',
             justifyContent: 'center',

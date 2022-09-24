@@ -20,6 +20,7 @@ class ThreadResource extends JsonResource {
             'mostRecentComment' => $this->whenLoaded('comments', fn () => $this->mostRecentComment()),
             'categories' => CategoryResource::collection($this->categories),
             'creator' => UserResource::make($this->creator),
+            'isUnread' => $this->isUnread(),
         ];
     }
 }

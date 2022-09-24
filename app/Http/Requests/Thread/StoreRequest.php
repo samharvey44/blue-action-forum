@@ -40,6 +40,17 @@ class StoreRequest extends FormRequest {
     }
 
     /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages(): array {
+        return [
+            'categories.required' => 'You must select at least one category.',
+        ];
+    }
+
+    /**
      * Validate the provided category ids.
      *
      * @param array $categoryIds

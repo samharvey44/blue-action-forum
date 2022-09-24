@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Inertia\Response;
 use Inertia\Inertia;
 
 use App\Http\Requests\Thread\GetPaginatedRequest;
+use App\Http\Requests\Thread\MarkAsReadRequest;
 use App\Http\Requests\Thread\IndexRequest;
 use App\Http\Requests\Thread\StoreRequest;
 use App\Http\Requests\Thread\ShowRequest;
 use App\Http\Resources\CategoryResource;
-use App\Http\Resources\CommentResource;
 use App\Http\Resources\ReactionResource;
+use App\Http\Resources\CommentResource;
 use App\Http\Resources\ThreadResource;
 use App\Models\Category;
 use App\Models\Reaction;
@@ -67,12 +71,28 @@ class ThreadController extends Controller {
      * 
      * @return Collection
      */
-    public function getPaginated(GetPaginatedRequest $request) {
+    public function getPaginated(GetPaginatedRequest $request): AnonymousResourceCollection {
         return ThreadResource::collection(
             Thread::getFiltered(
                 $request->get('filter'),
                 $request->get('search')
             )->with('comments')->paginate(Thread::THREADS_PER_PAGE)
         );
+    }
+
+    /**
+     * Mark all of the requested thread's comments as read.
+     *
+     * @param MarkAsReadRequest $request
+     * @param Thread $thread
+     * 
+     * @return void
+     */
+    public function markAsRead(MarkAsReadRequest $request, Thread $thread): void {
+        abort_unless($thread->isUnread(), 422, 'Thread is already read!');
+
+        DB::transaction(function () use ($thread) {
+            $thread->comments->each(fn ($comment) => $comment->markAsRead());
+        });
     }
 }

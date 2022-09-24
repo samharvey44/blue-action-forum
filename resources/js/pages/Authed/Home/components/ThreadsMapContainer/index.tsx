@@ -1,14 +1,24 @@
-import { Box, Button, Chip, Grid, Paper, Typography } from '@mui/material';
-import { Circle, Visibility } from '@mui/icons-material';
+import { Circle, NotificationsActive, Visibility } from '@mui/icons-material';
 import { Link } from '@inertiajs/inertia-react';
 import { Inertia } from '@inertiajs/inertia';
+import { useSnackbar } from 'notistack';
+import React, { useState } from 'react';
 import moment from 'moment';
-import React from 'react';
+import {
+    Box,
+    Button,
+    Chip,
+    Grid,
+    Paper,
+    Tooltip,
+    Typography,
+} from '@mui/material';
 
 import PaginationContainer from './components/PaginationContainer';
 import { useStyles } from './hooks/useStyles';
 import { ellipsise } from 'app/helpers';
 import { IProps } from './interfaces';
+import axios from 'axios';
 
 const ThreadsMapContainer: React.FC<IProps> = ({
     threads,
@@ -16,7 +26,11 @@ const ThreadsMapContainer: React.FC<IProps> = ({
     filter,
     search,
 }) => {
+    const { enqueueSnackbar } = useSnackbar();
     const styles = useStyles();
+
+    const [markingAsRead, setMarkingAsRead] = useState<boolean>(false);
+    const [markedAsRead, setMarkedAsRead] = useState<number[]>([]);
 
     // We'll remember our search terms so that the user is returned to the
     // same page of results when they navigate back.
@@ -31,6 +45,30 @@ const ThreadsMapContainer: React.FC<IProps> = ({
         );
     };
 
+    const markAsRead = (threadId: number) => {
+        if (markedAsRead.find((id) => id === threadId)) {
+            return;
+        }
+
+        axios
+            .patch(`/threads/${threadId}/markAsRead`)
+            .then(() => {
+                enqueueSnackbar('Thread was marked as read.', {
+                    variant: 'success',
+                });
+
+                setMarkedAsRead((arr) => [...arr, threadId]);
+            })
+            .catch(() => {
+                enqueueSnackbar('Something went wrong!', {
+                    variant: 'error',
+                });
+            })
+            .finally(() => {
+                setMarkingAsRead(false);
+            });
+    };
+
     return (
         <Grid container spacing={3}>
             {threads?.data.map((thread) => (
@@ -39,6 +77,32 @@ const ThreadsMapContainer: React.FC<IProps> = ({
                         <Grid container spacing={2}>
                             <Grid item xs={12} md={6}>
                                 <Box sx={styles.threadContentContainer}>
+                                    {thread.isUnread &&
+                                        !markedAsRead.find(
+                                            (id) => id === thread.id,
+                                        ) && (
+                                            <Tooltip title="Thread has unread comments! Click to dismiss">
+                                                <Box
+                                                    sx={styles.unreadContainer}
+                                                    onClick={() => {
+                                                        if (markingAsRead) {
+                                                            return;
+                                                        }
+
+                                                        setMarkingAsRead(true);
+
+                                                        markAsRead(thread.id);
+                                                    }}
+                                                >
+                                                    <NotificationsActive
+                                                        style={
+                                                            styles.unreadIcon
+                                                        }
+                                                    />
+                                                </Box>
+                                            </Tooltip>
+                                        )}
+
                                     <Typography variant="h5">
                                         <b>{thread.title}</b>
                                     </Typography>

@@ -68,6 +68,7 @@ Route::middleware('throttle:60,1')->group(function () {
                     });
 
                     Route::prefix('/{thread}')->group(function () {
+                        Route::patch('/markAsRead', [ThreadController::class, 'markAsRead']);
                         Route::post('/comment', [CommentController::class, 'store']);
 
                         Route::get('/{page?}', [ThreadController::class, 'show'])->name('thread.show');

@@ -50,6 +50,7 @@ export interface IThread {
     creator: IUser;
     categories: ICategory[];
     mostRecentComment: IComment | null;
+    isUnread: boolean;
 }
 
 export interface ICategory {

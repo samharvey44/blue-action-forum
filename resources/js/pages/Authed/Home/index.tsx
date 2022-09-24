@@ -1,5 +1,5 @@
-import { Add, History, Search, Whatshot } from '@mui/icons-material';
-import React, { useCallback, useEffect, useState } from 'react';
+import { Add, Clear, History, Search, Whatshot } from '@mui/icons-material';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link } from '@inertiajs/inertia-react';
 import { Inertia } from '@inertiajs/inertia';
 import { useSnackbar } from 'notistack';
@@ -84,7 +84,74 @@ const Home: React.FC = () => {
 
         setInitialLoad(false);
     }, [currentFilter, handleGetThreads, initialLoad, threadSearch]);
-    ``;
+
+    const searchContainer = useMemo(
+        () => (
+            <Grid container spacing={2}>
+                <Grid item xs={12} md={9}>
+                    <Box sx={styles.searchContainer}>
+                        <TextField
+                            value={threadSearch}
+                            onChange={({ target: { value } }) => {
+                                setThreadSearch(value);
+                            }}
+                            variant="filled"
+                            label="Search for a thread..."
+                            sx={styles.searchField}
+                        />
+                    </Box>
+                </Grid>
+
+                <Grid item xs={12} md={3}>
+                    <Box sx={styles.searchContainer}>
+                        <Button
+                            sx={styles.searchButton}
+                            variant="contained"
+                            onClick={() => {
+                                handleGetThreads(
+                                    currentThreads?.meta.current_page ?? 1,
+                                    currentFilter,
+                                    threadSearch,
+                                );
+                            }}
+                        >
+                            {<Search />}
+                        </Button>
+
+                        <Button
+                            sx={styles.clearButton}
+                            variant="contained"
+                            onClick={() => {
+                                if (threadSearch === '') {
+                                    return;
+                                }
+
+                                setThreadSearch('');
+
+                                handleGetThreads(
+                                    currentThreads?.meta.current_page ?? 1,
+                                    currentFilter,
+                                    '',
+                                );
+                            }}
+                        >
+                            {<Clear />}
+                        </Button>
+                    </Box>
+                </Grid>
+            </Grid>
+        ),
+        [
+            currentThreads?.meta.current_page,
+            styles.searchContainer,
+            styles.searchButton,
+            styles.searchField,
+            styles.clearButton,
+            handleGetThreads,
+            currentFilter,
+            threadSearch,
+        ],
+    );
 
     return (
         <AppContainer>
@@ -130,47 +197,11 @@ const Home: React.FC = () => {
                     <Grid item xs={12}>
                         <Paper sx={styles.filtersPaper}>
                             <Grid container spacing={3}>
-                                <Grid item xs={12} md={6}>
-                                    <Grid container spacing={2}>
-                                        <Grid item xs={9} md={10}>
-                                            <Box sx={styles.searchContainer}>
-                                                <TextField
-                                                    value={threadSearch}
-                                                    onChange={({
-                                                        target: { value },
-                                                    }) => {
-                                                        setThreadSearch(value);
-                                                    }}
-                                                    variant="filled"
-                                                    label="Search for a thread..."
-                                                    sx={styles.searchField}
-                                                />
-                                            </Box>
-                                        </Grid>
-
-                                        <Grid item xs={3} md={2}>
-                                            <Box sx={styles.searchContainer}>
-                                                <Button
-                                                    sx={styles.searchButton}
-                                                    variant="contained"
-                                                    onClick={() => {
-                                                        handleGetThreads(
-                                                            currentThreads?.meta
-                                                                .current_page ??
-                                                                1,
-                                                            currentFilter,
-                                                            threadSearch,
-                                                        );
-                                                    }}
-                                                >
-                                                    {<Search />}
-                                                </Button>
-                                            </Box>
-                                        </Grid>
-                                    </Grid>
+                                <Grid item xs={12} lg={6}>
+                                    {searchContainer}
                                 </Grid>
 
-                                <Grid item xs={12} md={6}>
+                                <Grid item xs={12} lg={6}>
                                     <Box sx={styles.buttonGroupContainer}>
                                         <ButtonGroup>
                                             <Button

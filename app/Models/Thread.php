@@ -6,16 +6,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 
 use App\Http\Resources\CommentResource;
-use App\Models\Traits\HasReadReceipts;
 use App\Models\Traits\HasCreator;
 
 use InvalidArgumentException;
 
 class Thread extends Model {
-    use HasReadReceipts, HasCreator;
+    use HasCreator;
 
     /**
      * The attributes that are mass assignable.
@@ -122,5 +120,16 @@ class Thread extends Model {
                 fn ($a, $b) => $a->id <= $b->id,
             ])->first()
         );
+    }
+
+    /**
+     * Return whether this thread contains unread comments.
+     *
+     * @return bool Whether this thread contains unread comments for the user.
+     */
+    public function isUnread(): bool {
+        $hasUnreadComment = (bool)$this->comments->filter(fn ($comment) => $comment->isUnread())->count();
+
+        return $hasUnreadComment;
     }
 }
