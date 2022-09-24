@@ -22,10 +22,8 @@ const AddCommentContainer: React.FC<IProps> = ({ threadId }) => {
     const form = useFormik({
         initialValues: formInitialValues,
         validationSchema: formSchema,
-        onSubmit: (values, { resetForm }) => {
+        onSubmit: ({ content }, { resetForm }) => {
             setSubmitting(true);
-
-            const { content } = values;
 
             Inertia.post(
                 `/threads/${threadId}/comment`,
@@ -63,7 +61,7 @@ const AddCommentContainer: React.FC<IProps> = ({ threadId }) => {
 
         const filesArr = Object.values(files);
 
-        if (length > 5 || [...uploadedFiles, ...filesArr].length > 5) {
+        if ([...uploadedFiles, ...filesArr].length > 5) {
             return enqueueSnackbar(
                 'You may only upload a maximum of 5 images per comment.',
                 {
@@ -74,13 +72,11 @@ const AddCommentContainer: React.FC<IProps> = ({ threadId }) => {
 
         setUploadedFiles((currFiles) => [
             ...currFiles,
-            ...filesArr.map((file) => {
-                return {
-                    file: file,
-                    key: Math.random(),
-                    displayUrl: URL.createObjectURL(file),
-                };
-            }),
+            ...filesArr.map((file) => ({
+                file: file,
+                key: Math.random(),
+                displayUrl: URL.createObjectURL(file),
+            })),
         ]);
 
         enqueueSnackbar('Uploaded file(s) successfully.', {
@@ -101,42 +97,44 @@ const AddCommentContainer: React.FC<IProps> = ({ threadId }) => {
         [enqueueSnackbar],
     );
 
-    const mappedFiles = useMemo(() => {
-        return uploadedFiles.map(({ displayUrl, key }, index, self) => (
-            <Box
-                key={key}
-                sx={
-                    index === self.length - 1
-                        ? styles.uploadedImageContainerEnd
-                        : styles.uploadedImageContainer
-                }
-            >
+    const mappedFiles = useMemo(
+        () =>
+            uploadedFiles.map(({ displayUrl, key }, index, self) => (
                 <Box
-                    component="img"
-                    sx={styles.uploadedFile}
-                    src={displayUrl}
-                    alt="Uploaded file"
-                />
-
-                <Box
-                    sx={styles.badge}
-                    onClick={() => {
-                        handleFileRemove(key);
-                    }}
+                    key={key}
+                    sx={
+                        index === self.length - 1
+                            ? styles.uploadedImageContainerEnd
+                            : styles.uploadedImageContainer
+                    }
                 >
-                    <Clear sx={styles.deleteIcon} />
+                    <Box
+                        component="img"
+                        sx={styles.uploadedFile}
+                        src={displayUrl}
+                        alt="Uploaded file"
+                    />
+
+                    <Box
+                        sx={styles.badge}
+                        onClick={() => {
+                            handleFileRemove(key);
+                        }}
+                    >
+                        <Clear sx={styles.deleteIcon} />
+                    </Box>
                 </Box>
-            </Box>
-        ));
-    }, [
-        handleFileRemove,
-        styles.badge,
-        styles.deleteIcon,
-        styles.uploadedFile,
-        styles.uploadedImageContainer,
-        styles.uploadedImageContainerEnd,
-        uploadedFiles,
-    ]);
+            )),
+        [
+            handleFileRemove,
+            styles.badge,
+            styles.deleteIcon,
+            styles.uploadedFile,
+            styles.uploadedImageContainer,
+            styles.uploadedImageContainerEnd,
+            uploadedFiles,
+        ],
+    );
 
     return (
         <form onSubmit={form.handleSubmit}>

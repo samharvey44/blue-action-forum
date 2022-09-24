@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Read extends Model {
     /**
@@ -32,5 +33,14 @@ class Read extends Model {
      */
     public function user(): BelongsTo {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * Return whether this read is by the authed user.
+     * 
+     * @return bool Whether this read is by the authed user.
+     */
+    public function isByUser(): bool {
+        return $this->user->id === Auth::id();
     }
 }

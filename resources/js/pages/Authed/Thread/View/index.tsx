@@ -29,7 +29,7 @@ const ViewThread: React.FC = () => {
 
     return (
         <AppContainer>
-            <AuthedContainer withBackButton customReturnLink="/home">
+            <AuthedContainer withBackButton>
                 <Paper sx={styles.titlePaper}>
                     <Typography variant="h3">{thread.title}</Typography>
 

@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Thread;
 
-use App\Models\Category;
 use Illuminate\Foundation\Http\FormRequest;
 
+use App\Models\Category;
 use App\Models\Comment;
 use App\Models\Thread;
 use App\Models\Image;
@@ -35,7 +35,18 @@ class StoreRequest extends FormRequest {
             'images.*' => 'required|' . Image::getValidationString(),
             'categories' => 'required|array|min:1',
             // We won't check whether the id exists, since we are going to do this later on.
-            'categories.*' => 'required|numeric|distinct'
+            'categories.*' => 'required|int|distinct'
+        ];
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages(): array {
+        return [
+            'categories.required' => 'You must select at least one category.',
         ];
     }
 
@@ -93,7 +104,7 @@ class StoreRequest extends FormRequest {
     /**
      * Associate categories to the thread.
      *
-     * @param array $categoryIds
+     * @param Thread $thread
      * 
      * @return void
      */
@@ -122,6 +133,7 @@ class StoreRequest extends FormRequest {
             $this->associateCategories($thread);
 
             $comment = $this->storeComment($thread);
+
             $this->storeImages($comment);
         });
 

@@ -25,7 +25,7 @@ trait HasReadReceipts {
      * 
      * @return void
      */
-    public function markAsRead(?User $by): void {
+    public function markAsRead(?User $by = null): void {
         $rr = Read::make([]);
 
         $rr->user()->associate($by ?? Auth::user());

@@ -60,4 +60,13 @@ class Comment extends Model {
     public function images(): MorphMany {
         return $this->morphMany(Image::class, 'imageable');
     }
+
+    /**
+     * Return whether this comment is currently unread.
+     *
+     * @return bool Whether this comment has been read by the user.
+     */
+    public function isUnread(): bool {
+        return !(bool)$this->reads->filter(fn ($read) => $read->isByUser())->count();
+    }
 }

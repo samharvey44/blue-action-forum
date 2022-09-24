@@ -1,8 +1,7 @@
 import useMakeStyles from 'app/hooks/makeStyles';
-import { PRIMARY } from 'app/globals/colors';
 
-export const useStyles = () => {
-    return useMakeStyles({
+export const useStyles = () =>
+    useMakeStyles({
         paginationContainer: {
             display: 'flex',
             justifyContent: 'center',
@@ -20,4 +19,3 @@ export const useStyles = () => {
             margin: '10px',
         },
     });
-};

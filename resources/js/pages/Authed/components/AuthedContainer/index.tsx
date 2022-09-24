@@ -1,11 +1,11 @@
 import { KeyboardReturn } from '@mui/icons-material';
 import { Box, Grow, Button } from '@mui/material';
+import { Link } from '@inertiajs/inertia-react';
 import React from 'react';
 
 import useHandleInertiaMessages from 'app/hooks/request/handleInertiaMessages';
 import { useStyles } from './hooks/useStyles';
 import { IProps } from './interfaces';
-import { Link } from '@inertiajs/inertia-react';
 
 const AuthedContainer: React.FC<IProps> = ({
     withBackButton,

@@ -1,5 +1,6 @@
-import { Add, Circle, Clear, FileUpload } from '@mui/icons-material';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { Add, Circle, Clear, FileUpload } from '@mui/icons-material';
+import { usePage } from '@inertiajs/inertia-react';
 import { Inertia } from '@inertiajs/inertia';
 import { useSnackbar } from 'notistack';
 import { useFormik } from 'formik';
@@ -17,7 +18,6 @@ import { IInertiaProps, IPreviewableFile } from 'app/interfaces';
 import AuthedContainer from '../../components/AuthedContainer';
 import AppContainer from 'app/components/layout/AppContainer';
 import { formInitialValues } from './form/initialValues';
-import { usePage } from '@inertiajs/inertia-react';
 import { useStyles } from './hooks/useStyles';
 import { formSchema } from './form/schema';
 import { IProps } from './interfaces';
@@ -36,10 +36,8 @@ const CreateThread: React.FC = () => {
     const form = useFormik({
         initialValues: formInitialValues,
         validationSchema: formSchema,
-        onSubmit: (values) => {
+        onSubmit: ({ title, content }) => {
             setSubmitting(true);
-
-            const { title, content } = values;
 
             Inertia.post(
                 '/threads/create',
@@ -76,7 +74,7 @@ const CreateThread: React.FC = () => {
 
         const filesArr = Object.values(files);
 
-        if (length > 5 || [...uploadedFiles, ...filesArr].length > 5) {
+        if ([...uploadedFiles, ...filesArr].length > 5) {
             return enqueueSnackbar(
                 'You may only upload a maximum of 5 images per comment.',
                 {
@@ -87,13 +85,11 @@ const CreateThread: React.FC = () => {
 
         setUploadedFiles((currFiles) => [
             ...currFiles,
-            ...filesArr.map((file) => {
-                return {
-                    file: file,
-                    key: Math.random(),
-                    displayUrl: URL.createObjectURL(file),
-                };
-            }),
+            ...filesArr.map((file) => ({
+                file: file,
+                key: Math.random(),
+                displayUrl: URL.createObjectURL(file),
+            })),
         ]);
 
         enqueueSnackbar('Uploaded file(s) successfully.', {
@@ -114,71 +110,75 @@ const CreateThread: React.FC = () => {
         [enqueueSnackbar],
     );
 
-    const mappedCategories = useMemo(() => {
-        return categories.map(({ id, name, displayColor }) => (
-            <Chip
-                icon={
-                    <Circle
-                        sx={{
-                            color: `${displayColor} !important`,
-                        }}
-                    />
-                }
-                onClick={() => {
-                    setSelectedCategories((selected) => {
-                        return selected.find((c) => c === id)
-                            ? selected.filter((c) => c !== id)
-                            : [...selected, id];
-                    });
-                }}
-                variant={
-                    selectedCategories.find((c) => c === id)
-                        ? 'filled'
-                        : 'outlined'
-                }
-                sx={styles.category}
-                label={name}
-                key={id}
-            />
-        ));
-    }, [categories, selectedCategories, styles.category]);
-
-    const mappedFiles = useMemo(() => {
-        return uploadedFiles.map(({ displayUrl, key }, index, self) => (
-            <Box
-                key={key}
-                sx={
-                    index === self.length - 1
-                        ? styles.uploadedImageContainerEnd
-                        : styles.uploadedImageContainer
-                }
-            >
-                <Box
-                    component="img"
-                    sx={styles.uploadedFile}
-                    src={displayUrl}
-                    alt="Uploaded file"
-                />
-
-                <Box
-                    sx={styles.badge}
+    const mappedCategories = useMemo(
+        () =>
+            categories.map(({ id, name, displayColor }) => (
+                <Chip
+                    icon={
+                        <Circle
+                            sx={{
+                                color: `${displayColor} !important`,
+                            }}
+                        />
+                    }
                     onClick={() => {
-                        handleFileRemove(key);
+                        setSelectedCategories((selected) =>
+                            selected.find((c) => c === id)
+                                ? selected.filter((c) => c !== id)
+                                : [...selected, id],
+                        );
                     }}
+                    variant={
+                        selectedCategories.find((c) => c === id)
+                            ? 'filled'
+                            : 'outlined'
+                    }
+                    sx={styles.category}
+                    label={name}
+                    key={id}
+                />
+            )),
+        [categories, selectedCategories, styles.category],
+    );
+
+    const mappedFiles = useMemo(
+        () =>
+            uploadedFiles.map(({ displayUrl, key }, index, self) => (
+                <Box
+                    key={key}
+                    sx={
+                        index === self.length - 1
+                            ? styles.uploadedImageContainerEnd
+                            : styles.uploadedImageContainer
+                    }
                 >
-                    <Clear sx={styles.deleteIcon} />
+                    <Box
+                        component="img"
+                        sx={styles.uploadedFile}
+                        src={displayUrl}
+                        alt="Uploaded file"
+                    />
+
+                    <Box
+                        sx={styles.badge}
+                        onClick={() => {
+                            handleFileRemove(key);
+                        }}
+                    >
+                        <Clear sx={styles.deleteIcon} />
+                    </Box>
                 </Box>
-            </Box>
-        ));
-    }, [
-        handleFileRemove,
-        styles.badge,
-        styles.deleteIcon,
-        styles.uploadedFile,
-        styles.uploadedImageContainer,
-        styles.uploadedImageContainerEnd,
-        uploadedFiles,
-    ]);
+            )),
+        [
+            handleFileRemove,
+            styles.badge,
+            styles.deleteIcon,
+            styles.uploadedFile,
+            styles.uploadedImageContainer,
+            styles.uploadedImageContainerEnd,
+            uploadedFiles,
+        ],
+    );
 
     return (
         <AppContainer>

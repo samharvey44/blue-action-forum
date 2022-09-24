@@ -23,8 +23,9 @@ class GetPaginatedRequest extends FormRequest {
      */
     public function rules(): array {
         return [
-            'page' => 'required|numeric',
+            'page' => 'required|int',
             'filter' => 'required|string',
+            'search' => 'sometimes|nullable|string'
         ];
     }
 }

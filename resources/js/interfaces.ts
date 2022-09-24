@@ -49,7 +49,8 @@ export interface IThread {
     title: string;
     creator: IUser;
     categories: ICategory[];
-    comments?: IComment[];
+    mostRecentComment: IComment | null;
+    isUnread: boolean;
 }
 
 export interface ICategory {
@@ -75,6 +76,16 @@ export interface IReaction {
 
 export interface IPaginatedComments {
     data: IComment[];
+    meta: {
+        current_page: number;
+        last_page: number;
+        per_page: number;
+        total: number;
+    };
+}
+
+export interface IPaginatedThreads {
+    data: IThread[];
     meta: {
         current_page: number;
         last_page: number;
