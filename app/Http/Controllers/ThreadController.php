@@ -69,7 +69,10 @@ class ThreadController extends Controller {
      */
     public function getPaginated(GetPaginatedRequest $request) {
         return ThreadResource::collection(
-            Thread::getFiltered($request->get('filter'))->paginate(Thread::THREADS_PER_PAGE)
+            Thread::getFiltered(
+                $request->get('filter'),
+                $request->get('search')
+            )->with('comments')->paginate(Thread::THREADS_PER_PAGE)
         );
     }
 }

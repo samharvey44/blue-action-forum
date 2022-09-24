@@ -1,4 +1,4 @@
-export enum EFIlter {
+export enum EFilter {
     Hot = 'hot',
     New = 'new',
 }

@@ -49,7 +49,7 @@ export interface IThread {
     title: string;
     creator: IUser;
     categories: ICategory[];
-    comments?: IComment[];
+    mostRecentComment: IComment | null;
 }
 
 export interface ICategory {

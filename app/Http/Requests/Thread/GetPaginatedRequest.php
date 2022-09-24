@@ -25,6 +25,7 @@ class GetPaginatedRequest extends FormRequest {
         return [
             'page' => 'required|int',
             'filter' => 'required|string',
+            'search' => 'sometimes|nullable|string'
         ];
     }
 }

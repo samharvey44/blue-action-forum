@@ -35,7 +35,7 @@ class StoreRequest extends FormRequest {
             'images.*' => 'required|' . Image::getValidationString(),
             'categories' => 'required|array|min:1',
             // We won't check whether the id exists, since we are going to do this later on.
-            'categories.*' => 'required|numeric|distinct'
+            'categories.*' => 'required|int|distinct'
         ];
     }
 

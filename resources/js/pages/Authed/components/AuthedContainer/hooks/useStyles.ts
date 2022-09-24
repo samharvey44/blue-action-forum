@@ -18,7 +18,7 @@ export const useStyles = () => {
 
         centerContainer: {
             padding: '20px',
-            marginTop: '50px',
+            marginTop: '15px',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',

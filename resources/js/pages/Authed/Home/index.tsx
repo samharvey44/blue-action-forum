@@ -1,6 +1,7 @@
 import { Add, History, Search, Whatshot } from '@mui/icons-material';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Link } from '@inertiajs/inertia-react';
+import { Inertia } from '@inertiajs/inertia';
 import { useSnackbar } from 'notistack';
 import axios from 'axios';
 import {
@@ -14,13 +15,15 @@ import {
     CircularProgress,
 } from '@mui/material';
 
+import ThreadsMapContainer from './components/ThreadsMapContainer';
 import AppContainer from 'app/components/layout/AppContainer';
 import AuthedContainer from '../components/AuthedContainer';
 import useGetPeriodOfDay from 'app/hooks/periodOfDay/get';
 import useGetAuthedUser from 'app/hooks/getAuthedUser';
 import { IPaginatedThreads } from 'app/interfaces';
+import { IRememberedProps } from './interfaces';
 import { useStyles } from './hooks/useStyles';
-import { EFIlter } from './enums';
+import { EFilter } from './enums';
 
 const Home: React.FC = () => {
     const { enqueueSnackbar } = useSnackbar();
@@ -28,36 +31,60 @@ const Home: React.FC = () => {
     const authedUser = useGetAuthedUser();
     const styles = useStyles();
 
-    const [currentFilter, setCurrentFilter] = useState<EFIlter>(EFIlter.Hot);
+    const [currentFilter, setCurrentFilter] = useState<EFilter>(EFilter.Hot);
     const [threadsLoading, setThreadsLoading] = useState(true);
     const [threadSearch, setThreadSearch] = useState('');
-    const [currentPage, setCurrentPage] = useState(1);
+    const [initialLoad, setInitialLoad] = useState(true);
     const [currentThreads, setCurrentThreads] =
         useState<IPaginatedThreads | null>(null);
 
-    const handleGetThreads = useCallback(() => {
-        axios
-            .get('/threads', {
-                params: {
-                    page: currentPage,
-                    filter: currentFilter,
-                },
-            })
-            .then(({ data }) => {
-                setCurrentThreads(data);
+    const handleGetThreads = useCallback(
+        (page: number, filter: EFilter, search?: string) => {
+            setThreadsLoading(true);
 
-                setThreadsLoading(false);
-            })
-            .catch(() => {
-                enqueueSnackbar('Failed to get threads!', {
-                    variant: 'error',
+            axios
+                .get('/threads', {
+                    params: {
+                        page,
+                        filter,
+                        search,
+                    },
+                })
+                .then(({ data }) => {
+                    setCurrentThreads(data);
+
+                    setThreadsLoading(false);
+                })
+                .catch(() => {
+                    enqueueSnackbar('Failed to get threads!', {
+                        variant: 'error',
+                    });
                 });
-            });
-    }, [enqueueSnackbar, currentPage, currentFilter]);
+        },
+        [enqueueSnackbar],
+    );
 
     useEffect(() => {
-        handleGetThreads();
-    }, [handleGetThreads]);
+        if (!initialLoad) {
+            return;
+        }
+
+        const props = Inertia.restore('ajaxProps') as IRememberedProps;
+
+        if (props) {
+            const { page, filter, search } = props;
+
+            setCurrentFilter(filter);
+            setThreadSearch(search);
+
+            handleGetThreads(page, filter, search);
+        } else {
+            handleGetThreads(1, currentFilter, threadSearch);
+        }
+
+        setInitialLoad(false);
+    }, [currentFilter, handleGetThreads, initialLoad, threadSearch]);
+    ``;
 
     return (
         <AppContainer>
@@ -109,10 +136,10 @@ const Home: React.FC = () => {
                                             <Box sx={styles.searchContainer}>
                                                 <TextField
                                                     value={threadSearch}
-                                                    onChange={(e) => {
-                                                        setThreadSearch(
-                                                            e.target.value,
-                                                        );
+                                                    onChange={({
+                                                        target: { value },
+                                                    }) => {
+                                                        setThreadSearch(value);
                                                     }}
                                                     variant="filled"
                                                     label="Search for a thread..."
@@ -126,6 +153,15 @@ const Home: React.FC = () => {
                                                 <Button
                                                     sx={styles.searchButton}
                                                     variant="contained"
+                                                    onClick={() => {
+                                                        handleGetThreads(
+                                                            currentThreads?.meta
+                                                                .current_page ??
+                                                                1,
+                                                            currentFilter,
+                                                            threadSearch,
+                                                        );
+                                                    }}
                                                 >
                                                     {<Search />}
                                                 </Button>
@@ -140,14 +176,21 @@ const Home: React.FC = () => {
                                             <Button
                                                 variant={
                                                     currentFilter ===
-                                                    EFIlter.Hot
+                                                    EFilter.Hot
                                                         ? 'contained'
                                                         : 'outlined'
                                                 }
                                                 startIcon={<Whatshot />}
                                                 onClick={() => {
+                                                    handleGetThreads(
+                                                        currentThreads?.meta
+                                                            .current_page ?? 1,
+                                                        EFilter.Hot,
+                                                        threadSearch,
+                                                    );
+
                                                     setCurrentFilter(
-                                                        EFIlter.Hot,
+                                                        EFilter.Hot,
                                                     );
                                                 }}
                                             >
@@ -157,14 +200,21 @@ const Home: React.FC = () => {
                                             <Button
                                                 variant={
                                                     currentFilter ===
-                                                    EFIlter.New
+                                                    EFilter.New
                                                         ? 'contained'
                                                         : 'outlined'
                                                 }
                                                 startIcon={<History />}
                                                 onClick={() => {
+                                                    handleGetThreads(
+                                                        currentThreads?.meta
+                                                            .current_page ?? 1,
+                                                        EFilter.New,
+                                                        threadSearch,
+                                                    );
+
                                                     setCurrentFilter(
-                                                        EFIlter.New,
+                                                        EFilter.New,
                                                     );
                                                 }}
                                             >
@@ -189,7 +239,14 @@ const Home: React.FC = () => {
                                     Threads loading...
                                 </Typography>
                             </Box>
-                        ) : null}
+                        ) : (
+                            <ThreadsMapContainer
+                                threads={currentThreads}
+                                handleGetThreads={handleGetThreads}
+                                filter={currentFilter}
+                                search={threadSearch}
+                            />
+                        )}
                     </Grid>
                 </Grid>
             </AuthedContainer>
