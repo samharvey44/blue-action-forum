@@ -16,6 +16,8 @@ class ThreadResource extends JsonResource {
             'id' => $this->id,
             'createdAt' => $this->created_at,
             'title' => $this->title,
+            'isLocked' => $this->is_locked,
+            'isPinned' => $this->is_pinned,
 
             'mostRecentComment' => $this->whenLoaded('comments', fn () => $this->mostRecentComment()),
             'categories' => CategoryResource::collection($this->categories),

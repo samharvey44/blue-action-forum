@@ -33,6 +33,23 @@ export const useStyles = () => {
             border: `3px solid ${PRIMARY}`,
         },
 
+        profilePictureContainer: {
+            position: 'relative',
+        },
+
+        creatorBadge: {
+            position: 'absolute',
+            right: 0,
+            top: '-15px',
+            backgroundColor: PRIMARY,
+            borderRadius: '50%',
+            padding: '5px',
+        },
+
+        creatorIcon: {
+            color: 'white',
+        },
+
         roleText: {
             color: PRIMARY,
         },
@@ -140,6 +157,12 @@ export const useStyles = () => {
 
         reactionActive: {
             cursor: 'pointer',
+        },
+
+        reactionActiveUserLeft: {
+            cursor: 'pointer',
+            color: PRIMARY,
+            fontWeight: 'bold',
         },
 
         addCommentGridItem: {

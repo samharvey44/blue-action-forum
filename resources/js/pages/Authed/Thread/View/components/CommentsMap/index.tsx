@@ -2,6 +2,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import React, { useCallback, useState } from 'react';
 import ImageViewer from 'react-simple-image-viewer';
 import { Inertia } from '@inertiajs/inertia';
+import { Edit } from '@mui/icons-material';
 import { Box } from '@mui/system';
 import moment from 'moment';
 import {
@@ -16,13 +17,20 @@ import {
 import PaginationContainer from './components/PaginationContainer';
 import AddCommentContainer from './components/AddCommentContainer';
 import { ICommentReaction, IFile } from 'app/interfaces';
+import useGetAuthedUser from 'app/hooks/getAuthedUser';
 import { useStyles } from './hooks/useStyles';
 import { IProps } from './interfaces';
 
-const CommentsMap: React.FC<IProps> = ({ threadId, comments, reactions }) => {
+const CommentsMap: React.FC<IProps> = ({
+    threadId,
+    comments,
+    reactions,
+    threadCreatorId,
+}) => {
     const [viewingImage, setViewingImage] = useState<IFile | null>(null);
     const [leavingReaction, setLeavingReaction] = useState(false);
 
+    const authedUser = useGetAuthedUser();
     const styles = useStyles();
     const theme = useTheme();
 
@@ -88,14 +96,33 @@ const CommentsMap: React.FC<IProps> = ({ threadId, comments, reactions }) => {
                             {!isMd && (
                                 <Grid item md={3}>
                                     <Paper sx={styles.userPaper}>
-                                        <Avatar
-                                            sx={styles.profilePicture}
-                                            src={
-                                                creator.profile?.profilePicture
-                                                    ?.url ?? undefined
-                                            }
-                                            alt="User's profile picture"
-                                        />
+                                        <Box
+                                            sx={styles.profilePictureContainer}
+                                        >
+                                            <Avatar
+                                                sx={styles.profilePicture}
+                                                src={
+                                                    creator.profile
+                                                        ?.profilePicture?.url ??
+                                                    undefined
+                                                }
+                                                alt="User's profile picture"
+                                            />
+
+                                            {creator.id === threadCreatorId && (
+                                                <Tooltip title="Creator of this thread.">
+                                                    <Box
+                                                        sx={styles.creatorBadge}
+                                                    >
+                                                        <Edit
+                                                            sx={
+                                                                styles.creatorIcon
+                                                            }
+                                                        />
+                                                    </Box>
+                                                </Tooltip>
+                                            )}
+                                        </Box>
 
                                         <Typography variant="h6">
                                             <b>{creator.profile?.username}</b>
@@ -235,7 +262,17 @@ const CommentsMap: React.FC<IProps> = ({ threadId, comments, reactions }) => {
                                                                             <Typography
                                                                                 variant="subtitle2"
                                                                                 style={
-                                                                                    styles.reactionActive
+                                                                                    thisCommentReactions.find(
+                                                                                        (
+                                                                                            cr,
+                                                                                        ) =>
+                                                                                            cr
+                                                                                                .user
+                                                                                                .id ===
+                                                                                            authedUser?.id,
+                                                                                    )
+                                                                                        ? styles.reactionActiveUserLeft
+                                                                                        : styles.reactionActive
                                                                                 }
                                                                             >
                                                                                 {

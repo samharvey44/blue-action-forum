@@ -35,6 +35,16 @@ class Thread extends Model {
     ];
 
     /**
+     * The attributes that should be cast to native types.
+     * 
+     * @var array
+     */
+    protected $casts = [
+        'is_locked' => 'boolean',
+        'is_pinned' => 'boolean',
+    ];
+
+    /**
      * The number of threads to display per page.
      * 
      * @var int
