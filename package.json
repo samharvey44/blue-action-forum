@@ -39,7 +39,7 @@
         "@mui/icons-material": "^5.5.1",
         "@mui/material": "^5.4.4",
         "@types/jest": "^27.4.1",
-        "@types/node": "^17.0.21",
+        "@types/node": "^18.7.23",
         "@types/react": "^17.0.39",
         "@types/react-dom": "^17.0.11",
         "formik": "^2.2.9",
