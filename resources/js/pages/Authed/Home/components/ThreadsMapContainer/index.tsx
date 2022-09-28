@@ -1,9 +1,9 @@
-import { Circle, NotificationsActive, Visibility } from '@mui/icons-material';
 import { Link } from '@inertiajs/inertia-react';
 import { Inertia } from '@inertiajs/inertia';
 import { useSnackbar } from 'notistack';
 import React, { useState } from 'react';
 import moment from 'moment';
+import axios from 'axios';
 import {
     Box,
     Button,
@@ -13,12 +13,18 @@ import {
     Tooltip,
     Typography,
 } from '@mui/material';
+import {
+    NotificationsActive,
+    Visibility,
+    PushPin,
+    Circle,
+    Lock,
+} from '@mui/icons-material';
 
 import PaginationContainer from './components/PaginationContainer';
 import { useStyles } from './hooks/useStyles';
 import { ellipsise } from 'app/helpers';
 import { IProps } from './interfaces';
-import axios from 'axios';
 
 const ThreadsMapContainer: React.FC<IProps> = ({
     threads,
@@ -124,6 +130,20 @@ const ThreadsMapContainer: React.FC<IProps> = ({
                                             )}{' '}
                                         by {thread.creator.profile?.username}
                                     </Typography>
+
+                                    <Box sx={styles.statusesContainer}>
+                                        {thread.isLocked && (
+                                            <Tooltip title="Thread has been locked by an admin.">
+                                                <Lock color="primary" />
+                                            </Tooltip>
+                                        )}
+
+                                        {thread.isPinned && (
+                                            <Tooltip title="Thread has been pinned by an admin.">
+                                                <PushPin color="primary" />
+                                            </Tooltip>
+                                        )}
+                                    </Box>
                                 </Box>
                             </Grid>
 
@@ -131,10 +151,8 @@ const ThreadsMapContainer: React.FC<IProps> = ({
                                 <Box sx={styles.threadContentContainer}>
                                     <Typography variant="subtitle2">
                                         <b>
-                                            {
-                                                thread.mostRecentComment
-                                                    ?.creator.profile?.username
-                                            }
+                                            {thread.mostRecentComment?.creator
+                                                .profile?.username ?? 'Unknown'}
                                         </b>
                                         {` said: ${ellipsise(
                                             thread.mostRecentComment?.content ??

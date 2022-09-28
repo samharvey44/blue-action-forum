@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 use App\Models\Traits\HasReadReceipts;
 use App\Models\Traits\HasCreator;
@@ -21,8 +22,8 @@ class Comment extends Model {
     protected $with = [
         'commentReactions',
         'creator',
-        'reads',
         'images',
+        'reads',
     ];
 
     /**
@@ -67,6 +68,6 @@ class Comment extends Model {
      * @return bool Whether this comment has been read by the user.
      */
     public function isUnread(): bool {
-        return !(bool)$this->reads->filter(fn ($read) => $read->isByUser())->count();
+        return !$this->creator->is(Auth::user()) && !(bool)$this->reads->filter(fn ($read) => $read->isByUser())->count();
     }
 }

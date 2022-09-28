@@ -71,7 +71,7 @@ class ThreadController extends Controller {
      * 
      * @param GetPaginatedRequest $request
      * 
-     * @return Collection
+     * @return AnonymousResourceCollection
      */
     public function getPaginated(GetPaginatedRequest $request): AnonymousResourceCollection {
         return ThreadResource::collection(
@@ -98,12 +98,28 @@ class ThreadController extends Controller {
         });
     }
 
+    /**
+     * Toggle the lock status of this thread.
+     * 
+     * @param ToggleLockedRequest
+     * @param Thread $thread
+     * 
+     * @return void
+     */
     public function toggleLocked(ToggleLockedRequest $request, Thread $thread): void {
         $thread->forceFill(['is_locked' => !$thread->is_locked]);
 
         $thread->update();
     }
 
+    /**
+     * Toggle the pinned status of this thread.
+     * 
+     * @param TogglePinnedRequest
+     * @param Thread $thread
+     * 
+     * @return void
+     */
     public function togglePinned(TogglePinnedRequest $request, Thread $thread): void {
         $thread->forceFill(['is_pinned' => !$thread->is_pinned]);
 

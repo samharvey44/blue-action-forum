@@ -87,26 +87,6 @@ class Thread extends Model {
     public static function getFiltered(string $filter, ?string $search): Builder {
         $query = static::query();
 
-        switch ($filter) {
-            case ('hot'): {
-                    $query = $query->withCount([
-                        'comments' => function ($sq) {
-                            $sq->where('created_at', '>=', now()->subHours(3));
-                        }
-                    ])->orderByDesc('comments_count')->orderByDesc('id');
-                }
-
-            case ('new'): {
-                    $query = $query->orderByDesc('id');
-
-                    break;
-                }
-
-            default: {
-                    throw new InvalidArgumentException('Invalid filter supplied!', 422);
-                }
-        }
-
         if ($search) {
             $query = $query->where(function ($sq) use ($search) {
                 $sq->where('title', 'LIKE', '%' . $search . '%')
@@ -116,7 +96,17 @@ class Thread extends Model {
             });
         }
 
-        return $query;
+        return match ($filter) {
+            'hot' => $query->withCount([
+                'comments' => function ($sq) {
+                    $sq->where('created_at', '>=', now()->subHours(3));
+                }
+            ])->orderByDesc('is_pinned')->orderByDesc('comments_count')->orderByDesc('id'),
+
+            'new' => $query->orderByDesc('is_pinned')->orderByDesc('id'),
+
+            default => throw new InvalidArgumentException('Invalid filter supplied!', 422)
+        };
     }
 
     /**

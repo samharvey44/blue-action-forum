@@ -5,4 +5,5 @@ export interface IProps {
     comments: IPaginatedComments;
     reactions: IReaction[];
     threadCreatorId: number;
+    threadIsLocked: boolean;
 }

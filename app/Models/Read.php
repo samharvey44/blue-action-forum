@@ -41,6 +41,6 @@ class Read extends Model {
      * @return bool Whether this read is by the authed user.
      */
     public function isByUser(): bool {
-        return $this->user->id === Auth::id();
+        return $this->user->is(Auth::user());
     }
 }

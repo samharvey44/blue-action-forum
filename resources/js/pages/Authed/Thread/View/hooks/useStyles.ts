@@ -52,9 +52,22 @@ export const useStyles = () =>
             cursor: 'pointer',
         },
 
+        lockIconNointeraction: {
+            marginRight: '10px',
+            color: PRIMARY,
+            height: '30px',
+            width: '30px',
+        },
+
         pinIconPinned: {
             color: PRIMARY,
             cursor: 'pointer',
+            height: '30px',
+            width: '30px',
+        },
+
+        pinIconPinnedNointeraction: {
+            color: PRIMARY,
             height: '30px',
             width: '30px',
         },

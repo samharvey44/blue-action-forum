@@ -7,6 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use App\Models\Comment;
 use App\Models\Thread;
 use App\Models\Image;
+use App\Models\Role;
 
 use Auth;
 use DB;
@@ -32,6 +33,19 @@ class StoreRequest extends FormRequest {
             'images' => 'sometimes|nullable|array',
             'images.*' => 'required|' . Image::getValidationString(),
         ];
+    }
+
+    /**
+     * Return whether a lock on the given thread prevents the authed user from commenting
+     * 
+     * @param Thread $thread The thread to make the check for.
+     * 
+     * @return bool Whether or not the user is being prevented from commenting due to a lock.
+     */
+    public function lockPreventingComment(Thread $thread): bool {
+        return $thread->is_locked
+            ? !Auth::user()->hasRole(Role::SUPER_ADMIN) && !Auth::user()->hasRole(Role::ADMIN)
+            : false;
     }
 
     /**

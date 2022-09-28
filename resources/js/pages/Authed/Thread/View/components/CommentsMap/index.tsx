@@ -1,5 +1,5 @@
 import useMediaQuery from '@mui/material/useMediaQuery';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import ImageViewer from 'react-simple-image-viewer';
 import { Inertia } from '@inertiajs/inertia';
 import { Edit } from '@mui/icons-material';
@@ -26,6 +26,7 @@ const CommentsMap: React.FC<IProps> = ({
     comments,
     reactions,
     threadCreatorId,
+    threadIsLocked,
 }) => {
     const [viewingImage, setViewingImage] = useState<IFile | null>(null);
     const [leavingReaction, setLeavingReaction] = useState(false);
@@ -79,6 +80,11 @@ const CommentsMap: React.FC<IProps> = ({
             },
         );
     };
+
+    const userIsAdmin = useMemo(
+        () => ['Super Admin', 'Admin'].some((r) => r === authedUser?.role.name),
+        [authedUser?.role.name],
+    );
 
     return (
         <Grid container spacing={3}>
@@ -335,9 +341,11 @@ const CommentsMap: React.FC<IProps> = ({
                 ),
             )}
 
-            <Grid item xs={12} style={styles.addCommentGridItem}>
-                <AddCommentContainer threadId={threadId} />
-            </Grid>
+            {(!threadIsLocked || userIsAdmin) && (
+                <Grid item xs={12} style={styles.addCommentGridItem}>
+                    <AddCommentContainer threadId={threadId} />
+                </Grid>
+            )}
 
             <Grid item xs={12}>
                 <PaginationContainer

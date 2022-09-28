@@ -1,7 +1,7 @@
 import { Circle, Lock, LockOpen, PushPin } from '@mui/icons-material';
 import { Chip, Paper, Tooltip, Typography } from '@mui/material';
+import React, { useEffect, useMemo, useState } from 'react';
 import { usePage } from '@inertiajs/inertia-react';
-import React, { useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { Box } from '@mui/system';
 import moment from 'moment';
@@ -23,6 +23,14 @@ const ViewThread: React.FC = () => {
     const { enqueueSnackbar } = useSnackbar();
     const authedUser = useGetAuthedUser();
     const styles = useStyles();
+
+    const userIsAdmin = useMemo(
+        () =>
+            ['Super Admin', 'Admin'].some(
+                (role) => role === authedUser?.role.name,
+            ),
+        [authedUser?.role.name],
+    );
 
     const [threadIsLocked, setThreadIsLocked] = useState(thread.isLocked);
     const [threadIsPinned, setThreadIsPinned] = useState(thread.isPinned);
@@ -135,22 +143,34 @@ const ViewThread: React.FC = () => {
                         </Box>
                     </Box>
 
-                    {['Super Admin', 'Admin'].some(
-                        (role) => role === authedUser?.role.name,
-                    ) && (
-                        <Box sx={styles.actionsContainer}>
-                            {threadIsLocked ? (
-                                <Tooltip title="Click to unlock thread.">
-                                    <Lock
-                                        sx={styles.lockIcon}
-                                        onClick={() => {
-                                            setTogglingLock(true);
+                    <Box sx={styles.actionsContainer}>
+                        {threadIsLocked ? (
+                            <Tooltip
+                                title={
+                                    userIsAdmin
+                                        ? 'Click to unlock thread.'
+                                        : 'Thread is locked.'
+                                }
+                            >
+                                <Lock
+                                    sx={
+                                        userIsAdmin
+                                            ? styles.lockIcon
+                                            : styles.lockIconNointeraction
+                                    }
+                                    onClick={() => {
+                                        if (!userIsAdmin) {
+                                            return;
+                                        }
 
-                                            toggleThreadLocked();
-                                        }}
-                                    />
-                                </Tooltip>
-                            ) : (
+                                        setTogglingLock(true);
+
+                                        toggleThreadLocked();
+                                    }}
+                                />
+                            </Tooltip>
+                        ) : (
+                            userIsAdmin && (
                                 <Tooltip title="Click to lock thread.">
                                     <LockOpen
                                         sx={styles.lockIcon}
@@ -161,20 +181,36 @@ const ViewThread: React.FC = () => {
                                         }}
                                     />
                                 </Tooltip>
-                            )}
+                            )
+                        )}
 
-                            {threadIsPinned ? (
-                                <Tooltip title="Click to unpin thread.">
-                                    <PushPin
-                                        sx={styles.pinIconPinned}
-                                        onClick={() => {
-                                            setTogglingPin(true);
+                        {threadIsPinned ? (
+                            <Tooltip
+                                title={
+                                    userIsAdmin
+                                        ? 'Click to unpin thread.'
+                                        : 'Thread is pinned.'
+                                }
+                            >
+                                <PushPin
+                                    sx={
+                                        userIsAdmin
+                                            ? styles.pinIconPinned
+                                            : styles.pinIconPinnedNointeraction
+                                    }
+                                    onClick={() => {
+                                        if (!userIsAdmin) {
+                                            return;
+                                        }
 
-                                            toggleThreadPinned();
-                                        }}
-                                    />
-                                </Tooltip>
-                            ) : (
+                                        setTogglingPin(true);
+
+                                        toggleThreadPinned();
+                                    }}
+                                />
+                            </Tooltip>
+                        ) : (
+                            userIsAdmin && (
                                 <Tooltip title="Click to pin thread.">
                                     <PushPin
                                         sx={styles.pinIconUnpinned}
@@ -185,9 +221,9 @@ const ViewThread: React.FC = () => {
                                         }}
                                     />
                                 </Tooltip>
-                            )}
-                        </Box>
-                    )}
+                            )
+                        )}
+                    </Box>
                 </Paper>
 
                 <Box sx={styles.commentsMapContainer}>
@@ -197,6 +233,7 @@ const ViewThread: React.FC = () => {
                             reactions={reactions}
                             comments={comments}
                             threadCreatorId={thread.creator.id}
+                            threadIsLocked={thread.isLocked}
                         />
                     }
                 </Box>
