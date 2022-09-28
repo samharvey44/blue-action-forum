@@ -46,7 +46,7 @@
         "laravel-echo": "^1.11.4",
         "moment": "^2.29.1",
         "normalizr": "^3.6.1",
-        "notistack": "^2.0.3",
+        "notistack": "^2.0.5",
         "pusher-js": "^7.0.6",
         "react-router-dom": "^6.4.1",
         "react-simple-image-viewer": "^1.2.2",
