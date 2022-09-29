@@ -21,6 +21,7 @@ class Comment extends Model {
      */
     protected $with = [
         'commentReactions',
+        'replyingTo',
         'creator',
         'images',
         'reads',
@@ -33,6 +34,15 @@ class Comment extends Model {
      */
     protected $fillable = [
         'content',
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     * 
+     * @param array
+     */
+    protected $casts = [
+        'is_deleted' => 'boolean',
     ];
 
     /**
@@ -60,6 +70,24 @@ class Comment extends Model {
      */
     public function images(): MorphMany {
         return $this->morphMany(Image::class, 'imageable');
+    }
+
+    /**
+     * The comment that this comment is a reply to.
+     * 
+     * @return BelongsTo
+     */
+    public function replyingTo(): BelongsTo {
+        return $this->belongsTo(self::class, 'replying_to');
+    }
+
+    /**
+     * The replies to this comment.
+     * 
+     * @return HasMany
+     */
+    public function replies(): HasMany {
+        return $this->hasMany(self::class, 'replying_to');
     }
 
     /**

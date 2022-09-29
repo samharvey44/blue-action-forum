@@ -1,8 +1,9 @@
+import { Delete, Edit, Reply, Report } from '@mui/icons-material';
+import React, { Fragment, useCallback, useMemo, useState } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import React, { useCallback, useMemo, useState } from 'react';
 import ImageViewer from 'react-simple-image-viewer';
 import { Inertia } from '@inertiajs/inertia';
-import { Edit } from '@mui/icons-material';
+import { useSnackbar } from 'notistack';
 import { Box } from '@mui/system';
 import moment from 'moment';
 import {
@@ -29,8 +30,10 @@ const CommentsMap: React.FC<IProps> = ({
     threadIsLocked,
 }) => {
     const [viewingImage, setViewingImage] = useState<IFile | null>(null);
+    const [deletingReaction, setDeletingReaction] = useState(false);
     const [leavingReaction, setLeavingReaction] = useState(false);
 
+    const { enqueueSnackbar } = useSnackbar();
     const authedUser = useGetAuthedUser();
     const styles = useStyles();
     const theme = useTheme();
@@ -81,6 +84,20 @@ const CommentsMap: React.FC<IProps> = ({
         );
     };
 
+    const handleDeleteComment = (commentId: number) => {
+        setDeletingReaction(true);
+
+        Inertia.delete(`/comments/${commentId}`, {
+            onFinish: () => {
+                setDeletingReaction(false);
+
+                enqueueSnackbar('Comment was deleted.', {
+                    variant: 'success',
+                });
+            },
+        });
+    };
+
     const userIsAdmin = useMemo(
         () => ['Super Admin', 'Admin'].some((r) => r === authedUser?.role.name),
         [authedUser?.role.name],
@@ -96,6 +113,7 @@ const CommentsMap: React.FC<IProps> = ({
                     creator,
                     images,
                     commentReactions,
+                    isDeleted,
                 }) => (
                     <Grid item xs={12} key={id} sx={styles.commentContainer}>
                         <Grid container spacing={3}>
@@ -189,150 +207,228 @@ const CommentsMap: React.FC<IProps> = ({
 
                                 <Paper sx={styles.contentPaper}>
                                     <Box sx={styles.contentInnerContainer}>
-                                        <Typography
-                                            variant="subtitle2"
-                                            sx={styles.postedAtText}
+                                        <Box
+                                            sx={styles.commentActionsContainer}
                                         >
-                                            Posted{' '}
-                                            {moment
-                                                .utc(createdAt)
-                                                .local()
-                                                .format('DD/MM/YY [at] HH:mm')}
-                                        </Typography>
+                                            <Typography
+                                                variant="subtitle2"
+                                                sx={styles.postedAtText}
+                                            >
+                                                Posted{' '}
+                                                {moment
+                                                    .utc(createdAt)
+                                                    .local()
+                                                    .format(
+                                                        'DD/MM/YY [at] HH:mm',
+                                                    )}
+                                            </Typography>
 
-                                        <Typography
-                                            variant="subtitle1"
-                                            sx={styles.commentContent}
-                                        >
-                                            {content}
-                                        </Typography>
-
-                                        <Box sx={styles.divider} />
-
-                                        <Grid container spacing={3}>
-                                            <Grid item xs={12} md={4}>
+                                            {!isDeleted && (
                                                 <Box
                                                     sx={
-                                                        styles.reactionsMapContainer
+                                                        styles.commentActionsInnerContainer
                                                     }
                                                 >
-                                                    {reactions.map(
-                                                        (reaction) => {
-                                                            const thisCommentReactions =
-                                                                commentReactions.filter(
-                                                                    (
-                                                                        commentReaction,
-                                                                    ) =>
-                                                                        commentReaction
-                                                                            .reaction
-                                                                            .id ===
-                                                                        reaction.id,
-                                                                );
+                                                    <Tooltip title="Reply to this comment.">
+                                                        <Reply
+                                                            color="primary"
+                                                            sx={
+                                                                styles.actionIconNomargin
+                                                            }
+                                                        />
+                                                    </Tooltip>
 
-                                                            return (
-                                                                <Box
+                                                    {creator.id ===
+                                                    authedUser?.id ? (
+                                                        !isDeleted && (
+                                                            <Tooltip title="Delete your comment.">
+                                                                <Delete
                                                                     sx={
-                                                                        styles.reactionAndCountContainer
+                                                                        styles.actionIcon
                                                                     }
-                                                                    key={
-                                                                        reaction.id
-                                                                    }
-                                                                >
+                                                                    color="primary"
+                                                                    onClick={() => {
+                                                                        if (
+                                                                            deletingReaction
+                                                                        ) {
+                                                                            return;
+                                                                        }
+
+                                                                        handleDeleteComment(
+                                                                            id,
+                                                                        );
+                                                                    }}
+                                                                />
+                                                            </Tooltip>
+                                                        )
+                                                    ) : (
+                                                        <Tooltip title="Report this comment.">
+                                                            <Report
+                                                                sx={
+                                                                    styles.actionIcon
+                                                                }
+                                                            />
+                                                        </Tooltip>
+                                                    )}
+                                                </Box>
+                                            )}
+                                        </Box>
+
+                                        {isDeleted ? (
+                                            <Typography
+                                                variant="subtitle1"
+                                                sx={
+                                                    styles.commentContentDeleted
+                                                }
+                                            >
+                                                <b>
+                                                    Comment was deleted by
+                                                    poster!
+                                                </b>
+                                            </Typography>
+                                        ) : (
+                                            <Typography
+                                                variant="subtitle1"
+                                                sx={styles.commentContent}
+                                            >
+                                                {content ?? ''}
+                                            </Typography>
+                                        )}
+
+                                        {!isDeleted && (
+                                            <Fragment>
+                                                <Box sx={styles.divider} />
+
+                                                <Grid container spacing={3}>
+                                                    <Grid item xs={12} md={4}>
+                                                        <Box
+                                                            sx={
+                                                                styles.reactionsMapContainer
+                                                            }
+                                                        >
+                                                            {reactions.map(
+                                                                (reaction) => {
+                                                                    const thisCommentReactions =
+                                                                        commentReactions.filter(
+                                                                            (
+                                                                                commentReaction,
+                                                                            ) =>
+                                                                                commentReaction
+                                                                                    .reaction
+                                                                                    .id ===
+                                                                                reaction.id,
+                                                                        );
+
+                                                                    return (
+                                                                        <Box
+                                                                            sx={
+                                                                                styles.reactionAndCountContainer
+                                                                            }
+                                                                            key={
+                                                                                reaction.id
+                                                                            }
+                                                                        >
+                                                                            <Box
+                                                                                sx={
+                                                                                    styles.reactionIcon
+                                                                                }
+                                                                                alt={`Reaction for ${reaction.name}`}
+                                                                                src={`/images/${reaction.iconPath}`}
+                                                                                component="img"
+                                                                                onClick={() => {
+                                                                                    if (
+                                                                                        leavingReaction
+                                                                                    ) {
+                                                                                        return;
+                                                                                    }
+
+                                                                                    handleLeaveReaction(
+                                                                                        id,
+                                                                                        reaction.id,
+                                                                                    );
+                                                                                }}
+                                                                            />
+
+                                                                            {thisCommentReactions.length ? (
+                                                                                <Tooltip
+                                                                                    title={getCommentReactionTooltip(
+                                                                                        thisCommentReactions,
+                                                                                    )}
+                                                                                >
+                                                                                    <Typography
+                                                                                        variant="subtitle2"
+                                                                                        style={
+                                                                                            thisCommentReactions.find(
+                                                                                                (
+                                                                                                    cr,
+                                                                                                ) =>
+                                                                                                    cr
+                                                                                                        .user
+                                                                                                        .id ===
+                                                                                                    authedUser?.id,
+                                                                                            )
+                                                                                                ? styles.reactionActiveUserLeft
+                                                                                                : styles.reactionActive
+                                                                                        }
+                                                                                    >
+                                                                                        {
+                                                                                            thisCommentReactions.length
+                                                                                        }
+                                                                                    </Typography>
+                                                                                </Tooltip>
+                                                                            ) : (
+                                                                                <Typography variant="subtitle2">
+                                                                                    0
+                                                                                </Typography>
+                                                                            )}
+                                                                        </Box>
+                                                                    );
+                                                                },
+                                                            )}
+                                                        </Box>
+                                                    </Grid>
+
+                                                    <Grid item xs={12} md={8}>
+                                                        <Box
+                                                            sx={
+                                                                styles.commentImagesContainer
+                                                            }
+                                                        >
+                                                            {images?.map(
+                                                                (
+                                                                    image,
+                                                                    index,
+                                                                    self,
+                                                                ) => (
                                                                     <Box
                                                                         sx={
-                                                                            styles.reactionIcon
+                                                                            index ===
+                                                                            self.length -
+                                                                                1
+                                                                                ? styles.commentImageEnd
+                                                                                : styles.commentImage
                                                                         }
-                                                                        alt={`Reaction for ${reaction.name}`}
-                                                                        src={`/images/${reaction.iconPath}`}
+                                                                        alt="Uploaded image"
                                                                         component="img"
+                                                                        src={
+                                                                            image.url
+                                                                        }
+                                                                        key={
+                                                                            image.id
+                                                                        }
                                                                         onClick={() => {
-                                                                            if (
-                                                                                leavingReaction
-                                                                            ) {
-                                                                                return;
-                                                                            }
-
-                                                                            handleLeaveReaction(
-                                                                                id,
-                                                                                reaction.id,
+                                                                            setViewingImage(
+                                                                                image,
                                                                             );
                                                                         }}
                                                                     />
-
-                                                                    {thisCommentReactions.length ? (
-                                                                        <Tooltip
-                                                                            title={getCommentReactionTooltip(
-                                                                                thisCommentReactions,
-                                                                            )}
-                                                                        >
-                                                                            <Typography
-                                                                                variant="subtitle2"
-                                                                                style={
-                                                                                    thisCommentReactions.find(
-                                                                                        (
-                                                                                            cr,
-                                                                                        ) =>
-                                                                                            cr
-                                                                                                .user
-                                                                                                .id ===
-                                                                                            authedUser?.id,
-                                                                                    )
-                                                                                        ? styles.reactionActiveUserLeft
-                                                                                        : styles.reactionActive
-                                                                                }
-                                                                            >
-                                                                                {
-                                                                                    thisCommentReactions.length
-                                                                                }
-                                                                            </Typography>
-                                                                        </Tooltip>
-                                                                    ) : (
-                                                                        <Typography variant="subtitle2">
-                                                                            0
-                                                                        </Typography>
-                                                                    )}
-                                                                </Box>
-                                                            );
-                                                        },
-                                                    )}
-                                                </Box>
-                                            </Grid>
-
-                                            <Grid item xs={12} md={8}>
-                                                <Box
-                                                    sx={
-                                                        styles.commentImagesContainer
-                                                    }
-                                                >
-                                                    {images.map(
-                                                        (
-                                                            image,
-                                                            index,
-                                                            self,
-                                                        ) => (
-                                                            <Box
-                                                                sx={
-                                                                    index ===
-                                                                    self.length -
-                                                                        1
-                                                                        ? styles.commentImageEnd
-                                                                        : styles.commentImage
-                                                                }
-                                                                alt="Uploaded image"
-                                                                component="img"
-                                                                src={image.url}
-                                                                key={image.id}
-                                                                onClick={() => {
-                                                                    setViewingImage(
-                                                                        image,
-                                                                    );
-                                                                }}
-                                                            />
-                                                        ),
-                                                    )}
-                                                </Box>
-                                            </Grid>
-                                        </Grid>
+                                                                ),
+                                                            )}
+                                                        </Box>
+                                                    </Grid>
+                                                </Grid>
+                                            </Fragment>
+                                        )}
                                     </Box>
                                 </Paper>
                             </Grid>

@@ -4,6 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+use App\Models\Comment;
 use App\Models\Thread;
 use App\Models\User;
 
@@ -18,8 +19,10 @@ return new class extends Migration {
             $table->id();
             $table->timestamps();
 
+            $table->boolean('is_deleted')->default(false);
             $table->text('content');
 
+            $table->foreignIdFor(Comment::class, 'replying_to')->nullable();
             $table->foreignIdFor(User::class, 'creator_id');
             $table->foreignIdFor(Thread::class);
         });

@@ -81,6 +81,8 @@ Route::middleware('throttle:60,1')->group(function () {
                 Route::prefix('/comments')->group(function () {
                     Route::prefix('/{comment}')->group(function () {
                         Route::put('/react', [CommentController::class, 'react']);
+
+                        Route::delete('/', [CommentController::class, 'markAsDeleted']);
                     });
                 });
             });

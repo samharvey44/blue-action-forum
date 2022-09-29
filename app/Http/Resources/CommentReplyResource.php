@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CommentResource extends JsonResource {
+class CommentReplyResource extends JsonResource {
     /**
      * Transform the resource into an array.
      *
@@ -18,9 +18,6 @@ class CommentResource extends JsonResource {
             'content' => $this->when(!$this->is_deleted, $this->content),
             'isDeleted' => $this->is_deleted,
 
-            'images' => $this->when(!$this->is_deleted, ImageResource::collection($this->images)),
-            'commentReactions' => CommentReactionResource::collection($this->commentReactions),
-            'replyingTo' => CommentReplyResource::make($this->replyingTo),
             'creator' => UserResource::make($this->creator),
         ];
     }

@@ -61,13 +61,22 @@ export interface ICategory {
     displayColor: string;
 }
 
+export interface ICommentReply {
+    id: number;
+    createdAt: string;
+    content?: string;
+    creator: IUser;
+}
+
 export interface IComment {
     id: number;
     createdAt: string;
-    content: string;
-    images: IFile[];
+    content?: string;
+    images?: IFile[];
     creator: IUser;
     commentReactions: ICommentReaction[];
+    replyingTo?: ICommentReply;
+    isDeleted: boolean;
 }
 
 export interface IReaction {

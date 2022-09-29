@@ -9,6 +9,8 @@ export const useStyles = () => {
 
     const isMd = useMediaQuery(theme.breakpoints.down('md'));
 
+    const WARNING_RED = '#ff0f0f';
+
     return useMakeStyles({
         commentContainer: {
             marginBottom: '10px',
@@ -81,6 +83,16 @@ export const useStyles = () => {
             marginTop: '10px',
             textAlign: 'left',
             width: '100%',
+        },
+
+        commentContentDeleted: {
+            wordWrap: 'break-word',
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+            marginTop: '10px',
+            textAlign: 'left',
+            width: '100%',
+            color: WARNING_RED,
         },
 
         profileMdContainer: {
@@ -167,6 +179,26 @@ export const useStyles = () => {
 
         addCommentGridItem: {
             marginTop: isMd ? '60px' : undefined,
+        },
+
+        commentActionsContainer: {
+            display: 'flex',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            width: '100%',
+        },
+
+        commentActionsInnerContainer: {
+            marginLeft: 'auto',
+        },
+
+        actionIcon: {
+            marginLeft: '10px',
+            cursor: 'pointer',
+        },
+
+        actionIconNomargin: {
+            cursor: 'pointer',
         },
     });
 };
