@@ -26,7 +26,7 @@ use App\Models\Thread;
 
 class ThreadController extends Controller {
     /**
-     * Return the create profile page.
+     * Return the create thread page.
      *
      * @param IndexRequest $request
      * 
