@@ -87,7 +87,7 @@ class Thread extends Model {
     public static function getFiltered(string $filter, ?string $search): Builder {
         $query = static::query();
 
-        if ($search) {
+        if ((bool)$search) {
             $query = $query->where(function ($sq) use ($search) {
                 $sq->where('title', 'LIKE', '%' . $search . '%')
                     ->orWhereHas('comments', function ($ssq) use ($search) {
