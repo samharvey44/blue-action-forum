@@ -1,5 +1,5 @@
-import { PRIMARY } from 'app/globals/colors';
 import useMakeStyles from 'app/hooks/makeStyles';
+import { PRIMARY } from 'app/globals/colors';
 
 export const useStyles = () =>
     useMakeStyles({

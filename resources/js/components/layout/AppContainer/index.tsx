@@ -1,4 +1,5 @@
 import React, { Fragment, useState } from 'react';
+import { Link } from '@inertiajs/inertia-react';
 import { Inertia } from '@inertiajs/inertia';
 import { Logout } from '@mui/icons-material';
 import AppBar from '@mui/material/AppBar';
@@ -16,7 +17,6 @@ import {
 import useGetAuthedUser from 'app/hooks/getAuthedUser';
 import { linkedInLink } from 'app/globals/config';
 import { useStyles } from './hooks/useStyles';
-import { Link } from '@inertiajs/inertia-react';
 
 const AppContainer: React.FC = ({ children }) => {
     const { enqueueSnackbar } = useSnackbar();

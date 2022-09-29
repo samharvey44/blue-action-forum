@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\JsonResponse;
 use Inertia\Response;
 use Inertia\Inertia;
 
@@ -104,12 +104,13 @@ class ThreadController extends Controller {
      * @param ToggleLockedRequest
      * @param Thread $thread
      * 
-     * @return void
+     * @return JsonResponse
      */
-    public function toggleLocked(ToggleLockedRequest $request, Thread $thread): void {
+    public function toggleLocked(ToggleLockedRequest $request, Thread $thread): JsonResponse {
         $thread->forceFill(['is_locked' => !$thread->is_locked]);
-
         $thread->update();
+
+        return response()->json($thread->is_locked);
     }
 
     /**
@@ -118,11 +119,12 @@ class ThreadController extends Controller {
      * @param TogglePinnedRequest
      * @param Thread $thread
      * 
-     * @return void
+     * @return JsonResponse
      */
-    public function togglePinned(TogglePinnedRequest $request, Thread $thread): void {
+    public function togglePinned(TogglePinnedRequest $request, Thread $thread): JsonResponse {
         $thread->forceFill(['is_pinned' => !$thread->is_pinned]);
-
         $thread->update();
+
+        return response()->json($thread->is_pinned);
     }
 }

@@ -43,6 +43,17 @@ return [
 
     'debug' => (bool) env('APP_DEBUG', false),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Render Inertia Error Modal
+    |--------------------------------------------------------------------------
+    |
+    | Inertia.js provides an error modal it will display when exceptions are thrown.
+    | This will determine whether we show the modal (meant for local development only)
+    | in the event of errors.
+    |
+    */
+
     'render_inertia_error_modal' => (bool) env('RENDER_INERTIA_ERROR_MODAL', false),
 
     /*

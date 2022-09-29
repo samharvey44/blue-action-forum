@@ -53,17 +53,15 @@ const ViewThread: React.FC = () => {
 
         axios
             .patch(`/threads/${thread.id}/toggleLocked`)
-            .then(() => {
+            .then(({ data }: { data: boolean }) => {
                 enqueueSnackbar(
-                    `Thread was ${
-                        threadIsLocked ? 'unlocked' : 'locked'
-                    } successfully.`,
+                    `Thread was ${data ? 'locked' : 'unlocked'} successfully.`,
                     {
                         variant: 'success',
                     },
                 );
 
-                setThreadIsLocked((curr) => !curr);
+                setThreadIsLocked(data);
             })
             .catch(() => {
                 enqueueSnackbar('Something went wrong!', {
@@ -82,17 +80,15 @@ const ViewThread: React.FC = () => {
 
         axios
             .patch(`/threads/${thread.id}/togglePinned`)
-            .then(() => {
+            .then(({ data }: { data: boolean }) => {
                 enqueueSnackbar(
-                    `Thread was ${
-                        threadIsPinned ? 'unpinned' : 'pinned'
-                    } successfully.`,
+                    `Thread was ${data ? 'pinned' : 'unpinned'} successfully.`,
                     {
                         variant: 'success',
                     },
                 );
 
-                setThreadIsPinned((curr) => !curr);
+                setThreadIsPinned(data);
             })
             .catch(() => {
                 enqueueSnackbar('Something went wrong!', {
