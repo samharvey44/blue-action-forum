@@ -15,10 +15,6 @@ class UserSeeder extends Seeder {
      * @return void
      */
     public function run() {
-        if (config('app.env') !== 'local') {
-            return;
-        }
-
         $superUser = User::make([
             'email' => config('user_management.super_user_email'),
             'password' => Hash::make(config('user_management.super_user_password')),
