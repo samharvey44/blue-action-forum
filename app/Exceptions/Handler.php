@@ -46,11 +46,14 @@ class Handler extends ExceptionHandler {
      * @return Throwable|Response
      */
     public function render($request, Throwable $e) {
+        $renderPageErrors = [401, 403, 404, 419, 422, 500, 503];
         $response = parent::render($request, $e);
 
         $renderInertiaErrorModal = config('app.render_inertia_error_modal');
 
-        if ($renderInertiaErrorModal) {
+        // If we want to render an Inertia error modal for debugging, or don't want to show
+        // our custom error page for this error code, we'll return the Inertia modal.
+        if ($renderInertiaErrorModal || !in_array($response->getStatusCode(), $renderPageErrors)) {
             return $response;
         }
 

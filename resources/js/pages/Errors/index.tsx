@@ -16,22 +16,24 @@ const Errors: React.FC = () => {
 
     const errorMessage =
         {
-            500: 'Internal Server Error',
-            422: 'Unprocessable Entity',
-            503: 'Service Unavailable',
-            419: 'Page Not Found',
-            403: 'Unauthorised',
+            401: 'Unauthorised',
+            403: 'Forbidden',
             404: 'Not Found',
+            419: 'Page Expired',
+            422: 'Unprocessable Entity',
+            500: 'Internal Server Error',
+            503: 'Service Unavailable',
         }[status] ?? '';
 
     const errorText =
         {
-            500: "Basically, something is broken. If you're seeing this, please contact us at collective6@outlook.com - we'll get it fixed.",
-            503: 'Collective 6 is currently under maintenance. Please check back later.',
+            401: "You aren't permitted to access this page or resource. You may not be logged in.",
             403: "You're trying to do or access something that you're not permitted to.",
             404: "We couldn't find the page or resource you were looking for.",
-            422: "Something you're trying to do isn't quite right.",
             419: 'Sorry, the page expired - try that again.',
+            422: "Something you're trying to do isn't quite right.",
+            500: "Basically, something is broken. If you're seeing this, please contact us at collective6@outlook.com - we'll get it fixed.",
+            503: 'Collective 6 is currently under maintenance. Please check back later.',
         }[status] ?? '';
 
     return (
