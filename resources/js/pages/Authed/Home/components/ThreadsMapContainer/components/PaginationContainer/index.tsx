@@ -16,9 +16,11 @@ const PaginationContainer: React.FC<IProps> = ({
 
     return (
         <Box sx={styles.paginationContainer}>
-            <Typography variant="subtitle1">{`Viewing page ${
-                threads?.meta.current_page ?? '1'
-            } of ${threads?.meta.last_page ?? '1'}`}</Typography>
+            <Typography variant="subtitle1">
+                {`Viewing page ${threads?.meta.current_page ?? '1'} of ${
+                    threads?.meta.last_page ?? '1'
+                }`}
+            </Typography>
 
             <Box sx={styles.buttonsContainer}>
                 <Button

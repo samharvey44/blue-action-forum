@@ -14,13 +14,15 @@ class ThreadResource extends JsonResource {
     public function toArray($request): array {
         return [
             'id' => $this->id,
-            'createdAt' => $this->created_at,
             'title' => $this->title,
+            'isLocked' => $this->is_locked,
+            'isPinned' => $this->is_pinned,
+            'isUnread' => $this->isUnread(),
+            'createdAt' => $this->created_at,
 
             'mostRecentComment' => $this->whenLoaded('comments', fn () => $this->mostRecentComment()),
             'categories' => CategoryResource::collection($this->categories),
             'creator' => UserResource::make($this->creator),
-            'isUnread' => $this->isUnread(),
         ];
     }
 }

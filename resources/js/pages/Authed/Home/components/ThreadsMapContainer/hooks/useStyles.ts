@@ -1,8 +1,8 @@
 import { useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/system';
-import { PRIMARY } from 'app/globals/colors';
 
 import useMakeStyles from 'app/hooks/makeStyles';
+import { PRIMARY } from 'app/globals/colors';
 
 export const useStyles = () => {
     const theme = useTheme();
@@ -64,6 +64,13 @@ export const useStyles = () => {
             color: 'white',
             height: '18px',
             width: '18px',
+        },
+
+        statusesContainer: {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+            marginLeft: '20px',
         },
     });
 };

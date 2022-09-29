@@ -115,7 +115,7 @@ const Home: React.FC = () => {
                                 );
                             }}
                         >
-                            {<Search />}
+                            <Search />
                         </Button>
 
                         <Button
@@ -135,7 +135,7 @@ const Home: React.FC = () => {
                                 );
                             }}
                         >
-                            {<Clear />}
+                            <Clear />
                         </Button>
                     </Box>
                 </Grid>

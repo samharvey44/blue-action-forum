@@ -51,6 +51,8 @@ export interface IThread {
     categories: ICategory[];
     mostRecentComment: IComment | null;
     isUnread: boolean;
+    isLocked: boolean;
+    isPinned: boolean;
 }
 
 export interface ICategory {

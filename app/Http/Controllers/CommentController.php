@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 
 use App\Http\Requests\Comment\ReactRequest;
 use App\Http\Requests\Comment\StoreRequest;
-use App\Models\CommentReaction;
-use App\Models\Reaction;
 use App\Models\Comment;
 use App\Models\Thread;
 
@@ -43,12 +41,20 @@ class CommentController extends Controller {
      * @param StoreRequest $request
      * @param Thread $thread
      * 
-     * @return void
+     * @return ?RedirectResponse
      */
-    public function store(StoreRequest $request, Thread $thread): void {
+    public function store(StoreRequest $request, Thread $thread): ?RedirectResponse {
+        if ($request->lockPreventingComment($thread)) {
+            return back()->withErrors([
+                'thread' => 'The thread is locked!',
+            ]);
+        }
+
         DB::transaction(function () use ($request, $thread) {
             $comment = $request->storeComment($thread);
             $request->storeImages($comment);
         });
+
+        return null;
     }
 }

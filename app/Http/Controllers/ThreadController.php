@@ -10,6 +10,8 @@ use Inertia\Response;
 use Inertia\Inertia;
 
 use App\Http\Requests\Thread\GetPaginatedRequest;
+use App\Http\Requests\Thread\ToggleLockedRequest;
+use App\Http\Requests\Thread\TogglePinnedRequest;
 use App\Http\Requests\Thread\MarkAsReadRequest;
 use App\Http\Requests\Thread\IndexRequest;
 use App\Http\Requests\Thread\StoreRequest;
@@ -69,7 +71,7 @@ class ThreadController extends Controller {
      * 
      * @param GetPaginatedRequest $request
      * 
-     * @return Collection
+     * @return AnonymousResourceCollection
      */
     public function getPaginated(GetPaginatedRequest $request): AnonymousResourceCollection {
         return ThreadResource::collection(
@@ -94,5 +96,33 @@ class ThreadController extends Controller {
         DB::transaction(function () use ($thread) {
             $thread->comments->each(fn ($comment) => $comment->markAsRead());
         });
+    }
+
+    /**
+     * Toggle the lock status of this thread.
+     * 
+     * @param ToggleLockedRequest
+     * @param Thread $thread
+     * 
+     * @return void
+     */
+    public function toggleLocked(ToggleLockedRequest $request, Thread $thread): void {
+        $thread->forceFill(['is_locked' => !$thread->is_locked]);
+
+        $thread->update();
+    }
+
+    /**
+     * Toggle the pinned status of this thread.
+     * 
+     * @param TogglePinnedRequest
+     * @param Thread $thread
+     * 
+     * @return void
+     */
+    public function togglePinned(TogglePinnedRequest $request, Thread $thread): void {
+        $thread->forceFill(['is_pinned' => !$thread->is_pinned]);
+
+        $thread->update();
     }
 }

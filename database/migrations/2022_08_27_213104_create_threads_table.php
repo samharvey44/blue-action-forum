@@ -18,6 +18,8 @@ return new class extends Migration {
             $table->timestamps();
 
             $table->string('title');
+            $table->boolean('is_locked')->default(false);
+            $table->boolean('is_pinned')->default(false);
 
             $table->foreignIdFor(User::class, 'creator_id');
         });

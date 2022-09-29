@@ -43,6 +43,8 @@ return [
 
     'debug' => (bool) env('APP_DEBUG', false),
 
+    'render_inertia_error_modal' => (bool) env('RENDER_INERTIA_ERROR_MODAL', false),
+
     /*
     |--------------------------------------------------------------------------
     | Application URL
