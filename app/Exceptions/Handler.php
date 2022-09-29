@@ -46,7 +46,7 @@ class Handler extends ExceptionHandler {
      * @return Throwable|Response
      */
     public function render($request, Throwable $e) {
-        $renderPageErrors = [401, 403, 404, 419, 422, 500, 503];
+        $renderPageErrors = [401, 403, 404, 419, 422, 429, 500, 503];
         $response = parent::render($request, $e);
 
         $renderInertiaErrorModal = config('app.render_inertia_error_modal');

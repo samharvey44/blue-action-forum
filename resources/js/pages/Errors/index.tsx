@@ -21,6 +21,7 @@ const Errors: React.FC = () => {
             404: 'Not Found',
             419: 'Page Expired',
             422: 'Unprocessable Entity',
+            429: 'Too Many Requests',
             500: 'Internal Server Error',
             503: 'Service Unavailable',
         }[status] ?? '';
@@ -32,6 +33,7 @@ const Errors: React.FC = () => {
             404: "We couldn't find the page or resource you were looking for.",
             419: 'Sorry, the page expired - try that again.',
             422: "Something you're trying to do isn't quite right.",
+            429: "You're trying to do something more quickly than is permitted. Wait a moment and try again.",
             500: "Basically, something is broken. If you're seeing this, please contact us at collective6@outlook.com - we'll get it fixed.",
             503: 'Collective 6 is currently under maintenance. Please check back later.',
         }[status] ?? '';
