@@ -116,9 +116,12 @@ class Thread extends Model {
      */
     public function mostRecentComment(): CommentResource {
         return CommentResource::make(
-            $this->comments->sortBy([
-                fn ($a, $b) => $a->id <= $b->id,
-            ])->first()
+            $this->comments
+                ->filter(fn ($comment) => !$comment->is_deleted)
+                ->sortBy([
+                    fn ($a, $b) => $a->id <= $b->id,
+                ])
+                ->first()
         );
     }
 

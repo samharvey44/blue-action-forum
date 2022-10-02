@@ -147,21 +147,24 @@ const ThreadsMapContainer: React.FC<IProps> = ({
                                 </Box>
                             </Grid>
 
-                            <Grid item xs={12}>
-                                <Box sx={styles.threadContentContainer}>
-                                    <Typography variant="subtitle2">
-                                        <b>
-                                            {thread.mostRecentComment?.creator
-                                                .profile?.username ?? 'Unknown'}
-                                        </b>
-                                        {` said: ${ellipsise(
-                                            thread.mostRecentComment?.content ??
-                                                '',
-                                            30,
-                                        )}`}
-                                    </Typography>
-                                </Box>
-                            </Grid>
+                            {thread.mostRecentComment && (
+                                <Grid item xs={12}>
+                                    <Box sx={styles.threadContentContainer}>
+                                        <Typography variant="subtitle2">
+                                            <b>
+                                                {thread.mostRecentComment
+                                                    .creator.profile
+                                                    ?.username ?? 'Unknown'}
+                                            </b>
+                                            {` said: ${ellipsise(
+                                                thread.mostRecentComment
+                                                    .content ?? '',
+                                                30,
+                                            )}`}
+                                        </Typography>
+                                    </Box>
+                                </Grid>
+                            )}
 
                             <Grid item xs={12} md={6}>
                                 <Box sx={styles.categoriesContainer}>

@@ -74,9 +74,13 @@ class DummySeeder extends Seeder {
                 $thread->creator()->associate($this->createdRecords['users']->random());
                 $thread->save();
 
-                $thread->categories()->attach(
-                    $categories->filter(fn () => rand(0, 1) === 0)->map->id
-                );
+                $filtered =  $categories->filter(fn () => rand(0, 1) === 0)->map->id;
+
+                if (count($filtered)) {
+                    $thread->categories()->attach($filtered);
+                } else {
+                    $thread->categories()->attach($categories->first()->id);
+                }
 
                 $collect->push($thread);
             });

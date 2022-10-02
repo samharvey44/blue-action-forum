@@ -195,6 +195,7 @@ export const useStyles = () => {
         actionIcon: {
             marginLeft: '10px',
             cursor: 'pointer',
+            color: PRIMARY,
         },
 
         actionIconNomargin: {
