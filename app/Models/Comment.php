@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -12,7 +13,7 @@ use App\Models\Traits\HasReadReceipts;
 use App\Models\Traits\HasCreator;
 
 class Comment extends Model {
-    use HasCreator, HasReadReceipts;
+    use HasCreator, HasReadReceipts, HasFactory;
 
     /**
      * The relationships that should always be loaded.

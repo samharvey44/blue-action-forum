@@ -3,17 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Http\Resources\CommentResource;
 use App\Models\Traits\HasCreator;
-
 use InvalidArgumentException;
 
 class Thread extends Model {
-    use HasCreator;
+    use HasCreator, HasFactory;
 
     /**
      * The attributes that are mass assignable.
