@@ -77,6 +77,8 @@ export interface IComment {
     commentReactions: ICommentReaction[];
     replyingTo?: ICommentReply;
     isDeleted: boolean;
+    isReported?: boolean;
+    isReportedByUser: boolean;
 }
 
 export interface IReaction {

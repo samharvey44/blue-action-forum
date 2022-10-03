@@ -7,6 +7,7 @@ use Illuminate\Database\Seeder;
 use App\Models\Category;
 use App\Models\Comment;
 use App\Models\Profile;
+use App\Models\Report;
 use App\Models\Thread;
 use App\Models\Role;
 use App\Models\User;
@@ -44,12 +45,9 @@ class DummySeeder extends Seeder {
      * @return void
      */
     private function seedProfiles(): void {
-        $users = $this->createdRecords['users']->filter(function (User $user) {
-            return $user->hasRole(Role::USER);
-        });
         $collect = collect();
 
-        foreach ($users as $user) {
+        foreach (User::whereDoesntHave('profile')->get() as $user) {
             $profile = Profile::factory()->for($user)->create();
 
             $collect->push($profile);
@@ -108,6 +106,25 @@ class DummySeeder extends Seeder {
     }
 
     /**
+     * Seed dummy reports into the database.
+     * 
+     * @return void
+     */
+    private function seedReports(): void {
+        $reports = Report::factory()
+            ->count(20)
+            ->make()
+            ->each(function (Report $report) {
+                $report->creator()->associate($this->createdRecords['users']->random());
+                $report->reportable()->associate($this->createdRecords['comments']->random());
+
+                $report->save();
+            });
+
+        $this->createdRecords['reports'] = $reports;
+    }
+
+    /**
      * Run the database seeds.
      *
      * @return void
@@ -117,5 +134,6 @@ class DummySeeder extends Seeder {
         $this->seedProfiles();
         $this->seedThreads();
         $this->seedComments();
+        $this->seedReports();
     }
 }

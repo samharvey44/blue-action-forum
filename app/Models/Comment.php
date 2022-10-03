@@ -23,6 +23,7 @@ class Comment extends Model {
     protected $with = [
         'commentReactions',
         'replyingTo',
+        'reports',
         'creator',
         'images',
         'reads',
@@ -92,11 +93,38 @@ class Comment extends Model {
     }
 
     /**
+     * The reports of this comment.
+     * 
+     * @return MorphMany
+     */
+    public function reports(): MorphMany {
+        return $this->morphMany(Report::class, 'reportable');
+    }
+
+    /**
      * Return whether this comment is currently unread.
      *
      * @return bool Whether this comment has been read by the user.
      */
     public function isUnread(): bool {
         return !$this->creator->is(Auth::user()) && !(bool)$this->reads->filter(fn ($read) => $read->isByUser())->count();
+    }
+
+    /**
+     * Return whether this comment is currently reported.
+     *
+     * @return bool Whether this comment is currently reported.
+     */
+    public function isReported(): bool {
+        return (bool)$this->reports->filter(fn (Report $report) => !$report->is_processed)->count();
+    }
+
+    /**
+     * Return whether this comment has been reported by the authed user.
+     *
+     * @return bool Whether this comment has been reported by the authed user.
+     */
+    public function isReportedByUser(): bool {
+        return (bool)$this->reports->filter(fn (Report $report) => $report->reportedByUser())->count();
     }
 }

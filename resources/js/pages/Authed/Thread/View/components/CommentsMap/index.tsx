@@ -30,7 +30,8 @@ const CommentsMap: React.FC<IProps> = ({
     threadIsLocked,
 }) => {
     const [viewingImage, setViewingImage] = useState<IFile | null>(null);
-    const [deletingReaction, setDeletingReaction] = useState(false);
+    const [reportingComment, setReportingComment] = useState(false);
+    const [deletingComment, setDeletingComment] = useState(false);
     const [leavingReaction, setLeavingReaction] = useState(false);
 
     const { enqueueSnackbar } = useSnackbar();
@@ -85,15 +86,32 @@ const CommentsMap: React.FC<IProps> = ({
     };
 
     const handleDeleteComment = (commentId: number) => {
-        setDeletingReaction(true);
+        setDeletingComment(true);
 
         Inertia.delete(`/comments/${commentId}`, {
             onFinish: () => {
-                setDeletingReaction(false);
+                setDeletingComment(false);
 
                 enqueueSnackbar('Comment was deleted.', {
                     variant: 'success',
                 });
+            },
+        });
+    };
+
+    const handleToggleReported = (commentId: number, isReported: boolean) => {
+        setReportingComment(true);
+
+        Inertia.put(`/comments/${commentId}/report`, undefined, {
+            onFinish: () => {
+                setReportingComment(false);
+
+                enqueueSnackbar(
+                    `Comment was ${isReported ? 'unreported' : 'reported'}.`,
+                    {
+                        variant: 'success',
+                    },
+                );
             },
         });
     };
@@ -114,6 +132,7 @@ const CommentsMap: React.FC<IProps> = ({
                     images,
                     commentReactions,
                     isDeleted,
+                    isReportedByUser,
                 }) => (
                     <Grid item xs={12} key={id} sx={styles.commentContainer}>
                         <Grid container spacing={3}>
@@ -231,7 +250,6 @@ const CommentsMap: React.FC<IProps> = ({
                                                 >
                                                     <Tooltip title="Reply to this comment.">
                                                         <Reply
-                                                            color="primary"
                                                             sx={
                                                                 styles.actionIconNomargin
                                                             }
@@ -246,10 +264,9 @@ const CommentsMap: React.FC<IProps> = ({
                                                                     sx={
                                                                         styles.actionIcon
                                                                     }
-                                                                    color="primary"
                                                                     onClick={() => {
                                                                         if (
-                                                                            deletingReaction
+                                                                            deletingComment
                                                                         ) {
                                                                             return;
                                                                         }
@@ -262,10 +279,30 @@ const CommentsMap: React.FC<IProps> = ({
                                                             </Tooltip>
                                                         )
                                                     ) : (
-                                                        <Tooltip title="Report this comment.">
+                                                        <Tooltip
+                                                            title={
+                                                                isReportedByUser
+                                                                    ? 'Unreport this comment.'
+                                                                    : 'Report this comment.'
+                                                            }
+                                                        >
                                                             <Report
+                                                                onClick={() => {
+                                                                    if (
+                                                                        reportingComment
+                                                                    ) {
+                                                                        return;
+                                                                    }
+
+                                                                    handleToggleReported(
+                                                                        id,
+                                                                        isReportedByUser,
+                                                                    );
+                                                                }}
                                                                 sx={
-                                                                    styles.actionIcon
+                                                                    isReportedByUser
+                                                                        ? styles.reportIconReported
+                                                                        : styles.actionIcon
                                                                 }
                                                             />
                                                         </Tooltip>

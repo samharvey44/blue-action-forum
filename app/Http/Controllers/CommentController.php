@@ -6,6 +6,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
+use App\Http\Requests\Comment\ToggleReportedRequest;
 use App\Http\Requests\Comment\MarkAsDeletedRequest;
 use App\Http\Requests\Comment\ReactRequest;
 use App\Http\Requests\Comment\StoreRequest;
@@ -86,5 +87,17 @@ class CommentController extends Controller {
         ]);
 
         $comment->update();
+    }
+
+    /**
+     * Toggle whether the authed user has reported this comment.
+     * 
+     * @param ToggleReportedRequest $request
+     * @param Comment $comment
+     * 
+     * @return void
+     */
+    public function toggleReported(ToggleReportedRequest $request, Comment $comment): void {
+        $request->createOrDeleteReportFor($comment);
     }
 }

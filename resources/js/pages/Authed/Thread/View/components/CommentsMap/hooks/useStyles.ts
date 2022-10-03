@@ -198,8 +198,15 @@ export const useStyles = () => {
             color: PRIMARY,
         },
 
+        reportIconReported: {
+            marginLeft: '10px',
+            cursor: 'pointer',
+            color: WARNING_RED,
+        },
+
         actionIconNomargin: {
             cursor: 'pointer',
+            color: PRIMARY,
         },
     });
 };

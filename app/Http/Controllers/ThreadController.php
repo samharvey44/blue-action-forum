@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
 use Inertia\Response;
 use Inertia\Inertia;
@@ -59,6 +58,8 @@ class ThreadController extends Controller {
      * @return Response
      */
     public function show(ShowRequest $request, Thread $thread, ?string $page = '1'): Response {
+        $thread->markAsRead();
+
         return Inertia::render('Authed/Thread/View/index', [
             'comments' => CommentResource::collection($thread->comments()->orderBy('id')->paginate(Thread::COMMENTS_PER_PAGE, page: $page)),
             'reactions' => ReactionResource::collection(Reaction::all()),
@@ -93,9 +94,7 @@ class ThreadController extends Controller {
     public function markAsRead(MarkAsReadRequest $request, Thread $thread): void {
         abort_unless($thread->isUnread(), 422, 'Thread is already read!');
 
-        DB::transaction(function () use ($thread) {
-            $thread->comments->each(fn ($comment) => $comment->markAsRead());
-        });
+        $thread->markAsRead();
     }
 
     /**

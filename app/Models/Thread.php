@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Http\Resources\CommentResource;
+use Illuminate\Support\Facades\DB;
 use App\Models\Traits\HasCreator;
 use InvalidArgumentException;
 
@@ -134,5 +135,20 @@ class Thread extends Model {
         $hasUnreadComment = (bool)$this->comments->filter(fn ($comment) => $comment->isUnread())->count();
 
         return $hasUnreadComment;
+    }
+
+    /**
+     * Mark this thread as read.
+     * 
+     * @return void
+     */
+    public function markAsRead(): void {
+        DB::transaction(function () {
+            $this->comments->filter(
+                fn ($comment) => $comment->isUnread()
+            )->each(
+                fn ($comment) => $comment->markAsRead()
+            );
+        });
     }
 }
