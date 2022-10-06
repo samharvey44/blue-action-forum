@@ -204,6 +204,11 @@ export const useStyles = () => {
             color: WARNING_RED,
         },
 
+        commentReportedIcon: {
+            marginLeft: '10px',
+            color: WARNING_RED,
+        },
+
         actionIconNomargin: {
             cursor: 'pointer',
             color: PRIMARY,

@@ -135,6 +135,8 @@ class StoreRequest extends FormRequest {
             $comment = $this->storeComment($thread);
 
             $this->storeImages($comment);
+
+            Auth::user()->threadsFollowing()->attach($thread->id);
         });
 
         return $thread;

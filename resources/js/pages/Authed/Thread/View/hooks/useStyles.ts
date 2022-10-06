@@ -59,23 +59,24 @@ export const useStyles = () =>
             width: '30px',
         },
 
-        pinIconPinned: {
+        pinIcon: {
             color: PRIMARY,
             cursor: 'pointer',
             height: '30px',
             width: '30px',
+            marginRight: '10px',
         },
 
         pinIconPinnedNointeraction: {
             color: PRIMARY,
             height: '30px',
             width: '30px',
+            marginRight: '10px',
         },
 
-        pinIconUnpinned: {
+        subscriptionIcon: {
             color: PRIMARY,
             cursor: 'pointer',
-            opacity: 0.4,
             height: '30px',
             width: '30px',
         },

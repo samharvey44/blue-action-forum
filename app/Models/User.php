@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\CanResetPassword as ResettablePassword;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -90,6 +91,15 @@ class User extends Authenticatable implements MustVerifyEmail, ResettablePasswor
     }
 
     /**
+     * The threads this user is following.
+     *
+     * @return BelongsToMany
+     */
+    public function threadsFollowing(): BelongsToMany {
+        return $this->belongsToMany(Thread::class, 'thread_follows', 'user_id', 'thread_id')->withTimestamps();
+    }
+
+    /**
      * Return whether or not this user has the provided role.
      *
      * @param string $role The role name to be checked.
@@ -107,5 +117,16 @@ class User extends Authenticatable implements MustVerifyEmail, ResettablePasswor
      */
     public function hasCreatedProfile(): bool {
         return (bool)$this->profile;
+    }
+
+    /**
+     * Return whether this user is following the given thread.
+     * 
+     * @param Thread $thread The thread to check follows for.
+     * 
+     * @return bool Whether the user is following the thread.
+     */
+    public function isFollowing(Thread $thread): bool {
+        return (bool)$this->threadsFollowing->where('id', $thread->id)->count();
     }
 }

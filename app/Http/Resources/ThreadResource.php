@@ -21,6 +21,7 @@ class ThreadResource extends JsonResource {
             'createdAt' => $this->created_at,
 
             'mostRecentComment' => $this->whenLoaded('comments', fn () => $this->mostRecentComment()),
+            'usersFollowing' => UserResource::collection($this->usersFollowing),
             'categories' => CategoryResource::collection($this->categories),
             'creator' => UserResource::make($this->creator),
         ];

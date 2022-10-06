@@ -1,4 +1,3 @@
-import { Delete, Edit, Reply, Report } from '@mui/icons-material';
 import React, { Fragment, useCallback, useMemo, useState } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import ImageViewer from 'react-simple-image-viewer';
@@ -14,6 +13,13 @@ import {
     Typography,
     useTheme,
 } from '@mui/material';
+import {
+    Delete,
+    Edit,
+    Reply,
+    Report,
+    ReportProblem,
+} from '@mui/icons-material';
 
 import PaginationContainer from './components/PaginationContainer';
 import AddCommentContainer from './components/AddCommentContainer';
@@ -133,6 +139,7 @@ const CommentsMap: React.FC<IProps> = ({
                     commentReactions,
                     isDeleted,
                     isReportedByUser,
+                    isReported,
                 }) => (
                     <Grid item xs={12} key={id} sx={styles.commentContainer}>
                         <Grid container spacing={3}>
@@ -308,6 +315,16 @@ const CommentsMap: React.FC<IProps> = ({
                                                         </Tooltip>
                                                     )}
                                                 </Box>
+                                            )}
+
+                                            {userIsAdmin && isReported && (
+                                                <Tooltip title="Comment has been reported by a user.">
+                                                    <ReportProblem
+                                                        style={
+                                                            styles.commentReportedIcon
+                                                        }
+                                                    />
+                                                </Tooltip>
                                             )}
                                         </Box>
 

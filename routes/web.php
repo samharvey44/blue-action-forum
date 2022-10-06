@@ -68,6 +68,7 @@ Route::middleware('throttle:60,1')->group(function () {
                     });
 
                     Route::prefix('/{thread}')->group(function () {
+                        Route::patch('/toggleFollowing', [ThreadController::class, 'toggleFollowing']);
                         Route::patch('/toggleLocked', [ThreadController::class, 'toggleLocked']);
                         Route::patch('/togglePinned', [ThreadController::class, 'togglePinned']);
                         Route::patch('/markAsRead', [ThreadController::class, 'markAsRead']);

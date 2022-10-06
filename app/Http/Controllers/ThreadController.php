@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Inertia\Response;
 use Inertia\Inertia;
 
+use App\Http\Requests\Thread\ToggleFollowingRequest;
 use App\Http\Requests\Thread\GetPaginatedRequest;
 use App\Http\Requests\Thread\ToggleLockedRequest;
 use App\Http\Requests\Thread\TogglePinnedRequest;
@@ -125,5 +126,17 @@ class ThreadController extends Controller {
         $thread->update();
 
         return response()->json($thread->is_pinned);
+    }
+
+    /**
+     * Toggle whether the authed user is following this thread.
+     * 
+     * @param ToggleFollowingRequest
+     * @param Thread $thread
+     * 
+     * @return JsonResponse
+     */
+    public function toggleFollowing(ToggleFollowingRequest $request, Thread $thread): JsonResponse {
+        return response()->json($request->followOrUnfollow($thread));
     }
 }

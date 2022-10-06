@@ -1,4 +1,3 @@
-import { Circle, Lock, LockOpen, PushPin } from '@mui/icons-material';
 import { Chip, Paper, Tooltip, Typography } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
 import { usePage } from '@inertiajs/inertia-react';
@@ -6,6 +5,15 @@ import { useSnackbar } from 'notistack';
 import { Box } from '@mui/system';
 import moment from 'moment';
 import axios from 'axios';
+import {
+    Circle,
+    Lock,
+    LockOpen,
+    PushPin,
+    PushPinOutlined,
+    Subscriptions,
+    SubscriptionsOutlined,
+} from '@mui/icons-material';
 
 import AuthedContainer from '../../components/AuthedContainer';
 import AppContainer from 'app/components/layout/AppContainer';
@@ -32,9 +40,14 @@ const ViewThread: React.FC = () => {
         [authedUser?.role.name],
     );
 
+    const [userIsFollowing, setUserIsFollowing] = useState(
+        !!thread.usersFollowing.filter(({ id }) => id === authedUser?.id)
+            .length,
+    );
     const [threadIsLocked, setThreadIsLocked] = useState(thread.isLocked);
     const [threadIsPinned, setThreadIsPinned] = useState(thread.isPinned);
 
+    const [togglingFollowing, setTogglingFollowing] = useState(false);
     const [togglingLock, setTogglingLock] = useState(false);
     const [togglingPin, setTogglingPin] = useState(false);
 
@@ -97,6 +110,35 @@ const ViewThread: React.FC = () => {
             })
             .finally(() => {
                 setTogglingPin(false);
+            });
+    };
+
+    const toggleFollowing = () => {
+        if (togglingFollowing) {
+            return;
+        }
+
+        axios
+            .patch(`/threads/${thread.id}/toggleFollowing`)
+            .then(({ data }: { data: boolean }) => {
+                enqueueSnackbar(
+                    `Thread was ${
+                        data ? 'followed' : 'unfollowed'
+                    } successfully.`,
+                    {
+                        variant: 'success',
+                    },
+                );
+
+                setUserIsFollowing(data);
+            })
+            .catch(() => {
+                enqueueSnackbar('Something went wrong!', {
+                    variant: 'error',
+                });
+            })
+            .finally(() => {
+                setTogglingFollowing(false);
             });
     };
 
@@ -191,7 +233,7 @@ const ViewThread: React.FC = () => {
                                 <PushPin
                                     sx={
                                         userIsAdmin
-                                            ? styles.pinIconPinned
+                                            ? styles.pinIcon
                                             : styles.pinIconPinnedNointeraction
                                     }
                                     onClick={() => {
@@ -208,8 +250,8 @@ const ViewThread: React.FC = () => {
                         ) : (
                             userIsAdmin && (
                                 <Tooltip title="Click to pin thread.">
-                                    <PushPin
-                                        sx={styles.pinIconUnpinned}
+                                    <PushPinOutlined
+                                        sx={styles.pinIcon}
                                         onClick={() => {
                                             setTogglingPin(true);
 
@@ -218,6 +260,30 @@ const ViewThread: React.FC = () => {
                                     />
                                 </Tooltip>
                             )
+                        )}
+
+                        {userIsFollowing ? (
+                            <Tooltip title="Unfollow this thread.">
+                                <Subscriptions
+                                    sx={styles.subscriptionIcon}
+                                    onClick={() => {
+                                        setTogglingFollowing(true);
+
+                                        toggleFollowing();
+                                    }}
+                                />
+                            </Tooltip>
+                        ) : (
+                            <Tooltip title="Follow this thread.">
+                                <SubscriptionsOutlined
+                                    sx={styles.subscriptionIcon}
+                                    onClick={() => {
+                                        setTogglingFollowing(true);
+
+                                        toggleFollowing();
+                                    }}
+                                />
+                            </Tooltip>
                         )}
                     </Box>
                 </Paper>

@@ -31,6 +31,7 @@ class Thread extends Model {
      * @var array
      */
     protected $with = [
+        'usersFollowing',
         'categories',
         'creator',
     ];
@@ -75,6 +76,15 @@ class Thread extends Model {
      */
     public function categories(): BelongsToMany {
         return $this->belongsToMany(Category::class, 'thread_categories', 'thread_id', 'category_id')->withTimestamps();
+    }
+
+    /**
+     * The users following this thread.
+     *
+     * @return BelongsToMany
+     */
+    public function usersFollowing(): BelongsToMany {
+        return $this->belongsToMany(User::class, 'thread_follows', 'thread_id', 'user_id')->withTimestamps();
     }
 
     /**
