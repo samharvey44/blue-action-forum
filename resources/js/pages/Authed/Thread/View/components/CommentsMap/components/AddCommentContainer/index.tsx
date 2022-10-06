@@ -9,9 +9,15 @@ import { formInitialValues } from './form/initialValues';
 import { IPreviewableFile } from 'app/interfaces';
 import { useStyles } from './hooks/useStyles';
 import { formSchema } from './form/schema';
+import { ellipsise } from 'app/helpers';
 import { IProps } from './interfaces';
 
-const AddCommentContainer: React.FC<IProps> = ({ threadId }) => {
+const AddCommentContainer: React.FC<IProps> = ({
+    threadId,
+    replyingTo,
+    setReplyingTo,
+    containerRef,
+}) => {
     const { enqueueSnackbar } = useSnackbar();
     const styles = useStyles();
 
@@ -32,6 +38,7 @@ const AddCommentContainer: React.FC<IProps> = ({ threadId }) => {
                     images: uploadedFiles.map(
                         (uploadedFile) => uploadedFile.file,
                     ),
+                    replyingTo: replyingTo?.id ?? null,
                 },
                 {
                     onSuccess: () => {
@@ -41,6 +48,8 @@ const AddCommentContainer: React.FC<IProps> = ({ threadId }) => {
 
                         setUploadedFiles([]);
                         resetForm();
+
+                        setReplyingTo(null);
                     },
                     onFinish: () => {
                         setSubmitting(false);
@@ -139,11 +148,35 @@ const AddCommentContainer: React.FC<IProps> = ({ threadId }) => {
     return (
         <form onSubmit={form.handleSubmit}>
             <Paper sx={styles.paper}>
-                <Typography variant="h6">
-                    Get involved with the discussion!
-                </Typography>
+                {replyingTo ? (
+                    <React.Fragment>
+                        <Box sx={styles.replyingToHeaderContainer}>
+                            <Clear
+                                sx={styles.replyingToClearIcon}
+                                onClick={() => {
+                                    setReplyingTo(null);
+                                }}
+                            />
 
-                <Box sx={styles.commentFormContainer}>
+                            <Typography variant="h6">
+                                Replying to{' '}
+                                <span style={styles.replyingToText}>
+                                    {replyingTo.creator.profile?.username}
+                                </span>
+                            </Typography>
+                        </Box>
+
+                        <Typography variant="subtitle1">
+                            {ellipsise(replyingTo.content ?? '', 25)}
+                        </Typography>
+                    </React.Fragment>
+                ) : (
+                    <Typography variant="h6">
+                        Get involved with the discussion!
+                    </Typography>
+                )}
+
+                <Box sx={styles.commentFormContainer} ref={containerRef}>
                     <TextField
                         label="Leave a comment..."
                         variant="filled"

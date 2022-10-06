@@ -213,5 +213,35 @@ export const useStyles = () => {
             cursor: 'pointer',
             color: PRIMARY,
         },
+
+        replyingContainer: {
+            backgroundColor: '#f5f6f7',
+            padding: '10px',
+            borderRadius: '5px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            width: '100%',
+            marginTop: '10px',
+        },
+
+        replyingToText: {
+            fontWeight: 'bold',
+            color: PRIMARY,
+            marginTop: '5px',
+        },
+
+        replyText: {
+            wordWrap: 'break-word',
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+        },
+
+        replyTextDeleted: {
+            wordWrap: 'break-word',
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+            color: WARNING_RED,
+        },
     });
 };

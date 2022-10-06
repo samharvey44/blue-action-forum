@@ -32,6 +32,7 @@ class StoreRequest extends FormRequest {
             'content' => 'required|string|max:600',
             'images' => 'sometimes|nullable|array',
             'images.*' => 'required|' . Image::getValidationString(),
+            'replyingTo' => 'required|nullable|int|exists:comments,id'
         ];
     }
 
@@ -62,6 +63,11 @@ class StoreRequest extends FormRequest {
 
         $comment->storeCreator(Auth::user());
         $comment->thread()->associate($thread);
+
+        if ((bool)$this->get('replyingTo')) {
+            $comment->replyingTo()->associate(Comment::find($this->get('replyingTo')));
+        }
+
         $comment->save();
 
         return $comment;

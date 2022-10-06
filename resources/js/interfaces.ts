@@ -67,6 +67,7 @@ export interface ICommentReply {
     createdAt: string;
     content?: string;
     creator: IUser;
+    isDeleted: boolean;
 }
 
 export interface IComment {

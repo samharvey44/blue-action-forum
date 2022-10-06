@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useMemo, useState } from 'react';
+import React, { Fragment, useCallback, useMemo, useRef, useState } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import ImageViewer from 'react-simple-image-viewer';
 import { Inertia } from '@inertiajs/inertia';
@@ -27,6 +27,7 @@ import { ICommentReaction, IFile } from 'app/interfaces';
 import useGetAuthedUser from 'app/hooks/getAuthedUser';
 import { useStyles } from './hooks/useStyles';
 import { IProps } from './interfaces';
+import { ellipsise } from 'app/helpers';
 
 const CommentsMap: React.FC<IProps> = ({
     threadId,
@@ -35,6 +36,7 @@ const CommentsMap: React.FC<IProps> = ({
     threadCreatorId,
     threadIsLocked,
 }) => {
+    const [userReplyingTo, setUserReplyingTo] = useState<number | null>(null);
     const [viewingImage, setViewingImage] = useState<IFile | null>(null);
     const [reportingComment, setReportingComment] = useState(false);
     const [deletingComment, setDeletingComment] = useState(false);
@@ -46,6 +48,8 @@ const CommentsMap: React.FC<IProps> = ({
     const theme = useTheme();
 
     const isMd = useMediaQuery(theme.breakpoints.down('md'));
+
+    const replyContainer = useRef<HTMLDivElement | null>(null);
 
     const disableForwardButton =
         comments.meta.current_page === comments.meta.last_page;
@@ -140,6 +144,7 @@ const CommentsMap: React.FC<IProps> = ({
                     isDeleted,
                     isReportedByUser,
                     isReported,
+                    replyingTo,
                 }) => (
                     <Grid item xs={12} key={id} sx={styles.commentContainer}>
                         <Grid container spacing={3}>
@@ -260,6 +265,22 @@ const CommentsMap: React.FC<IProps> = ({
                                                             sx={
                                                                 styles.actionIconNomargin
                                                             }
+                                                            onClick={() => {
+                                                                setUserReplyingTo(
+                                                                    id,
+                                                                );
+
+                                                                if (
+                                                                    replyContainer.current
+                                                                ) {
+                                                                    replyContainer.current.scrollIntoView(
+                                                                        {
+                                                                            behavior:
+                                                                                'smooth',
+                                                                        },
+                                                                    );
+                                                                }
+                                                            }}
                                                         />
                                                     </Tooltip>
 
@@ -327,6 +348,50 @@ const CommentsMap: React.FC<IProps> = ({
                                                 </Tooltip>
                                             )}
                                         </Box>
+
+                                        {replyingTo && (
+                                            <Box sx={styles.replyingContainer}>
+                                                <Typography variant="subtitle1">
+                                                    In reply to{' '}
+                                                    <span
+                                                        style={
+                                                            styles.replyingToText
+                                                        }
+                                                    >
+                                                        {
+                                                            replyingTo.creator
+                                                                .profile
+                                                                ?.username
+                                                        }
+                                                    </span>
+                                                </Typography>
+
+                                                {replyingTo.isDeleted ? (
+                                                    <Typography
+                                                        variant="subtitle2"
+                                                        sx={
+                                                            styles.replyTextDeleted
+                                                        }
+                                                    >
+                                                        <b>
+                                                            Comment was deleted
+                                                            by poster!
+                                                        </b>
+                                                    </Typography>
+                                                ) : (
+                                                    <Typography
+                                                        variant="subtitle2"
+                                                        sx={styles.replyText}
+                                                    >
+                                                        {replyingTo.content &&
+                                                            ellipsise(
+                                                                replyingTo?.content,
+                                                                70,
+                                                            )}
+                                                    </Typography>
+                                                )}
+                                            </Box>
+                                        )}
 
                                         {isDeleted ? (
                                             <Typography
@@ -493,7 +558,16 @@ const CommentsMap: React.FC<IProps> = ({
 
             {(!threadIsLocked || userIsAdmin) && (
                 <Grid item xs={12} style={styles.addCommentGridItem}>
-                    <AddCommentContainer threadId={threadId} />
+                    <AddCommentContainer
+                        threadId={threadId}
+                        replyingTo={
+                            comments.data.find(
+                                (c) => c.id === userReplyingTo,
+                            ) ?? null
+                        }
+                        setReplyingTo={setUserReplyingTo}
+                        containerRef={replyContainer}
+                    />
                 </Grid>
             )}
 
