@@ -113,6 +113,17 @@ class StoreRequest extends FormRequest {
     }
 
     /**
+     * Follow the newly created thread.
+     * 
+     * @param Thread $thread The new thread to follow
+     * 
+     * @return void
+     */
+    private function follow(Thread $thread): void {
+        Auth::user()->threadsFollowing()->attach($thread->id);
+    }
+
+    /**
      * Create a new thread.
      *
      * @return Thread
@@ -135,8 +146,7 @@ class StoreRequest extends FormRequest {
             $comment = $this->storeComment($thread);
 
             $this->storeImages($comment);
-
-            Auth::user()->threadsFollowing()->attach($thread->id);
+            $this->follow($thread);
         });
 
         return $thread;

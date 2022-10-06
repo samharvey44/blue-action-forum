@@ -31,7 +31,6 @@ class Thread extends Model {
      * @var array
      */
     protected $with = [
-        'usersFollowing',
         'categories',
         'creator',
     ];

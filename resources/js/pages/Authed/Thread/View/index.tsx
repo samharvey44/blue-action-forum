@@ -41,8 +41,7 @@ const ViewThread: React.FC = () => {
     );
 
     const [userIsFollowing, setUserIsFollowing] = useState(
-        !!thread.usersFollowing.filter(({ id }) => id === authedUser?.id)
-            .length,
+        thread.userIsFollowing,
     );
     const [threadIsLocked, setThreadIsLocked] = useState(thread.isLocked);
     const [threadIsPinned, setThreadIsPinned] = useState(thread.isPinned);

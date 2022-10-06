@@ -109,7 +109,7 @@ const Home: React.FC = () => {
                             variant="contained"
                             onClick={() => {
                                 handleGetThreads(
-                                    currentThreads?.meta.current_page ?? 1,
+                                    1,
                                     currentFilter,
                                     threadSearch,
                                 );
@@ -128,11 +128,7 @@ const Home: React.FC = () => {
 
                                 setThreadSearch('');
 
-                                handleGetThreads(
-                                    currentThreads?.meta.current_page ?? 1,
-                                    currentFilter,
-                                    '',
-                                );
+                                handleGetThreads(1, currentFilter, '');
                             }}
                         >
                             <Clear />
@@ -142,7 +138,6 @@ const Home: React.FC = () => {
             </Grid>
         ),
         [
-            currentThreads?.meta.current_page,
             styles.searchContainer,
             styles.searchButton,
             styles.searchField,

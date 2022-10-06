@@ -53,7 +53,7 @@ export interface IThread {
     isUnread: boolean;
     isLocked: boolean;
     isPinned: boolean;
-    usersFollowing: IUser[];
+    userIsFollowing: boolean;
 }
 
 export interface ICategory {
