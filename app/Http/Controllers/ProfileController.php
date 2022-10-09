@@ -7,7 +7,10 @@ use Inertia\Response;
 use Inertia\Inertia;
 
 use App\Http\Requests\Profile\IndexRequest;
+use App\Http\Requests\Profile\ShowRequest;
 use App\Http\Requests\Profile\StoreRequest;
+use App\Http\Resources\UserResource;
+use App\Models\Profile;
 
 class ProfileController extends Controller {
     /**
@@ -32,5 +35,19 @@ class ProfileController extends Controller {
         $request->createProfile();
 
         return redirect()->route('home');
+    }
+
+    /**
+     * Show the requested profile.
+     * 
+     * @param ShowRequest $request
+     * 
+     * @return Response
+     */
+    public function show(ShowRequest $request, Profile $profile): Response {
+        return Inertia::render('Authed/Profile/View/index', [
+            'user' => UserResource::make($profile->user),
+            'statistics' => $request->getStatisticsFor($profile->user),
+        ]);
     }
 }

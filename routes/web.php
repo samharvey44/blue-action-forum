@@ -87,6 +87,12 @@ Route::middleware('throttle:60,1')->group(function () {
                         Route::delete('/', [CommentController::class, 'markAsDeleted']);
                     });
                 });
+
+                Route::prefix('/profiles')->group(function () {
+                    Route::prefix('/{profile}')->group(function () {
+                        Route::get('/', [ProfileController::class, 'show'])->name('profile.show');
+                    });
+                });
             });
         });
     });

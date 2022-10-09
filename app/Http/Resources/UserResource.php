@@ -18,6 +18,7 @@ class UserResource extends JsonResource {
             'id' => $this->id,
             'createdAt' => $this->created_at,
             'email' => $this->when($this->id === Auth::id(), $this->email),
+            'lastSeen' => $this->last_seen,
 
             'role' => RoleResource::make($this->role),
             'profile' => ProfileResource::make($this->profile),

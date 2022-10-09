@@ -1,7 +1,7 @@
+import { Logout, Person, PersonAdd } from '@mui/icons-material';
 import React, { Fragment, useState } from 'react';
 import { Link } from '@inertiajs/inertia-react';
 import { Inertia } from '@inertiajs/inertia';
-import { Logout } from '@mui/icons-material';
 import AppBar from '@mui/material/AppBar';
 import { useSnackbar } from 'notistack';
 import {
@@ -75,6 +75,20 @@ const AppContainer: React.FC = ({ children }) => {
                                 'aria-labelledby': 'basic-button',
                             }}
                         >
+                            {authedUser && authedUser.profile && (
+                                <Link
+                                    href={`/profiles/${authedUser.profile.id}`}
+                                    style={styles.menuItemLink}
+                                >
+                                    <MenuItem>
+                                        <ListItemIcon>
+                                            <Person fontSize="small" />
+                                        </ListItemIcon>
+                                        <ListItemText>My Profile</ListItemText>
+                                    </MenuItem>
+                                </Link>
+                            )}
+
                             <MenuItem
                                 onClick={() => {
                                     handleLogout();

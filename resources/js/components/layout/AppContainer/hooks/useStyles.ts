@@ -53,5 +53,10 @@ export const useStyles = () => {
             display: 'flex',
             flexDirection: 'column',
         },
+
+        menuItemLink: {
+            textDecoration: 'none',
+            color: 'inherit',
+        },
     });
 };

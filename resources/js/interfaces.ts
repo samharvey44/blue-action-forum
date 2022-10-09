@@ -20,8 +20,9 @@ export interface IFile {
 export interface IProfile {
     id: number;
     username: string;
-    location?: string;
+    location: string | null;
     profilePicture: IFile | null;
+    bio: string | null;
 }
 
 export interface IRole {
@@ -35,6 +36,7 @@ export interface IUser {
     email?: string;
     profile: IProfile | null;
     role: IRole;
+    lastSeen: string | null;
 }
 
 export interface IPreviewableFile {

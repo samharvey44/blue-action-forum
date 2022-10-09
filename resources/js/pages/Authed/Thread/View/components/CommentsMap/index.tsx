@@ -385,7 +385,7 @@ const CommentsMap: React.FC<IProps> = ({
                                                     >
                                                         {replyingTo.content &&
                                                             ellipsise(
-                                                                replyingTo?.content,
+                                                                replyingTo.content,
                                                                 70,
                                                             )}
                                                     </Typography>

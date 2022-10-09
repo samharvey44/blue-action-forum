@@ -43,6 +43,7 @@ class User extends Authenticatable implements MustVerifyEmail, ResettablePasswor
      */
     protected $dates = [
         'email_verified_at',
+        'last_seen',
     ];
 
     /**
