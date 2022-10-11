@@ -28,7 +28,7 @@ class StoreRequest extends FormRequest {
         return [
             'username' => 'required|alpha_dash|string|min:3|max:30|unique:profiles,username',
             'location' => 'sometimes|nullable|max:30',
-            'bio' => 'sometimes|nullable|max:200',
+            'bio' => 'sometimes|nullable|max:100',
             'profilePicture' => 'sometimes|nullable|' . Image::getValidationString(),
         ];
     }

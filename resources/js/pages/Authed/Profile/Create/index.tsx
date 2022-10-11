@@ -188,7 +188,7 @@ const CreateProfile: React.FC = () => {
                                         helperText={
                                             form.touched.bio && form.errors.bio
                                         }
-                                        rows={6}
+                                        rows={4}
                                         multiline
                                     />
                                 </Grid>
