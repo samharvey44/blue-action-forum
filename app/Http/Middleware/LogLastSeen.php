@@ -40,7 +40,7 @@ class LogLastSeen {
         $user->forceFill(['last_seen' => now()]);
         $user->update();
 
-        Cache::put($cacheKey, true, now()->addMinutes(3));
+        Cache::put($cacheKey, true, now()->addMinutes(1));
 
         return $returnNext;
     }

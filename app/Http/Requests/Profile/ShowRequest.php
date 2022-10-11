@@ -28,18 +28,4 @@ class ShowRequest extends FormRequest {
             //
         ];
     }
-
-    /**
-     * Get statistics to display on the user's profile.
-     * 
-     * @param User $user The user to get statistics for.
-     * 
-     * @return array The array of statistics.
-     */
-    public function getStatisticsFor(User $user): array {
-        return [
-            'threadsCreated' => $user->threads()->count(),
-            'commentsCreated' => $user->comments()->count(),
-        ];
-    }
 }

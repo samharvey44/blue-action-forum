@@ -11,7 +11,9 @@ use Illuminate\Database\Eloquent\Model;
 use App\Http\Resources\CommentResource;
 use Illuminate\Support\Facades\DB;
 use App\Models\Traits\HasCreator;
+
 use InvalidArgumentException;
+use Auth;
 
 class Thread extends Model {
     use HasCreator, HasFactory;
@@ -112,6 +114,10 @@ class Thread extends Model {
                     $sq->where('created_at', '>=', now()->subHours(3));
                 }
             ])->orderByDesc('is_pinned')->orderByDesc('comments_count')->orderByDesc('id'),
+
+            'following' => $query->whereRelation('usersFollowing', 'users.id', Auth::id())
+                ->orderByDesc('is_pinned')
+                ->orderByDesc('id'),
 
             'new' => $query->orderByDesc('is_pinned')->orderByDesc('id'),
 

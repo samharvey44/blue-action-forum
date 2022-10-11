@@ -9,33 +9,29 @@ export const useStyles = () =>
             width: '100%',
         },
 
-        profileTitleContainer: {
+        centerContainer: {
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
         },
 
+        bioText: {
+            wordWrap: 'break-word',
+        },
+
         profilePicture: {
             border: `3px solid ${PRIMARY}`,
             height: '130px',
             width: '130px',
-            marginBottom: '10px',
-        },
-
-        detailsGrid: {
-            marginTop: '10px',
-        },
-
-        bio: {
-            width: '65%',
-        },
-
-        bioMobile: {
-            width: '100%',
+            marginBottom: '20px',
         },
 
         profileAreaHeader: {
             marginBottom: '10px',
+        },
+
+        primaryText: {
+            color: PRIMARY,
         },
     });

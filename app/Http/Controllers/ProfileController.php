@@ -47,7 +47,6 @@ class ProfileController extends Controller {
     public function show(ShowRequest $request, Profile $profile): Response {
         return Inertia::render('Authed/Profile/View/index', [
             'user' => UserResource::make($profile->user),
-            'statistics' => $request->getStatisticsFor($profile->user),
         ]);
     }
 }
