@@ -254,99 +254,101 @@ const CommentsMap: React.FC<IProps> = ({
                                                     )}
                                             </Typography>
 
-                                            {!isDeleted && (
-                                                <Box
-                                                    sx={
-                                                        styles.commentActionsInnerContainer
-                                                    }
-                                                >
-                                                    <Tooltip title="Reply to this comment.">
-                                                        <Reply
-                                                            sx={
-                                                                styles.actionIconNomargin
-                                                            }
-                                                            onClick={() => {
-                                                                setUserReplyingTo(
-                                                                    id,
-                                                                );
-
-                                                                if (
-                                                                    replyContainer.current
-                                                                ) {
-                                                                    replyContainer.current.scrollIntoView(
-                                                                        {
-                                                                            behavior:
-                                                                                'smooth',
-                                                                        },
-                                                                    );
+                                            <Box
+                                                sx={
+                                                    styles.commentActionsInnerContainer
+                                                }
+                                            >
+                                                {!isDeleted && (
+                                                    <Fragment>
+                                                        <Tooltip title="Reply to this comment.">
+                                                            <Reply
+                                                                sx={
+                                                                    styles.actionIconNomargin
                                                                 }
-                                                            }}
-                                                        />
-                                                    </Tooltip>
+                                                                onClick={() => {
+                                                                    setUserReplyingTo(
+                                                                        id,
+                                                                    );
 
-                                                    {creator.id ===
-                                                    authedUser?.id ? (
-                                                        !isDeleted && (
-                                                            <Tooltip title="Delete your comment.">
-                                                                <Delete
-                                                                    sx={
-                                                                        styles.actionIcon
+                                                                    if (
+                                                                        replyContainer.current
+                                                                    ) {
+                                                                        replyContainer.current.scrollIntoView(
+                                                                            {
+                                                                                behavior:
+                                                                                    'smooth',
+                                                                            },
+                                                                        );
                                                                     }
+                                                                }}
+                                                            />
+                                                        </Tooltip>
+
+                                                        {creator.id ===
+                                                        authedUser?.id ? (
+                                                            !isDeleted && (
+                                                                <Tooltip title="Delete your comment.">
+                                                                    <Delete
+                                                                        sx={
+                                                                            styles.actionIcon
+                                                                        }
+                                                                        onClick={() => {
+                                                                            if (
+                                                                                deletingComment
+                                                                            ) {
+                                                                                return;
+                                                                            }
+
+                                                                            handleDeleteComment(
+                                                                                id,
+                                                                            );
+                                                                        }}
+                                                                    />
+                                                                </Tooltip>
+                                                            )
+                                                        ) : (
+                                                            <Tooltip
+                                                                title={
+                                                                    isReportedByUser
+                                                                        ? 'Unreport this comment.'
+                                                                        : 'Report this comment.'
+                                                                }
+                                                            >
+                                                                <Report
                                                                     onClick={() => {
                                                                         if (
-                                                                            deletingComment
+                                                                            reportingComment
                                                                         ) {
                                                                             return;
                                                                         }
 
-                                                                        handleDeleteComment(
+                                                                        handleToggleReported(
                                                                             id,
+                                                                            isReportedByUser,
                                                                         );
                                                                     }}
+                                                                    sx={
+                                                                        isReportedByUser
+                                                                            ? styles.reportIconReported
+                                                                            : styles.actionIcon
+                                                                    }
                                                                 />
                                                             </Tooltip>
-                                                        )
-                                                    ) : (
-                                                        <Tooltip
-                                                            title={
-                                                                isReportedByUser
-                                                                    ? 'Unreport this comment.'
-                                                                    : 'Report this comment.'
+                                                        )}
+                                                    </Fragment>
+                                                )}
+
+                                                {userIsAdmin && isReported && (
+                                                    <Tooltip title="Comment has been reported by a user.">
+                                                        <ReportProblem
+                                                            style={
+                                                                styles.commentReportedIcon
                                                             }
-                                                        >
-                                                            <Report
-                                                                onClick={() => {
-                                                                    if (
-                                                                        reportingComment
-                                                                    ) {
-                                                                        return;
-                                                                    }
-
-                                                                    handleToggleReported(
-                                                                        id,
-                                                                        isReportedByUser,
-                                                                    );
-                                                                }}
-                                                                sx={
-                                                                    isReportedByUser
-                                                                        ? styles.reportIconReported
-                                                                        : styles.actionIcon
-                                                                }
-                                                            />
-                                                        </Tooltip>
-                                                    )}
-                                                </Box>
-                                            )}
-
-                                            {userIsAdmin && isReported && (
-                                                <Tooltip title="Comment has been reported by a user.">
-                                                    <ReportProblem
-                                                        style={
-                                                            styles.commentReportedIcon
-                                                        }
-                                                    />
-                                                </Tooltip>
-                                            )}
+                                                        />
+                                                    </Tooltip>
+                                                )}
+                                            </Box>
                                         </Box>
 
                                         {replyingTo && (

@@ -32,7 +32,7 @@ class StoreRequest extends FormRequest {
             'content' => 'required|string|max:600',
             'images' => 'sometimes|nullable|array',
             'images.*' => 'required|' . Image::getValidationString(),
-            'replyingTo' => 'required|nullable|int|exists:comments,id'
+            'replyingTo' => 'sometimes|nullable|int|exists:comments,id'
         ];
     }
 
