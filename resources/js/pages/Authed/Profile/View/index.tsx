@@ -1,10 +1,14 @@
-import { Avatar, Grid, Paper, Typography } from '@mui/material';
+import { Avatar, Grid, Paper, Tooltip, Typography } from '@mui/material';
+import { Edit, Report, ReportProblem } from '@mui/icons-material';
+import React, { useMemo, useState } from 'react';
+import { useSnackbar } from 'notistack';
 import { Box } from '@mui/system';
 import moment from 'moment';
-import React from 'react';
+import axios from 'axios';
 
 import AuthedContainer from '../../components/AuthedContainer';
 import AppContainer from 'app/components/layout/AppContainer';
+import useGetAuthedUser from 'app/hooks/getAuthedUser';
 import { usePage } from '@inertiajs/inertia-react';
 import { IInertiaProps } from 'app/interfaces';
 import { useStyles } from './hooks/useStyles';
@@ -15,7 +19,44 @@ const ViewProfile: React.FC = () => {
         props: { user },
     } = usePage<IInertiaProps & IProps>();
 
+    const { enqueueSnackbar } = useSnackbar();
+    const authedUser = useGetAuthedUser();
     const styles = useStyles();
+
+    const [reportedByUser, setReportedByUser] = useState(
+        user.profile?.isReportedByUser ?? false,
+    );
+    const [reportingProfile, setReportingProfile] = useState(false);
+
+    const handleToggleReported = () => {
+        setReportingProfile(true);
+
+        axios
+            .patch(`/profiles/${user.profile?.id}/report`)
+            .then(({ data }: { data: boolean }) => {
+                enqueueSnackbar(
+                    `Profile was ${data ? 'reported' : 'unreported'}.`,
+                    {
+                        variant: 'success',
+                    },
+                );
+
+                setReportedByUser(data);
+            })
+            .catch(() => {
+                enqueueSnackbar('Something went wrong!', {
+                    variant: 'error',
+                });
+            })
+            .finally(() => {
+                setReportingProfile(false);
+            });
+    };
+
+    const userIsAdmin = useMemo(
+        () => ['Super Admin', 'Admin'].some((r) => r === authedUser?.role.name),
+        [authedUser?.role.name],
+    );
 
     return (
         <AppContainer>
@@ -120,6 +161,51 @@ const ViewProfile: React.FC = () => {
                                     </Box>
                                 </Grid>
                             </Grid>
+                        </Grid>
+
+                        <Grid item xs={12}>
+                            <Box sx={styles.endAlignContainer}>
+                                {user.profile?.id ===
+                                    authedUser?.profile?.id && (
+                                    <Tooltip title="Edit your profile.">
+                                        <Edit style={styles.editIcon} />
+                                    </Tooltip>
+                                )}
+
+                                {user.profile?.id !==
+                                    authedUser?.profile?.id && (
+                                    <Tooltip
+                                        title={
+                                            reportedByUser
+                                                ? 'Unreport this profile.'
+                                                : 'Report this profile.'
+                                        }
+                                    >
+                                        <Report
+                                            onClick={() => {
+                                                if (reportingProfile) {
+                                                    return;
+                                                }
+
+                                                handleToggleReported();
+                                            }}
+                                            sx={
+                                                reportedByUser
+                                                    ? styles.reportIconReported
+                                                    : styles.actionIcon
+                                            }
+                                        />
+                                    </Tooltip>
+                                )}
+
+                                {userIsAdmin && user.profile?.isReported && (
+                                    <Tooltip title="Comment has been reported by a user.">
+                                        <ReportProblem
+                                            style={styles.reportIconReported}
+                                        />
+                                    </Tooltip>
+                                )}
+                            </Box>
                         </Grid>
                     </Grid>
                 </Paper>

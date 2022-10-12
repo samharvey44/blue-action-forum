@@ -51,9 +51,9 @@ class DummySeeder extends Seeder {
             $profile = Profile::factory()->for($user)->create();
 
             $collect->push($profile);
-
-            $this->createdRecords['profiles'][] = $collect;
         }
+
+        $this->createdRecords['profiles'] = $collect;
     }
 
     /**
@@ -115,8 +115,12 @@ class DummySeeder extends Seeder {
             ->count(20)
             ->make()
             ->each(function (Report $report) {
+                $reportables = collect();
+                $reportables = $reportables->concat($this->createdRecords['profiles']);
+                $reportables = $reportables->concat($this->createdRecords['comments']);
+
                 $report->creator()->associate($this->createdRecords['users']->random());
-                $report->reportable()->associate($this->createdRecords['comments']->random());
+                $report->reportable()->associate($reportables->random());
 
                 $report->save();
             });

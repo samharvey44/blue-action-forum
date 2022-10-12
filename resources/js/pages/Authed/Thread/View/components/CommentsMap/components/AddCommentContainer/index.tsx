@@ -42,7 +42,7 @@ const AddCommentContainer: React.FC<IProps> = ({
                 },
                 {
                     onSuccess: () => {
-                        enqueueSnackbar('Comment created successfully.', {
+                        enqueueSnackbar('Comment created.', {
                             variant: 'success',
                         });
 

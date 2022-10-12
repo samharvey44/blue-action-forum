@@ -23,6 +23,8 @@ export interface IProfile {
     location: string | null;
     profilePicture: IFile | null;
     bio: string | null;
+    isReported?: boolean;
+    isReportedByUser: boolean;
 }
 
 export interface IRole {

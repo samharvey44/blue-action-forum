@@ -26,8 +26,8 @@ import AddCommentContainer from './components/AddCommentContainer';
 import { ICommentReaction, IFile } from 'app/interfaces';
 import useGetAuthedUser from 'app/hooks/getAuthedUser';
 import { useStyles } from './hooks/useStyles';
-import { IProps } from './interfaces';
 import { ellipsise } from 'app/helpers';
+import { IProps } from './interfaces';
 
 const CommentsMap: React.FC<IProps> = ({
     threadId,
@@ -112,7 +112,7 @@ const CommentsMap: React.FC<IProps> = ({
     const handleToggleReported = (commentId: number, isReported: boolean) => {
         setReportingComment(true);
 
-        Inertia.put(`/comments/${commentId}/report`, undefined, {
+        Inertia.patch(`/comments/${commentId}/report`, undefined, {
             onFinish: () => {
                 setReportingComment(false);
 

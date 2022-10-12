@@ -81,7 +81,7 @@ Route::middleware('throttle:60,1')->group(function () {
 
                 Route::prefix('/comments')->group(function () {
                     Route::prefix('/{comment}')->group(function () {
-                        Route::put('/report', [CommentController::class, 'toggleReported']);
+                        Route::patch('/report', [CommentController::class, 'toggleReported']);
                         Route::put('/react', [CommentController::class, 'react']);
 
                         Route::delete('/', [CommentController::class, 'markAsDeleted']);
@@ -90,6 +90,8 @@ Route::middleware('throttle:60,1')->group(function () {
 
                 Route::prefix('/profiles')->group(function () {
                     Route::prefix('/{profile}')->group(function () {
+                        Route::patch('/report', [ProfileController::class, 'toggleReported']);
+
                         Route::get('/', [ProfileController::class, 'show'])->name('profile.show');
                     });
                 });

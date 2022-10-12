@@ -1,15 +1,13 @@
 import { useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/system';
 
+import { PRIMARY, WARNING_RED } from 'app/globals/colors';
 import useMakeStyles from 'app/hooks/makeStyles';
-import { PRIMARY } from 'app/globals/colors';
 
 export const useStyles = () => {
     const theme = useTheme();
 
     const isMd = useMediaQuery(theme.breakpoints.down('md'));
-
-    const WARNING_RED = '#ff0f0f';
 
     return useMakeStyles({
         commentContainer: {
