@@ -27,7 +27,7 @@ class LogLastSeen {
         $cacheKey = Auth::id() . 'last-online';
 
         // If we've got a valid last online status, we won't update it.
-        if (Cache::get($cacheKey)) {
+        if (Cache::has($cacheKey)) {
             return $returnNext;
         }
 

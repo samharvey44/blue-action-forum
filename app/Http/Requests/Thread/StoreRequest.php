@@ -33,7 +33,7 @@ class StoreRequest extends FormRequest {
             'content' => 'required|string|max:600',
             'images' => 'sometimes|nullable|array',
             'images.*' => 'required|' . Image::getValidationString(),
-            'categories' => 'required|array|min:1',
+            'categories' => 'required|array|min:1|max:5',
             // We won't check whether the id exists, since we are going to do this later on.
             'categories.*' => 'required|int|distinct'
         ];
@@ -47,6 +47,7 @@ class StoreRequest extends FormRequest {
     public function messages(): array {
         return [
             'categories.required' => 'You must select at least one category.',
+            'categories.max' => 'A maximum of five categories can be selected.',
         ];
     }
 

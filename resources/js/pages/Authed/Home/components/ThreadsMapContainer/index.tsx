@@ -19,6 +19,7 @@ import {
     PushPin,
     Circle,
     Lock,
+    Subscriptions,
 } from '@mui/icons-material';
 
 import PaginationContainer from './components/PaginationContainer';
@@ -141,6 +142,12 @@ const ThreadsMapContainer: React.FC<IProps> = ({
                                         {thread.isPinned && (
                                             <Tooltip title="Thread has been pinned by an admin.">
                                                 <PushPin color="primary" />
+                                            </Tooltip>
+                                        )}
+
+                                        {thread.userIsFollowing && (
+                                            <Tooltip title="You are following this thread.">
+                                                <Subscriptions color="primary" />
                                             </Tooltip>
                                         )}
                                     </Box>

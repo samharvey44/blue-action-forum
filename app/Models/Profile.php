@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Model;
 
@@ -45,5 +46,14 @@ class Profile extends Model { #
      */
     public function profilePicture(): MorphOne {
         return $this->morphOne(Image::class, 'imageable');
+    }
+
+    /**
+     * The reports of this profile.
+     * 
+     * @return MorphMany
+     */
+    public function reports(): MorphMany {
+        return $this->morphMany(Report::class, 'reportable');
     }
 }
