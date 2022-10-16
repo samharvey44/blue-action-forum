@@ -225,7 +225,6 @@ export const useStyles = () => {
 
         replyingToText: {
             fontWeight: 'bold',
-            color: PRIMARY,
             marginTop: '5px',
         },
 
@@ -240,6 +239,12 @@ export const useStyles = () => {
             whiteSpace: 'pre-wrap',
             wordBreak: 'break-word',
             color: WARNING_RED,
+        },
+
+        profileLink: {
+            textDecoration: 'none',
+            color: PRIMARY,
+            cursor: 'pointer',
         },
     });
 };

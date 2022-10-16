@@ -1,6 +1,7 @@
 import React, { Fragment, useCallback, useMemo, useRef, useState } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import ImageViewer from 'react-simple-image-viewer';
+import { Link } from '@inertiajs/inertia-react';
 import { Inertia } from '@inertiajs/inertia';
 import { useSnackbar } from 'notistack';
 import { Box } from '@mui/system';
@@ -179,9 +180,16 @@ const CommentsMap: React.FC<IProps> = ({
                                             )}
                                         </Box>
 
-                                        <Typography variant="h6">
-                                            <b>{creator.profile?.username}</b>
-                                        </Typography>
+                                        <Link
+                                            href={`/profiles/${creator.profile?.id}`}
+                                            style={styles.profileLink}
+                                        >
+                                            <Typography variant="h6">
+                                                <b>
+                                                    {creator.profile?.username}
+                                                </b>
+                                            </Typography>
+                                        </Link>
 
                                         <Typography variant="subtitle2">
                                             <b>Member since: </b>

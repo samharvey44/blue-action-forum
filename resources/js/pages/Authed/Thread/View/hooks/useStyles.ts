@@ -80,4 +80,10 @@ export const useStyles = () =>
             height: '30px',
             width: '30px',
         },
+
+        profileLink: {
+            textDecoration: 'none',
+            color: PRIMARY,
+            cursor: 'pointer',
+        },
     });

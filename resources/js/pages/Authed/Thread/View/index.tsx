@@ -1,6 +1,6 @@
 import { Chip, Paper, Tooltip, Typography } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
-import { usePage } from '@inertiajs/inertia-react';
+import { Link, usePage } from '@inertiajs/inertia-react';
 import { useSnackbar } from 'notistack';
 import { Box } from '@mui/system';
 import moment from 'moment';
@@ -147,7 +147,13 @@ const ViewThread: React.FC = () => {
                                 .local()
                                 .format('DD/MM/YYYY [at] HH:mm')}
                         </b>{' '}
-                        by <b>{thread.creator.profile?.username}</b>
+                        by{' '}
+                        <Link
+                            href={`/profiles/${thread.creator.profile?.id}`}
+                            style={styles.profileLink}
+                        >
+                            <b>{thread.creator.profile?.username}</b>
+                        </Link>
                     </Typography>
 
                     <Box sx={styles.outerCategoriesMapContainer}>
