@@ -129,7 +129,13 @@ const ThreadsMapContainer: React.FC<IProps> = ({
                                             .format(
                                                 'DD/MM/YYYY [at] HH:mm',
                                             )}{' '}
-                                        by {thread.creator.profile?.username}
+                                        by{' '}
+                                        <Link
+                                            href={`/profiles/${thread.creator.profile?.id}`}
+                                            style={styles.profileLinkText}
+                                        >
+                                            {thread.creator.profile?.username}
+                                        </Link>
                                     </Typography>
 
                                     <Box sx={styles.statusesContainer}>

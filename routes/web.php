@@ -89,6 +89,13 @@ Route::middleware('throttle:60,1')->group(function () {
                 });
 
                 Route::prefix('/profiles')->group(function () {
+                    Route::prefix('/edit')->group(function () {
+                        Route::put('/profilePicture', [ProfileController::class, 'changeProfilePicture']);
+
+                        Route::patch('/', [ProfileController::class, 'update']);
+                        Route::get('/', [ProfileController::class, 'edit']);
+                    });
+
                     Route::prefix('/{profile}')->group(function () {
                         Route::patch('/report', [ProfileController::class, 'toggleReported']);
 

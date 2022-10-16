@@ -1,5 +1,6 @@
 import { Avatar, Grid, Paper, Tooltip, Typography } from '@mui/material';
 import { Edit, Report, ReportProblem } from '@mui/icons-material';
+import { Link, usePage } from '@inertiajs/inertia-react';
 import React, { useMemo, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { Box } from '@mui/system';
@@ -9,7 +10,6 @@ import axios from 'axios';
 import AuthedContainer from '../../components/AuthedContainer';
 import AppContainer from 'app/components/layout/AppContainer';
 import useGetAuthedUser from 'app/hooks/getAuthedUser';
-import { usePage } from '@inertiajs/inertia-react';
 import { IInertiaProps } from 'app/interfaces';
 import { useStyles } from './hooks/useStyles';
 import { IProps } from './interfaces';
@@ -149,7 +149,7 @@ const ViewProfile: React.FC = () => {
                                     </Box>
                                 </Grid>
 
-                                <Grid item xs={12}>
+                                <Grid item xs={12} sx={styles.bioContainer}>
                                     <Box sx={styles.centerContainer}>
                                         <Typography
                                             variant="subtitle1"
@@ -167,9 +167,11 @@ const ViewProfile: React.FC = () => {
                             <Box sx={styles.endAlignContainer}>
                                 {user.profile?.id ===
                                     authedUser?.profile?.id && (
-                                    <Tooltip title="Edit your profile.">
-                                        <Edit style={styles.editIcon} />
-                                    </Tooltip>
+                                    <Link href="/profiles/edit">
+                                        <Tooltip title="Edit your profile.">
+                                            <Edit style={styles.editIcon} />
+                                        </Tooltip>
+                                    </Link>
                                 )}
 
                                 {user.profile?.id !==
@@ -199,7 +201,7 @@ const ViewProfile: React.FC = () => {
                                 )}
 
                                 {userIsAdmin && user.profile?.isReported && (
-                                    <Tooltip title="Comment has been reported by a user.">
+                                    <Tooltip title="Profile has been reported by a user.">
                                         <ReportProblem
                                             style={styles.reportIconReported}
                                         />

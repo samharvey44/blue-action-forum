@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\UploadedFile;
+
+use App\Events\ImageDeleting;
 
 class Profile extends Model { #
     use HasFactory;
@@ -73,5 +76,29 @@ class Profile extends Model { #
      */
     public function isReportedByUser(): bool {
         return (bool)$this->load('reports')->reports->filter(fn (Report $report) => $report->reportedByUser())->count();
+    }
+
+    /**
+     * Change this profile's profile picture.
+     * 
+     * @param ?UploadedFile $newPicture the new profile picture, or null if we are removing an existing one.
+     * 
+     * @return void
+     */
+    public function changeProfilePicture(?UploadedFile $newPicture): void {
+        $current = $this->profilePicture;
+
+        if ((bool)$current) {
+            ImageDeleting::dispatch($current);
+
+            $current->delete();
+        }
+
+        // If there's no uploaded picture, we're just removing our existing one.
+        if (is_null($newPicture)) {
+            return;
+        }
+
+        Image::storeAndAssociate($newPicture, $this);
     }
 }

@@ -57,4 +57,8 @@ export const useStyles = () =>
             color: PRIMARY,
             cursor: 'pointer',
         },
+
+        bioContainer: {
+            marginTop: '20px',
+        },
     });
