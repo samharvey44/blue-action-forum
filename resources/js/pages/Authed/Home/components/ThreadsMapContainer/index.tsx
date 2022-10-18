@@ -206,7 +206,6 @@ const ThreadsMapContainer: React.FC<IProps> = ({
                                     <Link
                                         href={`/threads/${thread.id}`}
                                         style={styles.threadLink}
-                                        preserveScroll={false}
                                         onClick={() => {
                                             rememberProps();
                                         }}
