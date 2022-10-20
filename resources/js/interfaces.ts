@@ -36,9 +36,11 @@ export interface IUser {
     id: number;
     createdAt: string;
     email?: string;
+    isGhost: boolean;
     profile: IProfile | null;
     role: IRole;
     lastSeen: string | null;
+    isSuspended?: boolean;
 }
 
 export interface IPreviewableFile {

@@ -6,8 +6,10 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Auth\Events\Registered;
 
+use App\Listeners\ConvertToGhostUser;
 use App\Listeners\RemoveFromStorage;
 use App\Events\ImageDeleting;
+use App\Events\UserDeleting;
 
 class EventServiceProvider extends ServiceProvider {
     /**
@@ -22,6 +24,10 @@ class EventServiceProvider extends ServiceProvider {
 
         ImageDeleting::class => [
             RemoveFromStorage::class,
+        ],
+
+        UserDeleting::class => [
+            ConvertToGhostUser::class,
         ],
     ];
 

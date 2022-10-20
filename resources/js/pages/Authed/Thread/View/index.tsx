@@ -148,12 +148,16 @@ const ViewThread: React.FC = () => {
                                 .format('DD/MM/YYYY [at] HH:mm')}
                         </b>{' '}
                         by{' '}
-                        <Link
-                            href={`/profiles/${thread.creator.profile?.id}`}
-                            style={styles.profileLink}
-                        >
-                            <b>{thread.creator.profile?.username}</b>
-                        </Link>
+                        {thread.creator.isGhost ? (
+                            thread.creator.profile?.username
+                        ) : (
+                            <Link
+                                href={`/profiles/${thread.creator.profile?.id}`}
+                                style={styles.profileLink}
+                            >
+                                <b>{thread.creator.profile?.username}</b>
+                            </Link>
+                        )}
                     </Typography>
 
                     <Box sx={styles.outerCategoriesMapContainer}>

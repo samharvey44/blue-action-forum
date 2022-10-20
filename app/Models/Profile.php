@@ -11,7 +11,7 @@ use Illuminate\Http\UploadedFile;
 
 use App\Events\ImageDeleting;
 
-class Profile extends Model { #
+class Profile extends Model {
     use HasFactory;
 
     /**

@@ -27,7 +27,7 @@ class ProfileSeeder extends Seeder {
         $superProfile->save();
 
         $ghostProfile = Profile::make([
-            'username' => 'ghost',
+            'username' => '[Deleted User]',
         ]);
 
         $ghostProfile->user()->associate($desiredUsers->firstWhere('email', config('user_management.ghost_user_email')));

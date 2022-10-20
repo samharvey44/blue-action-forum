@@ -113,7 +113,7 @@ const CommentsMap: React.FC<IProps> = ({
     const handleToggleReported = (commentId: number, isReported: boolean) => {
         setReportingComment(true);
 
-        Inertia.patch(`/comments/${commentId}/report`, undefined, {
+        Inertia.patch(`/comments/${commentId}/toggleReported`, undefined, {
             onFinish: () => {
                 setReportingComment(false);
 
@@ -180,16 +180,23 @@ const CommentsMap: React.FC<IProps> = ({
                                             )}
                                         </Box>
 
-                                        <Link
-                                            href={`/profiles/${creator.profile?.id}`}
-                                            style={styles.profileLink}
-                                        >
-                                            <Typography variant="h6">
-                                                <b>
-                                                    {creator.profile?.username}
-                                                </b>
-                                            </Typography>
-                                        </Link>
+                                        {creator.isGhost ? (
+                                            creator.profile?.username
+                                        ) : (
+                                            <Link
+                                                href={`/profiles/${creator.profile?.id}`}
+                                                style={styles.profileLink}
+                                            >
+                                                <Typography variant="h6">
+                                                    <b>
+                                                        {
+                                                            creator.profile
+                                                                ?.username
+                                                        }
+                                                    </b>
+                                                </Typography>
+                                            </Link>
+                                        )}
 
                                         <Typography variant="subtitle2">
                                             <b>Member since: </b>

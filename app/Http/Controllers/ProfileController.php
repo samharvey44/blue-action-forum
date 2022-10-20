@@ -9,6 +9,7 @@ use Inertia\Inertia;
 
 use App\Http\Requests\Profile\ChangeProfilePictureRequest;
 use App\Http\Requests\Profile\ToggleReportedRequest;
+use App\Http\Requests\Profile\DeleteRequest;
 use App\Http\Requests\Profile\UpdateRequest;
 use App\Http\Requests\Profile\IndexRequest;
 use App\Http\Requests\Profile\StoreRequest;
@@ -102,5 +103,19 @@ class ProfileController extends Controller {
      */
     public function update(UpdateRequest $request): void {
         Auth::user()->profile->update($request->only(['location', 'bio']));
+    }
+
+    /**
+     * Delete the authed user's account and profile.
+     * 
+     * @param DeleteRequest $request
+     * 
+     * @return void
+     */
+    public function delete(DeleteRequest $request): void {
+        $request->handleDelete();
+    }
+
+    public function toggleSuspended() {
     }
 }

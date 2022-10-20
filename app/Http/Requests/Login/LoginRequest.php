@@ -46,6 +46,12 @@ class LoginRequest extends FormRequest {
             ]);
         }
 
+        if ($matchingUser->is_suspended) {
+            return redirect()->back()->withErrors([
+                'suspended' => 'Your account has been suspended by an administrator.'
+            ]);
+        }
+
         Auth::login($matchingUser, $this->get('rememberMe'));
 
         return Auth::user()->hasCreatedProfile()

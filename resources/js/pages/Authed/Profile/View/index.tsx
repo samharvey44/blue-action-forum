@@ -1,11 +1,26 @@
-import { Avatar, Grid, Paper, Tooltip, Typography } from '@mui/material';
-import { Edit, Report, ReportProblem } from '@mui/icons-material';
+import {
+    Block,
+    Delete,
+    Edit,
+    Report,
+    ReportProblem,
+} from '@mui/icons-material';
+import React, { Fragment, useMemo, useState } from 'react';
 import { Link, usePage } from '@inertiajs/inertia-react';
-import React, { useMemo, useState } from 'react';
+import { Inertia } from '@inertiajs/inertia';
 import { useSnackbar } from 'notistack';
 import { Box } from '@mui/system';
 import moment from 'moment';
 import axios from 'axios';
+import {
+    Grid,
+    Modal,
+    Paper,
+    Avatar,
+    Button,
+    Tooltip,
+    Typography,
+} from '@mui/material';
 
 import AuthedContainer from '../../components/AuthedContainer';
 import AppContainer from 'app/components/layout/AppContainer';
@@ -23,16 +38,19 @@ const ViewProfile: React.FC = () => {
     const authedUser = useGetAuthedUser();
     const styles = useStyles();
 
+    const [isSuspended, setIsSuspended] = useState(user.isSuspended ?? false);
     const [reportedByUser, setReportedByUser] = useState(
         user.profile?.isReportedByUser ?? false,
     );
+    const [suspendingProfile, setSuspendingProfile] = useState(false);
     const [reportingProfile, setReportingProfile] = useState(false);
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
     const handleToggleReported = () => {
         setReportingProfile(true);
 
         axios
-            .patch(`/profiles/${user.profile?.id}/report`)
+            .patch(`/profiles/${user.profile?.id}/toggleReported`)
             .then(({ data }: { data: boolean }) => {
                 enqueueSnackbar(
                     `Profile was ${data ? 'reported' : 'unreported'}.`,
@@ -50,6 +68,48 @@ const ViewProfile: React.FC = () => {
             })
             .finally(() => {
                 setReportingProfile(false);
+            });
+    };
+
+    const handleDeleteAccount = () => {
+        axios
+            .delete(`/profiles/${user.profile?.id}`)
+            .then(() => {
+                Inertia.visit('/');
+
+                enqueueSnackbar(`Your account was deleted.`, {
+                    variant: 'success',
+                });
+            })
+            .catch(() => {
+                enqueueSnackbar('Something went wrong!', {
+                    variant: 'error',
+                });
+            });
+    };
+
+    const handleToggleSuspended = () => {
+        setSuspendingProfile(true);
+
+        axios
+            .patch(`/profiles/${user.profile?.id}/toggleSuspended`)
+            .then(({ data }: { data: boolean }) => {
+                enqueueSnackbar(
+                    `Account was ${data ? 'suspended' : 'unsuspended'}.`,
+                    {
+                        variant: 'success',
+                    },
+                );
+
+                setIsSuspended(data);
+            })
+            .catch(() => {
+                enqueueSnackbar('Something went wrong!', {
+                    variant: 'error',
+                });
+            })
+            .finally(() => {
+                setSuspendingProfile(false);
             });
     };
 
@@ -167,11 +227,22 @@ const ViewProfile: React.FC = () => {
                             <Box sx={styles.endAlignContainer}>
                                 {user.profile?.id ===
                                     authedUser?.profile?.id && (
-                                    <Link href="/profiles/edit">
-                                        <Tooltip title="Edit your profile.">
-                                            <Edit style={styles.editIcon} />
+                                    <Fragment>
+                                        <Link href="/profiles/edit">
+                                            <Tooltip title="Edit your profile.">
+                                                <Edit style={styles.editIcon} />
+                                            </Tooltip>
+                                        </Link>
+
+                                        <Tooltip title="Delete your profile.">
+                                            <Delete
+                                                style={styles.actionIcon}
+                                                onClick={() => {
+                                                    setDeleteModalOpen(true);
+                                                }}
+                                            />
                                         </Tooltip>
-                                    </Link>
+                                    </Fragment>
                                 )}
 
                                 {user.profile?.id !==
@@ -207,10 +278,60 @@ const ViewProfile: React.FC = () => {
                                         />
                                     </Tooltip>
                                 )}
+
+                                {userIsAdmin && (
+                                    <Tooltip
+                                        title={
+                                            isSuspended
+                                                ? 'Unsuspend this user.'
+                                                : 'Suspend this user.'
+                                        }
+                                    >
+                                        <Block
+                                            onClick={() => {
+                                                if (suspendingProfile) {
+                                                    return;
+                                                }
+
+                                                handleToggleSuspended();
+                                            }}
+                                            style={
+                                                isSuspended
+                                                    ? styles.reportIconReported
+                                                    : styles.actionIcon
+                                            }
+                                        />
+                                    </Tooltip>
+                                )}
                             </Box>
                         </Grid>
                     </Grid>
                 </Paper>
+
+                <Modal
+                    open={deleteModalOpen}
+                    onClose={() => {
+                        setDeleteModalOpen(false);
+                    }}
+                >
+                    <Box sx={styles.innerModalContainer}>
+                        <Typography variant="subtitle1">
+                            <b>Are you sure you wish to delete your account?</b>
+                        </Typography>
+                        <Typography variant="subtitle2">
+                            This action cannot be undone.
+                        </Typography>
+
+                        <Button
+                            startIcon={<Delete />}
+                            sx={styles.deleteButton}
+                            variant="contained"
+                            onClick={handleDeleteAccount}
+                        >
+                            Delete Account
+                        </Button>
+                    </Box>
+                </Modal>
             </AuthedContainer>
         </AppContainer>
     );

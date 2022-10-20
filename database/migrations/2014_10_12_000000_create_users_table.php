@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->string('password');
             $table->dateTime('email_verified_at')->nullable();
             $table->dateTime('last_seen')->nullable();
+            $table->boolean('suspended')->default(false);
 
             $table->foreignIdFor(Role::class);
 

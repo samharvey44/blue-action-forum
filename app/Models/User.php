@@ -47,6 +47,15 @@ class User extends Authenticatable implements MustVerifyEmail, ResettablePasswor
     ];
 
     /**
+     * Get the ghost user account.
+     * 
+     * @return self
+     */
+    public static function ghostUser(): self {
+        return self::firstWhere('email', config('user_management.ghost_user_email'));
+    }
+
+    /**
      * The role this user has.
      *
      * @return BelongsTo
