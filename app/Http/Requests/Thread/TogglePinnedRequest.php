@@ -15,7 +15,7 @@ class TogglePinnedRequest extends FormRequest {
      * @return bool
      */
     public function authorize(): bool {
-        return Auth::check() && (Auth::user()->hasRole(Role::SUPER_ADMIN) || Auth::user()->hasRole(Role::ADMIN));
+        return Auth::check();
     }
 
     /**

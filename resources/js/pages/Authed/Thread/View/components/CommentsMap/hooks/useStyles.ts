@@ -1,8 +1,8 @@
 import { useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/system';
 
+import { PRIMARY, WARNING_RED } from 'app/globals/colors';
 import useMakeStyles from 'app/hooks/makeStyles';
-import { PRIMARY } from 'app/globals/colors';
 
 export const useStyles = () => {
     const theme = useTheme();
@@ -81,6 +81,16 @@ export const useStyles = () => {
             marginTop: '10px',
             textAlign: 'left',
             width: '100%',
+        },
+
+        commentContentDeleted: {
+            wordWrap: 'break-word',
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+            marginTop: '10px',
+            textAlign: 'left',
+            width: '100%',
+            color: WARNING_RED,
         },
 
         profileMdContainer: {
@@ -167,6 +177,74 @@ export const useStyles = () => {
 
         addCommentGridItem: {
             marginTop: isMd ? '60px' : undefined,
+        },
+
+        commentActionsContainer: {
+            display: 'flex',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            width: '100%',
+        },
+
+        commentActionsInnerContainer: {
+            marginLeft: 'auto',
+        },
+
+        actionIcon: {
+            marginLeft: '10px',
+            cursor: 'pointer',
+            color: PRIMARY,
+        },
+
+        reportIconReported: {
+            marginLeft: '10px',
+            cursor: 'pointer',
+            color: WARNING_RED,
+        },
+
+        commentReportedIcon: {
+            marginLeft: '10px',
+            color: WARNING_RED,
+        },
+
+        actionIconNomargin: {
+            cursor: 'pointer',
+            color: PRIMARY,
+        },
+
+        replyingContainer: {
+            backgroundColor: '#f5f6f7',
+            padding: '10px',
+            borderRadius: '5px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            width: '100%',
+            marginTop: '10px',
+        },
+
+        replyingToText: {
+            fontWeight: 'bold',
+            marginTop: '5px',
+        },
+
+        replyText: {
+            wordWrap: 'break-word',
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+        },
+
+        replyTextDeleted: {
+            wordWrap: 'break-word',
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+            color: WARNING_RED,
+        },
+
+        profileLink: {
+            textDecoration: 'none',
+            color: PRIMARY,
+            cursor: 'pointer',
         },
     });
 };

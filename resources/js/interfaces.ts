@@ -20,8 +20,11 @@ export interface IFile {
 export interface IProfile {
     id: number;
     username: string;
-    location?: string;
+    location: string | null;
     profilePicture: IFile | null;
+    bio: string | null;
+    isReported?: boolean;
+    isReportedByUser: boolean;
 }
 
 export interface IRole {
@@ -33,8 +36,11 @@ export interface IUser {
     id: number;
     createdAt: string;
     email?: string;
+    isGhost: boolean;
     profile: IProfile | null;
     role: IRole;
+    lastSeen: string | null;
+    isSuspended?: boolean;
 }
 
 export interface IPreviewableFile {
@@ -53,6 +59,7 @@ export interface IThread {
     isUnread: boolean;
     isLocked: boolean;
     isPinned: boolean;
+    userIsFollowing: boolean;
 }
 
 export interface ICategory {
@@ -61,13 +68,25 @@ export interface ICategory {
     displayColor: string;
 }
 
+export interface ICommentReply {
+    id: number;
+    createdAt: string;
+    content?: string;
+    creator: IUser;
+    isDeleted: boolean;
+}
+
 export interface IComment {
     id: number;
     createdAt: string;
-    content: string;
-    images: IFile[];
+    content?: string;
+    images?: IFile[];
     creator: IUser;
     commentReactions: ICommentReaction[];
+    replyingTo?: ICommentReply;
+    isDeleted: boolean;
+    isReported?: boolean;
+    isReportedByUser: boolean;
 }
 
 export interface IReaction {

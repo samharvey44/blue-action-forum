@@ -80,5 +80,23 @@ export const useStyles = () => {
             marginTop: '10px',
             marginBottom: '10px',
         },
+
+        replyingToText: {
+            color: PRIMARY,
+            fontWeight: 'bold',
+        },
+
+        replyingToHeaderContainer: {
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            textAlign: 'center',
+        },
+
+        replyingToClearIcon: {
+            color: PRIMARY,
+            marginLeft: '10px',
+            cursor: 'pointer',
+        },
     });
 };

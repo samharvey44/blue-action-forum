@@ -1,11 +1,19 @@
-import { Circle, Lock, LockOpen, PushPin } from '@mui/icons-material';
 import { Chip, Paper, Tooltip, Typography } from '@mui/material';
-import React, { useEffect, useMemo, useState } from 'react';
-import { usePage } from '@inertiajs/inertia-react';
+import { Link, usePage } from '@inertiajs/inertia-react';
+import React, { useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { Box } from '@mui/system';
 import moment from 'moment';
 import axios from 'axios';
+import {
+    Circle,
+    Lock,
+    LockOpen,
+    PushPin,
+    PushPinOutlined,
+    Subscriptions,
+    SubscriptionsOutlined,
+} from '@mui/icons-material';
 
 import AuthedContainer from '../../components/AuthedContainer';
 import AppContainer from 'app/components/layout/AppContainer';
@@ -13,6 +21,7 @@ import useGetAuthedUser from 'app/hooks/getAuthedUser';
 import CommentsMap from './components/CommentsMap';
 import { IInertiaProps } from 'app/interfaces';
 import { useStyles } from './hooks/useStyles';
+import { userIsAdmin } from 'app/helpers';
 import { IProps } from './interfaces';
 
 const ViewThread: React.FC = () => {
@@ -24,17 +33,13 @@ const ViewThread: React.FC = () => {
     const authedUser = useGetAuthedUser();
     const styles = useStyles();
 
-    const userIsAdmin = useMemo(
-        () =>
-            ['Super Admin', 'Admin'].some(
-                (role) => role === authedUser?.role.name,
-            ),
-        [authedUser?.role.name],
+    const [userIsFollowing, setUserIsFollowing] = useState(
+        thread.userIsFollowing,
     );
-
     const [threadIsLocked, setThreadIsLocked] = useState(thread.isLocked);
     const [threadIsPinned, setThreadIsPinned] = useState(thread.isPinned);
 
+    const [togglingFollowing, setTogglingFollowing] = useState(false);
     const [togglingLock, setTogglingLock] = useState(false);
     const [togglingPin, setTogglingPin] = useState(false);
 
@@ -54,12 +59,9 @@ const ViewThread: React.FC = () => {
         axios
             .patch(`/threads/${thread.id}/toggleLocked`)
             .then(({ data }: { data: boolean }) => {
-                enqueueSnackbar(
-                    `Thread was ${data ? 'locked' : 'unlocked'} successfully.`,
-                    {
-                        variant: 'success',
-                    },
-                );
+                enqueueSnackbar(`Thread was ${data ? 'locked' : 'unlocked'}.`, {
+                    variant: 'success',
+                });
 
                 setThreadIsLocked(data);
             })
@@ -81,12 +83,9 @@ const ViewThread: React.FC = () => {
         axios
             .patch(`/threads/${thread.id}/togglePinned`)
             .then(({ data }: { data: boolean }) => {
-                enqueueSnackbar(
-                    `Thread was ${data ? 'pinned' : 'unpinned'} successfully.`,
-                    {
-                        variant: 'success',
-                    },
-                );
+                enqueueSnackbar(`Thread was ${data ? 'pinned' : 'unpinned'}.`, {
+                    variant: 'success',
+                });
 
                 setThreadIsPinned(data);
             })
@@ -99,6 +98,35 @@ const ViewThread: React.FC = () => {
                 setTogglingPin(false);
             });
     };
+
+    const toggleFollowing = () => {
+        if (togglingFollowing) {
+            return;
+        }
+
+        axios
+            .patch(`/threads/${thread.id}/toggleFollowing`)
+            .then(({ data }: { data: boolean }) => {
+                enqueueSnackbar(
+                    `Thread was ${data ? 'followed' : 'unfollowed'}.`,
+                    {
+                        variant: 'success',
+                    },
+                );
+
+                setUserIsFollowing(data);
+            })
+            .catch(() => {
+                enqueueSnackbar('Something went wrong!', {
+                    variant: 'error',
+                });
+            })
+            .finally(() => {
+                setTogglingFollowing(false);
+            });
+    };
+
+    const authedUserIsAdmin = userIsAdmin(authedUser);
 
     return (
         <AppContainer>
@@ -114,7 +142,17 @@ const ViewThread: React.FC = () => {
                                 .local()
                                 .format('DD/MM/YYYY [at] HH:mm')}
                         </b>{' '}
-                        by <b>{thread.creator.profile?.username}</b>
+                        by{' '}
+                        {thread.creator.isGhost ? (
+                            thread.creator.profile?.username
+                        ) : (
+                            <Link
+                                href={`/profiles/${thread.creator.profile?.id}`}
+                                style={styles.profileLink}
+                            >
+                                <b>{thread.creator.profile?.username}</b>
+                            </Link>
+                        )}
                     </Typography>
 
                     <Box sx={styles.outerCategoriesMapContainer}>
@@ -143,19 +181,19 @@ const ViewThread: React.FC = () => {
                         {threadIsLocked ? (
                             <Tooltip
                                 title={
-                                    userIsAdmin
+                                    authedUserIsAdmin
                                         ? 'Click to unlock thread.'
                                         : 'Thread is locked.'
                                 }
                             >
                                 <Lock
                                     sx={
-                                        userIsAdmin
+                                        authedUserIsAdmin
                                             ? styles.lockIcon
                                             : styles.lockIconNointeraction
                                     }
                                     onClick={() => {
-                                        if (!userIsAdmin) {
+                                        if (!authedUserIsAdmin) {
                                             return;
                                         }
 
@@ -166,7 +204,7 @@ const ViewThread: React.FC = () => {
                                 />
                             </Tooltip>
                         ) : (
-                            userIsAdmin && (
+                            authedUserIsAdmin && (
                                 <Tooltip title="Click to lock thread.">
                                     <LockOpen
                                         sx={styles.lockIcon}
@@ -183,19 +221,19 @@ const ViewThread: React.FC = () => {
                         {threadIsPinned ? (
                             <Tooltip
                                 title={
-                                    userIsAdmin
+                                    authedUserIsAdmin
                                         ? 'Click to unpin thread.'
                                         : 'Thread is pinned.'
                                 }
                             >
                                 <PushPin
                                     sx={
-                                        userIsAdmin
-                                            ? styles.pinIconPinned
+                                        authedUserIsAdmin
+                                            ? styles.pinIcon
                                             : styles.pinIconPinnedNointeraction
                                     }
                                     onClick={() => {
-                                        if (!userIsAdmin) {
+                                        if (!authedUserIsAdmin) {
                                             return;
                                         }
 
@@ -206,10 +244,10 @@ const ViewThread: React.FC = () => {
                                 />
                             </Tooltip>
                         ) : (
-                            userIsAdmin && (
+                            authedUserIsAdmin && (
                                 <Tooltip title="Click to pin thread.">
-                                    <PushPin
-                                        sx={styles.pinIconUnpinned}
+                                    <PushPinOutlined
+                                        sx={styles.pinIcon}
                                         onClick={() => {
                                             setTogglingPin(true);
 
@@ -218,6 +256,30 @@ const ViewThread: React.FC = () => {
                                     />
                                 </Tooltip>
                             )
+                        )}
+
+                        {userIsFollowing ? (
+                            <Tooltip title="Unfollow this thread.">
+                                <Subscriptions
+                                    sx={styles.subscriptionIcon}
+                                    onClick={() => {
+                                        setTogglingFollowing(true);
+
+                                        toggleFollowing();
+                                    }}
+                                />
+                            </Tooltip>
+                        ) : (
+                            <Tooltip title="Follow this thread.">
+                                <SubscriptionsOutlined
+                                    sx={styles.subscriptionIcon}
+                                    onClick={() => {
+                                        setTogglingFollowing(true);
+
+                                        toggleFollowing();
+                                    }}
+                                />
+                            </Tooltip>
                         )}
                     </Box>
                 </Paper>

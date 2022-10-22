@@ -13,5 +13,5 @@ export const formSchema = Yup.object().shape({
         30,
         'Location must not be longer than 30 characters.',
     ),
-    bio: Yup.string().max(200, 'Bio must not be longer than 200 characters.'),
+    bio: Yup.string().max(100, 'Bio must not be longer than 100 characters.'),
 });

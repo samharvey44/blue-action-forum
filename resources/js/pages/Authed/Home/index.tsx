@@ -1,4 +1,3 @@
-import { Add, Clear, History, Search, Whatshot } from '@mui/icons-material';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link } from '@inertiajs/inertia-react';
 import { Inertia } from '@inertiajs/inertia';
@@ -14,6 +13,14 @@ import {
     Box,
     CircularProgress,
 } from '@mui/material';
+import {
+    Add,
+    Clear,
+    History,
+    Search,
+    Whatshot,
+    Subscriptions,
+} from '@mui/icons-material';
 
 import ThreadsMapContainer from './components/ThreadsMapContainer';
 import AppContainer from 'app/components/layout/AppContainer';
@@ -109,7 +116,7 @@ const Home: React.FC = () => {
                             variant="contained"
                             onClick={() => {
                                 handleGetThreads(
-                                    currentThreads?.meta.current_page ?? 1,
+                                    1,
                                     currentFilter,
                                     threadSearch,
                                 );
@@ -128,11 +135,7 @@ const Home: React.FC = () => {
 
                                 setThreadSearch('');
 
-                                handleGetThreads(
-                                    currentThreads?.meta.current_page ?? 1,
-                                    currentFilter,
-                                    '',
-                                );
+                                handleGetThreads(1, currentFilter, '');
                             }}
                         >
                             <Clear />
@@ -142,7 +145,6 @@ const Home: React.FC = () => {
             </Grid>
         ),
         [
-            currentThreads?.meta.current_page,
             styles.searchContainer,
             styles.searchButton,
             styles.searchField,
@@ -226,6 +228,30 @@ const Home: React.FC = () => {
                                                 }}
                                             >
                                                 Hot
+                                            </Button>
+
+                                            <Button
+                                                variant={
+                                                    currentFilter ===
+                                                    EFilter.Following
+                                                        ? 'contained'
+                                                        : 'outlined'
+                                                }
+                                                startIcon={<Subscriptions />}
+                                                onClick={() => {
+                                                    handleGetThreads(
+                                                        currentThreads?.meta
+                                                            .current_page ?? 1,
+                                                        EFilter.Following,
+                                                        threadSearch,
+                                                    );
+
+                                                    setCurrentFilter(
+                                                        EFilter.Following,
+                                                    );
+                                                }}
+                                            >
+                                                Following
                                             </Button>
 
                                             <Button

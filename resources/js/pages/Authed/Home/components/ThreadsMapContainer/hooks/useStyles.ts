@@ -72,5 +72,11 @@ export const useStyles = () => {
             justifyContent: 'flex-end',
             marginLeft: '20px',
         },
+
+        profileLinkText: {
+            color: PRIMARY,
+            textDecoration: 'none',
+            cursor: 'pointer',
+        },
     });
 };

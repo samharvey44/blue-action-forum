@@ -19,6 +19,7 @@ import {
     PushPin,
     Circle,
     Lock,
+    Subscriptions,
 } from '@mui/icons-material';
 
 import PaginationContainer from './components/PaginationContainer';
@@ -128,7 +129,20 @@ const ThreadsMapContainer: React.FC<IProps> = ({
                                             .format(
                                                 'DD/MM/YYYY [at] HH:mm',
                                             )}{' '}
-                                        by {thread.creator.profile?.username}
+                                        by{' '}
+                                        {thread.creator.isGhost ? (
+                                            thread.creator.profile?.username
+                                        ) : (
+                                            <Link
+                                                href={`/profiles/${thread.creator.profile?.id}`}
+                                                style={styles.profileLinkText}
+                                            >
+                                                {
+                                                    thread.creator.profile
+                                                        ?.username
+                                                }
+                                            </Link>
+                                        )}
                                     </Typography>
 
                                     <Box sx={styles.statusesContainer}>
@@ -143,25 +157,34 @@ const ThreadsMapContainer: React.FC<IProps> = ({
                                                 <PushPin color="primary" />
                                             </Tooltip>
                                         )}
+
+                                        {thread.userIsFollowing && (
+                                            <Tooltip title="You are following this thread.">
+                                                <Subscriptions color="primary" />
+                                            </Tooltip>
+                                        )}
                                     </Box>
                                 </Box>
                             </Grid>
 
-                            <Grid item xs={12}>
-                                <Box sx={styles.threadContentContainer}>
-                                    <Typography variant="subtitle2">
-                                        <b>
-                                            {thread.mostRecentComment?.creator
-                                                .profile?.username ?? 'Unknown'}
-                                        </b>
-                                        {` said: ${ellipsise(
-                                            thread.mostRecentComment?.content ??
-                                                '',
-                                            30,
-                                        )}`}
-                                    </Typography>
-                                </Box>
-                            </Grid>
+                            {thread.mostRecentComment && (
+                                <Grid item xs={12}>
+                                    <Box sx={styles.threadContentContainer}>
+                                        <Typography variant="subtitle2">
+                                            <b>
+                                                {thread.mostRecentComment
+                                                    .creator.profile
+                                                    ?.username ?? 'Unknown'}
+                                            </b>
+                                            {` said: ${ellipsise(
+                                                thread.mostRecentComment
+                                                    .content ?? '',
+                                                30,
+                                            )}`}
+                                        </Typography>
+                                    </Box>
+                                </Grid>
+                            )}
 
                             <Grid item xs={12} md={6}>
                                 <Box sx={styles.categoriesContainer}>

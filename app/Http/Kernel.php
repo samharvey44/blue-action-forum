@@ -20,6 +20,7 @@ class Kernel extends HttpKernel {
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+        \App\Http\Middleware\LogLastSeen::class,
     ];
 
     /**
@@ -65,5 +66,7 @@ class Kernel extends HttpKernel {
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'profile.created' => \App\Http\Middleware\HasCreatedProfile::class,
         'images.optimize' => \Spatie\LaravelImageOptimizer\Middlewares\OptimizeImages::class,
+        'user.unsuspended' => \App\Http\Middleware\UserNotSuspended::class,
+        'user.isAdmin' => \App\Http\Middleware\UserIsAdmin::class,
     ];
 }

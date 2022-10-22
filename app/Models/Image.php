@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 class Image extends Model {
     /**
@@ -68,5 +69,14 @@ class Image extends Model {
      */
     public function getImage(): BinaryFileResponse {
         return response()->file(storage_path('app/') . $this->storage_path);
+    }
+
+    /**
+     * Delete this image from the filesystem.
+     * 
+     * @return void
+     */
+    public function removeFromStorage(): void {
+        Storage::disk('local')->delete($this->storage_path);
     }
 }

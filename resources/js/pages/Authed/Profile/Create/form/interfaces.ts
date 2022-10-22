@@ -1,5 +1,5 @@
 export interface IInitialValues {
     username: string;
     location: string;
-    bio: '';
+    bio: string;
 }

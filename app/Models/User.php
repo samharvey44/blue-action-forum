@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\CanResetPassword as ResettablePassword;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -13,7 +15,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements MustVerifyEmail, ResettablePassword {
-    use HasApiTokens, Notifiable, CanResetPassword;
+    use HasApiTokens, Notifiable, CanResetPassword, HasFactory;
 
     /**
      * The attributes that are mass assignable.
@@ -41,7 +43,26 @@ class User extends Authenticatable implements MustVerifyEmail, ResettablePasswor
      */
     protected $dates = [
         'email_verified_at',
+        'last_seen',
     ];
+
+    /**
+     * The attributes that should be cast to native types.
+     * 
+     * @var array
+     */
+    protected $casts = [
+        'is_suspended' => 'boolean',
+    ];
+
+    /**
+     * Get the ghost user account.
+     * 
+     * @return self
+     */
+    public static function ghostUser(): self {
+        return self::firstWhere('email', config('user_management.ghost_user_email'));
+    }
 
     /**
      * The role this user has.
@@ -89,6 +110,15 @@ class User extends Authenticatable implements MustVerifyEmail, ResettablePasswor
     }
 
     /**
+     * The threads this user is following.
+     *
+     * @return BelongsToMany
+     */
+    public function threadsFollowing(): BelongsToMany {
+        return $this->belongsToMany(Thread::class, 'thread_follows', 'user_id', 'thread_id')->withTimestamps();
+    }
+
+    /**
      * Return whether or not this user has the provided role.
      *
      * @param string $role The role name to be checked.
@@ -106,5 +136,25 @@ class User extends Authenticatable implements MustVerifyEmail, ResettablePasswor
      */
     public function hasCreatedProfile(): bool {
         return (bool)$this->profile;
+    }
+
+    /**
+     * Return whether this user is following the given thread.
+     * 
+     * @param Thread $thread The thread to check follows for.
+     * 
+     * @return bool Whether the user is following the thread.
+     */
+    public function isFollowing(Thread $thread): bool {
+        return (bool)$this->threadsFollowing->where('id', $thread->id)->count();
+    }
+
+    /**
+     * Return whether this user is suspendable and deletable.
+     * 
+     * @return bool Whether this user can be suspended and/or deleted.
+     */
+    public function suspendableAndDeletable(): bool {
+        return !in_array($this->email, [config('user_management.super_user_email'), config('user_management.ghost_user_email')]);
     }
 }

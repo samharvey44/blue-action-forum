@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
 use Inertia\Response;
 use Inertia\Inertia;
 
+use App\Http\Requests\Thread\ToggleFollowingRequest;
 use App\Http\Requests\Thread\GetPaginatedRequest;
 use App\Http\Requests\Thread\ToggleLockedRequest;
 use App\Http\Requests\Thread\TogglePinnedRequest;
@@ -59,6 +59,8 @@ class ThreadController extends Controller {
      * @return Response
      */
     public function show(ShowRequest $request, Thread $thread, ?string $page = '1'): Response {
+        $thread->markAsRead();
+
         return Inertia::render('Authed/Thread/View/index', [
             'comments' => CommentResource::collection($thread->comments()->orderBy('id')->paginate(Thread::COMMENTS_PER_PAGE, page: $page)),
             'reactions' => ReactionResource::collection(Reaction::all()),
@@ -93,9 +95,7 @@ class ThreadController extends Controller {
     public function markAsRead(MarkAsReadRequest $request, Thread $thread): void {
         abort_unless($thread->isUnread(), 422, 'Thread is already read!');
 
-        DB::transaction(function () use ($thread) {
-            $thread->comments->each(fn ($comment) => $comment->markAsRead());
-        });
+        $thread->markAsRead();
     }
 
     /**
@@ -126,5 +126,17 @@ class ThreadController extends Controller {
         $thread->update();
 
         return response()->json($thread->is_pinned);
+    }
+
+    /**
+     * Toggle whether the authed user is following this thread.
+     * 
+     * @param ToggleFollowingRequest
+     * @param Thread $thread
+     * 
+     * @return JsonResponse
+     */
+    public function toggleFollowing(ToggleFollowingRequest $request, Thread $thread): JsonResponse {
+        return response()->json($request->followOrUnfollow($thread));
     }
 }

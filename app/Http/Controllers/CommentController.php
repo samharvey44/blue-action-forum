@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
+use App\Http\Requests\Comment\ToggleReportedRequest;
+use App\Http\Requests\Comment\MarkAsDeletedRequest;
 use App\Http\Requests\Comment\ReactRequest;
 use App\Http\Requests\Comment\StoreRequest;
 use App\Models\Comment;
@@ -12,14 +15,20 @@ use App\Models\Thread;
 
 class CommentController extends Controller {
     /**
-     * React to comment with the given reaction.
+     * React to a comment with the given reaction.
      * 
      * @param ReactRequest $request
      * @param Comment $comment
      * 
-     * @return void
+     * @return ?RedirectResponse
      */
-    public function react(ReactRequest $request, Comment $comment): void {
+    public function react(ReactRequest $request, Comment $comment): ?RedirectResponse {
+        if ($comment->is_deleted) {
+            return back()->withErrors([
+                'reaction' => "You can't react to a deleted comment!",
+            ]);
+        }
+
         $existingReaction = $request->findExistingReaction($comment);
 
         if ($existingReaction) {
@@ -28,11 +37,13 @@ class CommentController extends Controller {
             $existingReaction->delete();
 
             if ($isRemovingReaction) {
-                return;
+                return null;
             }
         }
 
         $request->storeCommentReaction($comment);
+
+        return null;
     }
 
     /**
@@ -56,5 +67,37 @@ class CommentController extends Controller {
         });
 
         return null;
+    }
+
+    /**
+     * Mark the requested comment as deleted.
+     * 
+     * @param MarkAsDeletedRequest $request
+     * @param Comment $comment
+     * 
+     * @return void
+     */
+    public function markAsDeleted(MarkAsDeletedRequest $request, Comment $comment): void {
+        abort_unless($comment->creator->is(Auth::user()), 403, "You can't delete a comment that isn't yours!");
+
+        abort_if($comment->is_deleted, 422, 'Comment is already deleted!');
+
+        $comment->forceFill([
+            'is_deleted' => true,
+        ]);
+
+        $comment->update();
+    }
+
+    /**
+     * Toggle whether the authed user has reported this comment.
+     * 
+     * @param ToggleReportedRequest $request
+     * @param Comment $comment
+     * 
+     * @return void
+     */
+    public function toggleReported(ToggleReportedRequest $request, Comment $comment): void {
+        $request->createOrDeleteReportFor($comment);
     }
 }

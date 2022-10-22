@@ -18,5 +18,9 @@ class DatabaseSeeder extends Seeder {
             CategorySeeder::class,
             ReactionSeeder::class,
         ]);
+
+        if (config('app.env') === 'local') {
+            $this->call(DummySeeder::class);
+        }
     }
 }
