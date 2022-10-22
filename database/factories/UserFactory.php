@@ -19,7 +19,7 @@ class UserFactory extends Factory {
             'email' => $this->faker->unique()->safeEmail(),
             'password' => Hash::make('password'),
             'email_verified_at' => now(),
-            'suspended' => $this->faker->boolean(5),
+            'is_suspended' => $this->faker->boolean(5),
         ];
     }
 }

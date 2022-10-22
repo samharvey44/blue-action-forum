@@ -3,6 +3,7 @@ import { Box, Grow, Button } from '@mui/material';
 import { Link } from '@inertiajs/inertia-react';
 import React from 'react';
 
+import useHandleLogoutSuspended from 'app/hooks/request/handleLogoutSuspended';
 import useHandleInertiaMessages from 'app/hooks/request/handleInertiaMessages';
 import { useStyles } from './hooks/useStyles';
 import { IProps } from './interfaces';
@@ -12,6 +13,7 @@ const AuthedContainer: React.FC<IProps> = ({
     customReturnLink,
     children,
 }) => {
+    useHandleLogoutSuspended();
     useHandleInertiaMessages();
 
     const styles = useStyles();

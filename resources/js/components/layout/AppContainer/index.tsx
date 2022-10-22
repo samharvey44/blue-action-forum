@@ -1,4 +1,4 @@
-import { Logout, Person } from '@mui/icons-material';
+import { AdminPanelSettings, Logout, Person } from '@mui/icons-material';
 import React, { Fragment, useState } from 'react';
 import { Link } from '@inertiajs/inertia-react';
 import { Inertia } from '@inertiajs/inertia';
@@ -17,6 +17,7 @@ import {
 import useGetAuthedUser from 'app/hooks/getAuthedUser';
 import { linkedInLink } from 'app/globals/config';
 import { useStyles } from './hooks/useStyles';
+import { userIsAdmin } from 'app/helpers';
 
 const AppContainer: React.FC = ({ children }) => {
     const { enqueueSnackbar } = useSnackbar();
@@ -75,6 +76,17 @@ const AppContainer: React.FC = ({ children }) => {
                                 'aria-labelledby': 'basic-button',
                             }}
                         >
+                            {userIsAdmin(authedUser) && (
+                                <Link href="/admin" style={styles.menuItemLink}>
+                                    <MenuItem>
+                                        <ListItemIcon>
+                                            <AdminPanelSettings fontSize="small" />
+                                        </ListItemIcon>
+                                        <ListItemText>Admin Area</ListItemText>
+                                    </MenuItem>
+                                </Link>
+                            )}
+
                             {authedUser && authedUser.profile && (
                                 <Link
                                     href={`/profiles/${authedUser.profile.id}`}

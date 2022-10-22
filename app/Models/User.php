@@ -47,6 +47,15 @@ class User extends Authenticatable implements MustVerifyEmail, ResettablePasswor
     ];
 
     /**
+     * The attributes that should be cast to native types.
+     * 
+     * @var array
+     */
+    protected $casts = [
+        'is_suspended' => 'boolean',
+    ];
+
+    /**
      * Get the ghost user account.
      * 
      * @return self
@@ -138,5 +147,14 @@ class User extends Authenticatable implements MustVerifyEmail, ResettablePasswor
      */
     public function isFollowing(Thread $thread): bool {
         return (bool)$this->threadsFollowing->where('id', $thread->id)->count();
+    }
+
+    /**
+     * Return whether this user is suspendable and deletable.
+     * 
+     * @return bool Whether this user can be suspended and/or deleted.
+     */
+    public function suspendableAndDeletable(): bool {
+        return !in_array($this->email, [config('user_management.super_user_email'), config('user_management.ghost_user_email')]);
     }
 }

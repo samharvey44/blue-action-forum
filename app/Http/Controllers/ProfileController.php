@@ -8,6 +8,7 @@ use Inertia\Response;
 use Inertia\Inertia;
 
 use App\Http\Requests\Profile\ChangeProfilePictureRequest;
+use App\Http\Requests\Profile\ToggleSuspendedRequest;
 use App\Http\Requests\Profile\ToggleReportedRequest;
 use App\Http\Requests\Profile\DeleteRequest;
 use App\Http\Requests\Profile\UpdateRequest;
@@ -113,9 +114,31 @@ class ProfileController extends Controller {
      * @return void
      */
     public function delete(DeleteRequest $request): void {
+        if (!Auth::user()->suspendableAndDeletable()) {
+            abort(403, "System users can't be deleted!");
+        }
+
         $request->handleDelete();
     }
 
-    public function toggleSuspended() {
+    /**
+     * Toggle the suspended status of the given profile's user.
+     * 
+     * @param ToggleSuspendedRequest $request
+     * @param Profile $profile
+     * 
+     * @return bool
+     */
+    public function toggleSuspended(ToggleSuspendedRequest $request, Profile $profile): bool {
+        $user = $profile->user;
+
+        if (!$user->suspendableAndDeletable()) {
+            abort(403, "System users can't be suspended!");
+        }
+
+        $user->forceFill(['is_suspended' => !$user->is_suspended]);
+        $user->update();
+
+        return $user->is_suspended;
     }
 }

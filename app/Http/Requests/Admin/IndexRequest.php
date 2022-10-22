@@ -1,14 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Thread;
+namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-use App\Models\Role;
-
 use Auth;
 
-class TogglePinnedRequest extends FormRequest {
+class IndexRequest extends FormRequest {
     /**
      * Determine if the user is authorized to make this request.
      *

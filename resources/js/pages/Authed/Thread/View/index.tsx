@@ -1,6 +1,6 @@
 import { Chip, Paper, Tooltip, Typography } from '@mui/material';
-import React, { useEffect, useMemo, useState } from 'react';
 import { Link, usePage } from '@inertiajs/inertia-react';
+import React, { useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { Box } from '@mui/system';
 import moment from 'moment';
@@ -21,6 +21,7 @@ import useGetAuthedUser from 'app/hooks/getAuthedUser';
 import CommentsMap from './components/CommentsMap';
 import { IInertiaProps } from 'app/interfaces';
 import { useStyles } from './hooks/useStyles';
+import { userIsAdmin } from 'app/helpers';
 import { IProps } from './interfaces';
 
 const ViewThread: React.FC = () => {
@@ -31,14 +32,6 @@ const ViewThread: React.FC = () => {
     const { enqueueSnackbar } = useSnackbar();
     const authedUser = useGetAuthedUser();
     const styles = useStyles();
-
-    const userIsAdmin = useMemo(
-        () =>
-            ['Super Admin', 'Admin'].some(
-                (role) => role === authedUser?.role.name,
-            ),
-        [authedUser?.role.name],
-    );
 
     const [userIsFollowing, setUserIsFollowing] = useState(
         thread.userIsFollowing,
@@ -133,6 +126,8 @@ const ViewThread: React.FC = () => {
             });
     };
 
+    const authedUserIsAdmin = userIsAdmin(authedUser);
+
     return (
         <AppContainer>
             <AuthedContainer withBackButton>
@@ -186,19 +181,19 @@ const ViewThread: React.FC = () => {
                         {threadIsLocked ? (
                             <Tooltip
                                 title={
-                                    userIsAdmin
+                                    authedUserIsAdmin
                                         ? 'Click to unlock thread.'
                                         : 'Thread is locked.'
                                 }
                             >
                                 <Lock
                                     sx={
-                                        userIsAdmin
+                                        authedUserIsAdmin
                                             ? styles.lockIcon
                                             : styles.lockIconNointeraction
                                     }
                                     onClick={() => {
-                                        if (!userIsAdmin) {
+                                        if (!authedUserIsAdmin) {
                                             return;
                                         }
 
@@ -209,7 +204,7 @@ const ViewThread: React.FC = () => {
                                 />
                             </Tooltip>
                         ) : (
-                            userIsAdmin && (
+                            authedUserIsAdmin && (
                                 <Tooltip title="Click to lock thread.">
                                     <LockOpen
                                         sx={styles.lockIcon}
@@ -226,19 +221,19 @@ const ViewThread: React.FC = () => {
                         {threadIsPinned ? (
                             <Tooltip
                                 title={
-                                    userIsAdmin
+                                    authedUserIsAdmin
                                         ? 'Click to unpin thread.'
                                         : 'Thread is pinned.'
                                 }
                             >
                                 <PushPin
                                     sx={
-                                        userIsAdmin
+                                        authedUserIsAdmin
                                             ? styles.pinIcon
                                             : styles.pinIconPinnedNointeraction
                                     }
                                     onClick={() => {
-                                        if (!userIsAdmin) {
+                                        if (!authedUserIsAdmin) {
                                             return;
                                         }
 
@@ -249,7 +244,7 @@ const ViewThread: React.FC = () => {
                                 />
                             </Tooltip>
                         ) : (
-                            userIsAdmin && (
+                            authedUserIsAdmin && (
                                 <Tooltip title="Click to pin thread.">
                                     <PushPinOutlined
                                         sx={styles.pinIcon}

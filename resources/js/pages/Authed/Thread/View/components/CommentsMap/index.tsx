@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useMemo, useRef, useState } from 'react';
+import React, { Fragment, useCallback, useRef, useState } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import ImageViewer from 'react-simple-image-viewer';
 import { Link } from '@inertiajs/inertia-react';
@@ -26,8 +26,8 @@ import PaginationContainer from './components/PaginationContainer';
 import AddCommentContainer from './components/AddCommentContainer';
 import { ICommentReaction, IFile } from 'app/interfaces';
 import useGetAuthedUser from 'app/hooks/getAuthedUser';
+import { ellipsise, userIsAdmin } from 'app/helpers';
 import { useStyles } from './hooks/useStyles';
-import { ellipsise } from 'app/helpers';
 import { IProps } from './interfaces';
 
 const CommentsMap: React.FC<IProps> = ({
@@ -126,11 +126,6 @@ const CommentsMap: React.FC<IProps> = ({
             },
         });
     };
-
-    const userIsAdmin = useMemo(
-        () => ['Super Admin', 'Admin'].some((r) => r === authedUser?.role.name),
-        [authedUser?.role.name],
-    );
 
     return (
         <Grid container spacing={3}>
@@ -354,15 +349,16 @@ const CommentsMap: React.FC<IProps> = ({
                                                     </Fragment>
                                                 )}
 
-                                                {userIsAdmin && isReported && (
-                                                    <Tooltip title="Comment has been reported by a user.">
-                                                        <ReportProblem
-                                                            style={
-                                                                styles.commentReportedIcon
-                                                            }
-                                                        />
-                                                    </Tooltip>
-                                                )}
+                                                {userIsAdmin(authedUser) &&
+                                                    isReported && (
+                                                        <Tooltip title="Comment has been reported by a user.">
+                                                            <ReportProblem
+                                                                style={
+                                                                    styles.commentReportedIcon
+                                                                }
+                                                            />
+                                                        </Tooltip>
+                                                    )}
                                             </Box>
                                         </Box>
 
@@ -573,7 +569,7 @@ const CommentsMap: React.FC<IProps> = ({
                 ),
             )}
 
-            {(!threadIsLocked || userIsAdmin) && (
+            {(!threadIsLocked || userIsAdmin(authedUser)) && (
                 <Grid item xs={12} style={styles.addCommentGridItem}>
                     <AddCommentContainer
                         threadId={threadId}

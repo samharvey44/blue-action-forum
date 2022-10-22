@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ThreadController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\HomeController;
 
@@ -27,7 +28,7 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::middleware('throttle:60,1')->group(function () {
-    Route::middleware('auth')->group(function () {
+    Route::middleware(['auth', 'user.unsuspended'])->group(function () {
         Route::post('/logout', [LogoutController::class, 'index'])->name('logout');
 
         Route::prefix('/email-verification')->group(function () {
@@ -68,9 +69,9 @@ Route::middleware('throttle:60,1')->group(function () {
                     });
 
                     Route::prefix('/{thread}')->group(function () {
+                        Route::patch('/toggleLocked', [ThreadController::class, 'toggleLocked'])->middleware('user.isAdmin');
+                        Route::patch('/togglePinned', [ThreadController::class, 'togglePinned'])->middleware('user.isAdmin');
                         Route::patch('/toggleFollowing', [ThreadController::class, 'toggleFollowing']);
-                        Route::patch('/toggleLocked', [ThreadController::class, 'toggleLocked']);
-                        Route::patch('/togglePinned', [ThreadController::class, 'togglePinned']);
                         Route::patch('/markAsRead', [ThreadController::class, 'markAsRead']);
 
                         Route::post('/comment', [CommentController::class, 'store']);
@@ -97,12 +98,18 @@ Route::middleware('throttle:60,1')->group(function () {
                     });
 
                     Route::prefix('/{profile}')->group(function () {
-                        Route::patch('/toggleSuspended', [ProfileController::class, 'toggleSuspended']);
+                        Route::patch('/toggleSuspended', [ProfileController::class, 'toggleSuspended'])->middleware('user.isAdmin');
                         Route::patch('/toggleReported', [ProfileController::class, 'toggleReported']);
 
                         Route::get('/', [ProfileController::class, 'show'])->name('profile.show');
                         Route::delete('/', [ProfileController::class, 'delete']);
                     });
+                });
+            });
+
+            Route::middleware('user.isAdmin')->group(function () {
+                Route::prefix('/admin')->group(function () {
+                    Route::get('/', [AdminController::class, 'index']);
                 });
             });
         });

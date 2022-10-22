@@ -5,8 +5,8 @@ import {
     Report,
     ReportProblem,
 } from '@mui/icons-material';
-import React, { Fragment, useMemo, useState } from 'react';
 import { Link, usePage } from '@inertiajs/inertia-react';
+import React, { Fragment, useState } from 'react';
 import { Inertia } from '@inertiajs/inertia';
 import { useSnackbar } from 'notistack';
 import { Box } from '@mui/system';
@@ -27,6 +27,7 @@ import AppContainer from 'app/components/layout/AppContainer';
 import useGetAuthedUser from 'app/hooks/getAuthedUser';
 import { IInertiaProps } from 'app/interfaces';
 import { useStyles } from './hooks/useStyles';
+import { userIsAdmin } from 'app/helpers';
 import { IProps } from './interfaces';
 
 const ViewProfile: React.FC = () => {
@@ -112,11 +113,6 @@ const ViewProfile: React.FC = () => {
                 setSuspendingProfile(false);
             });
     };
-
-    const userIsAdmin = useMemo(
-        () => ['Super Admin', 'Admin'].some((r) => r === authedUser?.role.name),
-        [authedUser?.role.name],
-    );
 
     return (
         <AppContainer>
@@ -234,14 +230,18 @@ const ViewProfile: React.FC = () => {
                                             </Tooltip>
                                         </Link>
 
-                                        <Tooltip title="Delete your profile.">
-                                            <Delete
-                                                style={styles.actionIcon}
-                                                onClick={() => {
-                                                    setDeleteModalOpen(true);
-                                                }}
-                                            />
-                                        </Tooltip>
+                                        {!userIsAdmin(user) && (
+                                            <Tooltip title="Delete your profile.">
+                                                <Delete
+                                                    style={styles.actionIcon}
+                                                    onClick={() => {
+                                                        setDeleteModalOpen(
+                                                            true,
+                                                        );
+                                                    }}
+                                                />
+                                            </Tooltip>
+                                        )}
                                     </Fragment>
                                 )}
 
@@ -271,15 +271,18 @@ const ViewProfile: React.FC = () => {
                                     </Tooltip>
                                 )}
 
-                                {userIsAdmin && user.profile?.isReported && (
-                                    <Tooltip title="Profile has been reported by a user.">
-                                        <ReportProblem
-                                            style={styles.reportIconReported}
-                                        />
-                                    </Tooltip>
-                                )}
+                                {userIsAdmin(authedUser) &&
+                                    user.profile?.isReported && (
+                                        <Tooltip title="Profile has been reported by a user.">
+                                            <ReportProblem
+                                                style={
+                                                    styles.reportIconReported
+                                                }
+                                            />
+                                        </Tooltip>
+                                    )}
 
-                                {userIsAdmin && (
+                                {userIsAdmin(authedUser) && !userIsAdmin(user) && (
                                     <Tooltip
                                         title={
                                             isSuspended
