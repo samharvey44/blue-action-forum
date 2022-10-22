@@ -2,8 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Auth\PasswordResetController;
+use App\Http\Controllers\SignupInvitationController;
 use App\Http\Controllers\Auth\SignupController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\LoginController;
@@ -31,86 +31,91 @@ Route::middleware('throttle:60,1')->group(function () {
     Route::middleware(['auth', 'user.unsuspended'])->group(function () {
         Route::post('/logout', [LogoutController::class, 'index'])->name('logout');
 
-        Route::prefix('/email-verification')->group(function () {
-            Route::get('/{id}/{hash}', [EmailVerificationController::class, 'verify'])
-                ->middleware('signed')
-                ->name('verification.verify');
+        // Email verification disabled in favour of signup links, but retaining for potential future use.
+        //
+        // Route::prefix('/email-verification')->group(function () {
+        //     Route::get('/{id}/{hash}', [EmailVerificationController::class, 'verify'])
+        //         ->middleware('signed')
+        //         ->name('verification.verify');
 
-            Route::post('/', [EmailVerificationController::class, 'resendEmail'])
-                ->middleware('throttle:1,1')
-                ->name('verification.send');
+        //     Route::post('/', [EmailVerificationController::class, 'resendEmail'])
+        //         ->middleware('throttle:1,1')
+        //         ->name('verification.send');
 
-            Route::get('/', [EmailVerificationController::class, 'index'])->name('verification.notice');
+        //     Route::get('/', [EmailVerificationController::class, 'index'])->name('verification.notice');
+        // });
+
+        // Route::middleware('verified')->group(function () {
+        // });
+
+        Route::prefix('/create-profile')->group(function () {
+            Route::post('/', [ProfileController::class, 'store'])
+                ->middleware('images.optimize')
+                ->name('profile.store');
+
+            Route::get('/', [ProfileController::class, 'index'])->name('profile.create');
         });
 
-        Route::middleware('verified')->group(function () {
-            Route::prefix('/create-profile')->group(function () {
-                Route::post('/', [ProfileController::class, 'store'])
-                    ->middleware('images.optimize')
-                    ->name('profile.store');
+        Route::middleware('profile.created')->group(function () {
+            Route::get('/images/{image}', [ImageController::class, 'index'])->name('image');
 
-                Route::get('/', [ProfileController::class, 'index'])->name('profile.create');
-            });
+            Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-            Route::middleware('profile.created')->group(function () {
-                Route::get('/images/{image}', [ImageController::class, 'index'])->name('image');
+            Route::prefix('/threads')->group(function () {
+                Route::get('/', [ThreadController::class, 'getPaginated']);
 
-                Route::get('/home', [HomeController::class, 'index'])->name('home');
+                Route::prefix('/create')->group(function () {
+                    Route::post('/', [ThreadController::class, 'store'])
+                        ->middleware('images.optimize')
+                        ->name('thread.store');
 
-                Route::prefix('/threads')->group(function () {
-                    Route::get('/', [ThreadController::class, 'getPaginated']);
-
-                    Route::prefix('/create')->group(function () {
-                        Route::post('/', [ThreadController::class, 'store'])
-                            ->middleware('images.optimize')
-                            ->name('thread.store');
-
-                        Route::get('/', [ThreadController::class, 'index'])->name('thread.create');
-                    });
-
-                    Route::prefix('/{thread}')->group(function () {
-                        Route::patch('/toggleLocked', [ThreadController::class, 'toggleLocked'])->middleware('user.isAdmin');
-                        Route::patch('/togglePinned', [ThreadController::class, 'togglePinned'])->middleware('user.isAdmin');
-                        Route::patch('/toggleFollowing', [ThreadController::class, 'toggleFollowing']);
-                        Route::patch('/markAsRead', [ThreadController::class, 'markAsRead']);
-
-                        Route::post('/comment', [CommentController::class, 'store']);
-
-                        Route::get('/{page?}', [ThreadController::class, 'show'])->name('thread.show');
-                    });
+                    Route::get('/', [ThreadController::class, 'index'])->name('thread.create');
                 });
 
-                Route::prefix('/comments')->group(function () {
-                    Route::prefix('/{comment}')->group(function () {
-                        Route::patch('/toggleReported', [CommentController::class, 'toggleReported']);
-                        Route::put('/react', [CommentController::class, 'react']);
+                Route::prefix('/{thread}')->group(function () {
+                    Route::patch('/toggleLocked', [ThreadController::class, 'toggleLocked'])->middleware('user.isAdmin');
+                    Route::patch('/togglePinned', [ThreadController::class, 'togglePinned'])->middleware('user.isAdmin');
+                    Route::patch('/toggleFollowing', [ThreadController::class, 'toggleFollowing']);
+                    Route::patch('/markAsRead', [ThreadController::class, 'markAsRead']);
 
-                        Route::delete('/', [CommentController::class, 'markAsDeleted']);
-                    });
-                });
+                    Route::post('/comment', [CommentController::class, 'store']);
 
-                Route::prefix('/profiles')->group(function () {
-                    Route::prefix('/edit')->group(function () {
-                        Route::put('/profilePicture', [ProfileController::class, 'changeProfilePicture']);
-
-                        Route::patch('/', [ProfileController::class, 'update']);
-                        Route::get('/', [ProfileController::class, 'edit']);
-                    });
-
-                    Route::prefix('/{profile}')->group(function () {
-                        Route::patch('/toggleSuspended', [ProfileController::class, 'toggleSuspended'])->middleware('user.isAdmin');
-                        Route::patch('/toggleReported', [ProfileController::class, 'toggleReported']);
-
-                        Route::get('/', [ProfileController::class, 'show'])->name('profile.show');
-                        Route::delete('/', [ProfileController::class, 'delete']);
-                    });
+                    Route::get('/{page?}', [ThreadController::class, 'show'])->name('thread.show');
                 });
             });
 
-            Route::middleware('user.isAdmin')->group(function () {
-                Route::prefix('/admin')->group(function () {
-                    Route::get('/', [AdminController::class, 'index']);
+            Route::prefix('/comments')->group(function () {
+                Route::prefix('/{comment}')->group(function () {
+                    Route::patch('/toggleReported', [CommentController::class, 'toggleReported']);
+                    Route::put('/react', [CommentController::class, 'react']);
+
+                    Route::delete('/', [CommentController::class, 'markAsDeleted']);
                 });
+            });
+
+            Route::prefix('/profiles')->group(function () {
+                Route::prefix('/edit')->group(function () {
+                    Route::put('/profilePicture', [ProfileController::class, 'changeProfilePicture']);
+
+                    Route::patch('/', [ProfileController::class, 'update']);
+                    Route::get('/', [ProfileController::class, 'edit']);
+                });
+
+                Route::prefix('/{profile}')->group(function () {
+                    Route::patch('/toggleSuspended', [ProfileController::class, 'toggleSuspended'])->middleware('user.isAdmin');
+                    Route::patch('/toggleReported', [ProfileController::class, 'toggleReported']);
+
+                    Route::get('/', [ProfileController::class, 'show'])->name('profile.show');
+                    Route::delete('/', [ProfileController::class, 'delete']);
+                });
+            });
+        });
+
+        Route::middleware('user.isAdmin')->group(function () {
+            Route::prefix('/admin')->group(function () {
+                Route::put('/generateSignupUrl', [SignupInvitationController::class, 'generate']);
+
+                Route::get('/', [AdminController::class, 'index']);
             });
         });
     });

@@ -5,6 +5,6 @@ import { useMemo } from 'react';
 
 export default function useMakeStyles<T = Record<string, SxProps<Theme>>>(
     styles: T,
-) {
+): T {
     return useMemo(() => styles, [styles]);
 }

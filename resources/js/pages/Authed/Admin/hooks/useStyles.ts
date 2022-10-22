@@ -17,6 +17,6 @@ export const useStyles = () =>
         },
 
         buttonGroup: {
-            marginTop: '10px',
+            marginTop: '20px',
         },
     });

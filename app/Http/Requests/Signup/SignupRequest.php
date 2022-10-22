@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Signup;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Hash;
 
 use App\Models\User;
@@ -47,8 +46,6 @@ class SignupRequest extends FormRequest {
 
         $newUser->role()->associate(Role::firstWhere('name', Role::USER));
         $newUser->save();
-
-        event(new Registered($newUser));
 
         return $newUser;
     }

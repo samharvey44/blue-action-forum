@@ -11,6 +11,7 @@ import {
 
 import AppContainer from 'app/components/layout/AppContainer';
 import AuthedContainer from '../components/AuthedContainer';
+import GenerateSignup from './components/GenerateSignup';
 import { useStyles } from './hooks/useStyles';
 import { EAdminView } from './enums';
 
@@ -27,8 +28,8 @@ const Admin: React.FC = () => {
                     <Grid item xs={12}>
                         <Paper sx={styles.paper}>
                             <Box sx={styles.centeredContainer}>
-                                <Typography variant="h3">
-                                    Administration Panel
+                                <Typography variant="h4">
+                                    <b>Administration Panel</b>
                                 </Typography>
 
                                 <ButtonGroup sx={styles.buttonGroup}>
@@ -46,7 +47,7 @@ const Admin: React.FC = () => {
                                             );
                                         }}
                                     >
-                                        Signup Links
+                                        Signup
                                     </Button>
 
                                     <Button
@@ -82,7 +83,11 @@ const Admin: React.FC = () => {
                     </Grid>
 
                     <Grid item xs={12}>
-                        <Paper sx={styles.paper}></Paper>
+                        <Paper sx={styles.paper}>
+                            {currentView === EAdminView.GenerateSignup && (
+                                <GenerateSignup />
+                            )}
+                        </Paper>
                     </Grid>
                 </Grid>
             </AuthedContainer>

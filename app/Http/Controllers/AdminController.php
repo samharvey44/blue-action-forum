@@ -9,7 +9,7 @@ use App\Http\Requests\Admin\IndexRequest;
 
 class AdminController extends Controller {
     /**
-     * Return the home page.
+     * Return the admin page.
      *
      * @param IndexRequest $request
      * 
