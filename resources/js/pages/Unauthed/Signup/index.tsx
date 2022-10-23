@@ -24,7 +24,9 @@ const Signup: React.FC = () => {
             const { email, password, passwordConfirmation } = values;
 
             Inertia.post(
-                '/signup',
+                // We'll post to the current location href, since we need
+                // to retain the signature and token in the URL.
+                window.location.href,
                 {
                     email,
                     password,

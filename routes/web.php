@@ -127,8 +127,8 @@ Route::middleware('throttle:60,1')->group(function () {
         });
 
         Route::prefix('/signup')->group(function () {
-            Route::post('/', [SignupController::class, 'signup'])->name('signup.signup');
-            Route::get('/', [SignupController::class, 'index'])->name('signup.show');
+            Route::post('/{token}', [SignupController::class, 'signup'])->name('signup.signup');
+            Route::get('/{token}', [SignupController::class, 'index'])->name('signup.show');
         });
 
         Route::prefix('password-reset')->group(function () {

@@ -41,4 +41,29 @@ class SignupInvitation extends Model {
 
         return URL::temporarySignedRoute('signup.show', $expiry, ['token' => $token]);
     }
+
+    /**
+     * Validate the provided signup token.
+     * 
+     * @param string $token The token to validate.
+     * 
+     * @return bool Whether the given token is valid.
+     */
+    public static function validate(string $token): bool {
+        return (bool)static::where('invitation_token', $token)
+            ->where('expires_at', '>', now())
+            ->whereNull('used_at')
+            ->first();
+    }
+
+    /**
+     * Expire this signup invitation.
+     * 
+     * @return void
+     */
+    public function expire(): void {
+        $this->forceFill(['used_at' => now()]);
+
+        $this->update();
+    }
 }
