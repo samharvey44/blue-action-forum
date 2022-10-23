@@ -115,6 +115,16 @@ export interface IPaginatedThreads {
     };
 }
 
+export interface IPaginatedUsers {
+    data: IUser[];
+    meta: {
+        current_page: number;
+        last_page: number;
+        per_page: number;
+        total: number;
+    };
+}
+
 export interface ICommentReaction {
     id: number;
     user: IUser;

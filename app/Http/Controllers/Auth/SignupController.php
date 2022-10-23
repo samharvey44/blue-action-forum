@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Events\SignupInvitationUsed;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Response;
 use Inertia\Inertia;
@@ -12,6 +13,7 @@ use App\Http\Controllers\Controller;
 use App\Models\SignupInvitation;
 
 use Auth;
+use Illuminate\Support\Facades\DB;
 
 class SignupController extends Controller {
     /**
@@ -23,7 +25,9 @@ class SignupController extends Controller {
      * @return Response
      */
     public function index(IndexRequest $request, string $token): Response {
-        if (!$request->hasValidSignature() || !SignupInvitation::validate($token)) {
+        $matching = SignupInvitation::validate($token);
+
+        if (!$request->hasValidSignature() || !(bool)$matching) {
             abort(404);
         }
 
@@ -39,12 +43,19 @@ class SignupController extends Controller {
      * @return RedirectResponse
      */
     public function signup(SignupRequest $request, string $token): RedirectResponse {
-        if (!$request->hasValidSignature() || !SignupInvitation::validate($token)) {
+        $matching = SignupInvitation::validate($token);
+
+        if (!$request->hasValidSignature() || !(bool)$matching) {
             abort(404);
         }
 
-        $user = $request->createUser();
-        Auth::login($user);
+        DB::transaction(function () use ($request, $matching) {
+            $user = $request->createUser();
+            SignupInvitationUsed::dispatch($matching);
+
+            Auth::login($user);
+        });
+
 
         return redirect()->route('profile.create');
     }

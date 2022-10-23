@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Models\Traits\HasCreator;
 
+use InvalidArgumentException;
+
 class Report extends Model {
     use HasFactory, HasCreator;
 
@@ -52,6 +54,7 @@ class Report extends Model {
 
         $reportModel->creator()->associate($by ?? Auth::user());
         $reportModel->reportable()->associate($model);
+
         $reportModel->save();
     }
 
@@ -62,5 +65,42 @@ class Report extends Model {
      */
     public function reportedByUser(): bool {
         return $this->creator->is(Auth::user());
+    }
+
+    /**
+     * Generate the URL for the report.
+     *      * 
+     * @return string The URL for the report.
+     */
+    public function generateUrl(): string {
+        $reportable = $this->reportable;
+        $url = '';
+
+        switch ($reportable::class) {
+            case Comment::class: {
+                    $thread = $reportable->thread->load('comments');
+                    $commentIndex = $thread->comments->values()->search(
+                        fn ($comment) => $comment->id === $reportable->id
+                    );
+
+                    $page = ceil($commentIndex / Thread::COMMENTS_PER_PAGE);
+
+                    $url = route('thread.show', ['thread' => $thread->id, 'page' => $page]);
+
+                    break;
+                }
+
+            case Profile::class: {
+                    $url = route('profile.show', ['profile' => $reportable->id]);
+
+                    break;
+                }
+
+            default: {
+                    throw new InvalidArgumentException('Unhandled relation for URL!');
+                }
+        }
+
+        return $url;
     }
 }

@@ -47,10 +47,10 @@ class SignupInvitation extends Model {
      * 
      * @param string $token The token to validate.
      * 
-     * @return bool Whether the given token is valid.
+     * @return static The matching token from the database, if there is one.
      */
-    public static function validate(string $token): bool {
-        return (bool)static::where('invitation_token', $token)
+    public static function validate(string $token): ?static {
+        return static::where('invitation_token', $token)
             ->where('expires_at', '>', now())
             ->whereNull('used_at')
             ->first();

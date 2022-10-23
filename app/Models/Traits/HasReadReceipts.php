@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Models\Read;
 use App\Models\User;
+use Exception;
 
 trait HasReadReceipts {
     /**
@@ -32,5 +33,18 @@ trait HasReadReceipts {
         $rr->readable()->associate($this);
 
         $rr->save();
+    }
+
+    /**
+     * Return whether this is currently unread.
+     *
+     * @return bool Whether this has been read by the user.
+     */
+    public function isUnread(): bool {
+        if (!method_exists($this, 'creator')) {
+            throw new Exception('Using HasReadReceipts trait on model with no creator relation.');
+        }
+
+        return !$this->creator->is(Auth::user()) && !(bool)$this->reads->filter(fn ($read) => $read->isByUser())->count();
     }
 }

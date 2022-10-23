@@ -16,9 +16,10 @@ use App\Http\Requests\Profile\IndexRequest;
 use App\Http\Requests\Profile\StoreRequest;
 use App\Http\Requests\Profile\EditRequest;
 use App\Http\Requests\Profile\ShowRequest;
+use App\Http\Requests\Profile\ToggleAdminRequest;
 use App\Http\Resources\UserResource;
 use App\Models\Profile;
-
+use App\Models\Role;
 use Auth;
 
 class ProfileController extends Controller {
@@ -140,5 +141,30 @@ class ProfileController extends Controller {
         $user->update();
 
         return $user->is_suspended;
+    }
+
+    /**
+     * Toggle the admin status of the given profile's user.
+     * 
+     * @param ToggleAdminRequest $request
+     * @param Profile $profile
+     * 
+     * @return bool
+     */
+    public function toggleAdmin(ToggleAdminRequest $request, Profile $profile): bool {
+        $user = $profile->user;
+        $role = $user->role->name;
+
+        if ($role === Role::SUPER_ADMIN) {
+            abort(403, 'The role of a super user cannot be changed.');
+        }
+
+        $user->role()->associate(
+            Role::firstWhere('name', $role === 'Admin' ? 'User' : 'Admin')
+        );
+
+        $user->update();
+
+        return $user->role->name === 'Admin';
     }
 }

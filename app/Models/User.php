@@ -55,6 +55,16 @@ class User extends Authenticatable implements ResettablePassword {
     ];
 
     /**
+     * Scope a query to only include undeleted users.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeUndeleted($query) {
+        return $query->where('email', '!=', config('user_management.ghost_user_email'));
+    }
+
+    /**
      * Get the ghost user account.
      * 
      * @return self

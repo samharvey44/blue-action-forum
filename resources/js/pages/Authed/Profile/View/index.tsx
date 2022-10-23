@@ -1,7 +1,10 @@
 import {
     Block,
     Delete,
+    Done,
     Edit,
+    GroupAdd,
+    GroupRemove,
     Report,
     ReportProblem,
 } from '@mui/icons-material';
@@ -40,12 +43,18 @@ const ViewProfile: React.FC = () => {
     const styles = useStyles();
 
     const [isSuspended, setIsSuspended] = useState(user.isSuspended ?? false);
+    const [isAdmin, setIsAdmin] = useState(user.role.name === 'Admin');
     const [reportedByUser, setReportedByUser] = useState(
         user.profile?.isReportedByUser ?? false,
     );
+
     const [suspendingProfile, setSuspendingProfile] = useState(false);
     const [reportingProfile, setReportingProfile] = useState(false);
+    const [togglingAdmin, setTogglingAdmin] = useState(false);
+    const [deletingUser, setDeletingUser] = useState(false);
+
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [adminModalOpen, setAdminModalOpen] = useState(false);
 
     const handleToggleReported = () => {
         setReportingProfile(true);
@@ -73,6 +82,8 @@ const ViewProfile: React.FC = () => {
     };
 
     const handleDeleteAccount = () => {
+        setDeletingUser(true);
+
         axios
             .delete(`/profiles/${user.profile?.id}`)
             .then(() => {
@@ -86,6 +97,9 @@ const ViewProfile: React.FC = () => {
                 enqueueSnackbar('Something went wrong!', {
                     variant: 'error',
                 });
+            })
+            .finally(() => {
+                setDeletingUser(false);
             });
     };
 
@@ -111,6 +125,32 @@ const ViewProfile: React.FC = () => {
             })
             .finally(() => {
                 setSuspendingProfile(false);
+            });
+    };
+
+    const handleToggleAdminStatus = () => {
+        setTogglingAdmin(true);
+
+        axios
+            .patch(`/profiles/${user.profile?.id}/toggleAdmin`)
+            .then(({ data }: { data: boolean }) => {
+                enqueueSnackbar(
+                    `Account was ${data ? 'made admin' : 'downgraded'}.`,
+                    {
+                        variant: 'success',
+                    },
+                );
+
+                setAdminModalOpen(false);
+                setIsAdmin(data);
+            })
+            .catch(() => {
+                enqueueSnackbar('Something went wrong!', {
+                    variant: 'error',
+                });
+            })
+            .finally(() => {
+                setTogglingAdmin(false);
             });
     };
 
@@ -182,9 +222,10 @@ const ViewProfile: React.FC = () => {
                                         </Typography>
 
                                         <Typography variant="subtitle1">
-                                            {user.role.name === 'User'
-                                                ? 'Forum User'
-                                                : user.role.name}
+                                            {user.role.name === 'Super' &&
+                                                user.role.name}
+
+                                            {isAdmin ? 'Admin' : 'Forum User'}
                                         </Typography>
                                     </Box>
                                 </Grid>
@@ -282,6 +323,31 @@ const ViewProfile: React.FC = () => {
                                         </Tooltip>
                                     )}
 
+                                {userIsAdmin(authedUser) &&
+                                    (isAdmin ? (
+                                        <Tooltip title="Click to downgrade to user.">
+                                            <GroupRemove
+                                                style={styles.actionIcon}
+                                                onClick={() => {
+                                                    if (togglingAdmin) {
+                                                        return;
+                                                    }
+
+                                                    handleToggleAdminStatus();
+                                                }}
+                                            />
+                                        </Tooltip>
+                                    ) : (
+                                        <Tooltip title="Click to upgrade to admin.">
+                                            <GroupAdd
+                                                style={styles.actionIcon}
+                                                onClick={() => {
+                                                    setAdminModalOpen(true);
+                                                }}
+                                            />
+                                        </Tooltip>
+                                    ))}
+
                                 {userIsAdmin(authedUser) && !userIsAdmin(user) && (
                                     <Tooltip
                                         title={
@@ -329,9 +395,50 @@ const ViewProfile: React.FC = () => {
                             startIcon={<Delete />}
                             sx={styles.deleteButton}
                             variant="contained"
-                            onClick={handleDeleteAccount}
+                            onClick={() => {
+                                if (deletingUser) {
+                                    return;
+                                }
+
+                                handleDeleteAccount();
+                            }}
                         >
                             Delete Account
+                        </Button>
+                    </Box>
+                </Modal>
+
+                <Modal
+                    open={adminModalOpen}
+                    onClose={() => {
+                        setAdminModalOpen(false);
+                    }}
+                >
+                    <Box sx={styles.innerModalContainer}>
+                        <Typography variant="subtitle1">
+                            <b>
+                                Are you sure you wish to make this user an
+                                admin?
+                            </b>
+                        </Typography>
+                        <Typography variant="subtitle2">
+                            Please check you are upgrading the correct user
+                            before proceeding.
+                        </Typography>
+
+                        <Button
+                            onClick={() => {
+                                if (togglingAdmin) {
+                                    return;
+                                }
+
+                                handleToggleAdminStatus();
+                            }}
+                            sx={styles.deleteButton}
+                            startIcon={<Done />}
+                            variant="contained"
+                        >
+                            Upgrade Account
                         </Button>
                     </Box>
                 </Modal>

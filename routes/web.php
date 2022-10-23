@@ -103,6 +103,7 @@ Route::middleware('throttle:60,1')->group(function () {
 
                 Route::prefix('/{profile}')->group(function () {
                     Route::patch('/toggleSuspended', [ProfileController::class, 'toggleSuspended'])->middleware('user.isAdmin');
+                    Route::patch('/toggleAdmin', [ProfileController::class, 'toggleAdmin'])->middleware('user.isAdmin');
                     Route::patch('/toggleReported', [ProfileController::class, 'toggleReported']);
 
                     Route::get('/', [ProfileController::class, 'show'])->name('profile.show');
@@ -115,6 +116,7 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::prefix('/admin')->group(function () {
                 Route::put('/generateSignupUrl', [SignupInvitationController::class, 'generate']);
 
+                Route::get('/users', [AdminController::class, 'getUsers']);
                 Route::get('/', [AdminController::class, 'index']);
             });
         });

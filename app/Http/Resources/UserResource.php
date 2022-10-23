@@ -18,14 +18,19 @@ class UserResource extends JsonResource {
     public function toArray($request): array {
         $user = Auth::user();
 
+        $isAdmin = $user->hasRole(Role::SUPER_ADMIN) || $user->hasRole(Role::ADMIN);
+
         return [
             'id' => $this->id,
             'createdAt' => $this->created_at,
-            'email' => $this->when($this->id === Auth::id(), $this->email),
+            'email' => $this->when(
+                $this->resource->is($user) || $isAdmin,
+                $this->email
+            ),
             'lastSeen' => $this->last_seen,
             'isGhost' => $this->email === config('user_management.ghost_user_email'),
             'isSuspended' => $this->when(
-                $this->resource->is($user) || ($user->hasRole(Role::SUPER_ADMIN) || $user->hasRole(Role::ADMIN)),
+                $this->resource->is($user) || $isAdmin,
                 $this->is_suspended
             ),
 
