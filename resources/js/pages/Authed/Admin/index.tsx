@@ -15,6 +15,7 @@ import GenerateSignup from './components/GenerateSignup';
 import { useStyles } from './hooks/useStyles';
 import Users from './components/Users';
 import { EAdminView } from './enums';
+import Reports from './components/Reports';
 
 const Admin: React.FC = () => {
     const styles = useStyles();
@@ -95,6 +96,13 @@ const Admin: React.FC = () => {
 
                             {currentView === EAdminView.Users && (
                                 <Users
+                                    dataLoading={dataLoading}
+                                    setDataLoading={setDataLoading}
+                                />
+                            )}
+
+                            {currentView === EAdminView.Reports && (
+                                <Reports
                                     dataLoading={dataLoading}
                                     setDataLoading={setDataLoading}
                                 />

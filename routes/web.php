@@ -116,7 +116,9 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::prefix('/admin')->group(function () {
                 Route::put('/generateSignupUrl', [SignupInvitationController::class, 'generate']);
 
+                Route::get('/reports', [AdminController::class, 'getReports']);
                 Route::get('/users', [AdminController::class, 'getUsers']);
+
                 Route::get('/', [AdminController::class, 'index']);
             });
         });

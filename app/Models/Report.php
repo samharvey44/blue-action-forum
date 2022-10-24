@@ -83,7 +83,7 @@ class Report extends Model {
                         fn ($comment) => $comment->id === $reportable->id
                     );
 
-                    $page = ceil($commentIndex / Thread::COMMENTS_PER_PAGE);
+                    $page = ceil(($commentIndex + 1) / Thread::COMMENTS_PER_PAGE);
 
                     $url = route('thread.show', ['thread' => $thread->id, 'page' => $page]);
 

@@ -1,18 +1,10 @@
 import TablePaginationActions from '@mui/material/TablePagination/TablePaginationActions';
-import { Clear, Search } from '@mui/icons-material';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import moment from 'moment';
 import axios from 'axios';
-import React, {
-    Fragment,
-    useCallback,
-    useEffect,
-    useMemo,
-    useState,
-} from 'react';
 import {
     Box,
-    Button,
     CircularProgress,
     Grid,
     Paper,
@@ -23,24 +15,24 @@ import {
     TableHead,
     TablePagination,
     TableRow,
-    TextField,
     Typography,
 } from '@mui/material';
 
-import { IPaginatedUsers } from 'app/interfaces';
+import { IPaginatedReports } from 'app/interfaces';
 import { useStyles } from './hooks/useStyles';
 import { IProps } from './interfaces';
 
-const Users: React.FC<IProps> = ({ dataLoading, setDataLoading }) => {
+const Reports: React.FC<IProps> = ({ dataLoading, setDataLoading }) => {
     const { enqueueSnackbar } = useSnackbar();
     const styles = useStyles();
 
-    const [currentPage, setCurrentPage] = useState(1);
+    const [reports, setReports] = useState<IPaginatedReports | null>(null);
     const [rowsPerPage, setRowsPerPage] = useState(20);
-    const [users, setUsers] = useState<IPaginatedUsers | null>(null);
+    const [currentPage, setCurrentPage] = useState(1);
 
-    const [currentSearch, setCurrentSearch] = useState('');
-    const [searchField, setSearchField] = useState('');
+    const [processedFilter, setProcessedFilter] = useState<null | boolean>(
+        null,
+    );
 
     const TableHeaderCell: React.FC = ({ children }) =>
         useMemo(
@@ -53,111 +45,54 @@ const Users: React.FC<IProps> = ({ dataLoading, setDataLoading }) => {
         );
 
     const headers = [
-        'User ID',
-        'Email',
-        'Signed up on',
-        'Profile Created',
-        'Username',
-        'Last Seen',
-        'Suspended',
-        'User Role',
+        'Report ID',
+        'Reported At',
+        'Report Type',
+        'Processed',
+        'Link to Report',
     ];
 
-    const getUsers = useCallback(() => {
+    const getReports = useCallback(() => {
         setDataLoading(true);
 
         axios
-            .get('/admin/users', {
+            .get('/admin/reports', {
                 params: {
-                    search: currentSearch,
                     page: currentPage,
+                    processedFilter,
                     rowsPerPage,
                 },
             })
-            .then(({ data }: { data: IPaginatedUsers }) => {
-                setUsers(data);
+            .then(({ data }: { data: IPaginatedReports }) => {
+                setReports(data);
             })
             .catch(() => {
-                enqueueSnackbar('Failed to get users.', { variant: 'error' });
+                enqueueSnackbar('Failed to get reports.', { variant: 'error' });
             })
             .finally(() => {
                 setDataLoading(false);
             });
     }, [
         currentPage,
-        currentSearch,
         enqueueSnackbar,
+        processedFilter,
         rowsPerPage,
         setDataLoading,
     ]);
 
     useEffect(() => {
-        getUsers();
-    }, [getUsers]);
-
-    const SearchContainer = useMemo(
-        () => (
-            <Fragment>
-                <Grid item xs={12} md={4}>
-                    <Box sx={styles.searchContainer}>
-                        <TextField
-                            value={searchField}
-                            onChange={({ target: { value } }) => {
-                                setSearchField(value);
-                            }}
-                            variant="filled"
-                            label="Search for a user..."
-                            sx={styles.searchField}
-                        />
-                    </Box>
-                </Grid>
-
-                <Grid item xs={12} md={2}>
-                    <Box sx={styles.searchContainer}>
-                        <Button
-                            sx={styles.searchButton}
-                            variant="contained"
-                            onClick={() => {
-                                setCurrentSearch(searchField);
-                            }}
-                        >
-                            <Search />
-                        </Button>
-
-                        <Button
-                            sx={styles.clearButton}
-                            variant="contained"
-                            onClick={() => {
-                                setCurrentSearch('');
-                                setSearchField('');
-                            }}
-                        >
-                            <Clear />
-                        </Button>
-                    </Box>
-                </Grid>
-            </Fragment>
-        ),
-        [
-            searchField,
-            styles.clearButton,
-            styles.searchButton,
-            styles.searchContainer,
-            styles.searchField,
-        ],
-    );
+        getReports();
+    }, [getReports]);
 
     return (
         <Grid container spacing={3}>
-            {SearchContainer}
-
             <Grid item xs={12}>
                 {dataLoading ? (
                     <Box sx={styles.loadingContainer}>
                         <CircularProgress color="primary" />
 
                         <Typography variant="h6" sx={styles.loadingText}>
-                            Users loading...
+                            Reports loading...
                         </Typography>
                     </Box>
                 ) : (
@@ -173,56 +108,31 @@ const Users: React.FC<IProps> = ({ dataLoading, setDataLoading }) => {
                                 </TableRow>
                             </TableHead>
 
-                            {users?.data && (
+                            {reports?.data && (
                                 <TableBody>
-                                    {users.data.map((user) => (
-                                        <TableRow key={user.id}>
+                                    {reports.data.map((report) => (
+                                        <TableRow key={report.id}>
                                             <TableCell align="center">
-                                                {user.id}
-                                            </TableCell>
-                                            <TableCell align="center">
-                                                {user.email}
+                                                {report.id}
                                             </TableCell>
                                             <TableCell align="center">
                                                 {moment
-                                                    .utc(user.createdAt)
+                                                    .utc(report.createdAt)
                                                     .local()
                                                     .format(
                                                         'DD/MM/YYYY [at] HH:mm',
                                                     )}
                                             </TableCell>
                                             <TableCell align="center">
-                                                {user.profile ? 'Yes' : 'No'}
+                                                {report.reportType}
                                             </TableCell>
                                             <TableCell align="center">
-                                                {user.profile ? (
-                                                    <a
-                                                        target="_blank"
-                                                        href={`/profiles/${user.profile?.id}`}
-                                                        style={styles.username}
-                                                        rel="noopener noreferrer"
-                                                    >
-                                                        {user.profile.username}
-                                                    </a>
-                                                ) : (
-                                                    'N/A'
-                                                )}
-                                            </TableCell>
-                                            <TableCell align="center">
-                                                {user.lastSeen
-                                                    ? moment
-                                                          .utc(user.lastSeen)
-                                                          .local()
-                                                          .fromNow()
-                                                    : 'Never'}
-                                            </TableCell>
-                                            <TableCell align="center">
-                                                {user.isSuspended
+                                                {report.isProcessed
                                                     ? 'Yes'
                                                     : 'No'}
                                             </TableCell>
                                             <TableCell align="center">
-                                                {user.role.name}
+                                                {report.url}
                                             </TableCell>
                                         </TableRow>
                                     ))}
@@ -233,7 +143,7 @@ const Users: React.FC<IProps> = ({ dataLoading, setDataLoading }) => {
                                     <TablePagination
                                         rowsPerPageOptions={[5, 10, 20, 40]}
                                         colSpan={headers.length}
-                                        count={users?.meta.total ?? 0}
+                                        count={reports?.meta.total ?? 0}
                                         rowsPerPage={rowsPerPage}
                                         // Note, the paging for the table starts at 0
                                         page={currentPage - 1}
@@ -264,4 +174,4 @@ const Users: React.FC<IProps> = ({ dataLoading, setDataLoading }) => {
     );
 };
 
-export default Users;
+export default Reports;

@@ -16,7 +16,10 @@ class ReportResource extends JsonResource {
             'id' => $this->id,
             'createdAt' => $this->created_at,
             'url' => $this->generateUrl(),
-            'isProcessed' => $this->isProcessed,
+            'isProcessed' => $this->is_processed,
+            // We'll strip backslashes first, since this will affect our ability to use quotes in str_replace.
+            'reportType' => str_replace('AppModels', '', stripslashes($this->reportable_type)),
+            'creator' => UserResource::make($this->reporter),
         ];
     }
 }

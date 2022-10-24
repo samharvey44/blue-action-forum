@@ -20,7 +20,7 @@ export const useStyles = () =>
             backgroundColor: PRIMARY,
         },
 
-        username: {
+        url: {
             color: PRIMARY,
             cursor: 'pointer',
             textDecoration: 'none',
@@ -35,23 +35,5 @@ export const useStyles = () =>
 
         loadingText: {
             marginTop: '10px',
-        },
-
-        searchContainer: {
-            display: 'flex',
-            alignItems: 'center',
-            height: '100%',
-        },
-
-        searchField: {
-            width: '100%',
-        },
-
-        searchButton: {
-            marginLeft: 'auto',
-        },
-
-        clearButton: {
-            marginLeft: '10px',
         },
     });
