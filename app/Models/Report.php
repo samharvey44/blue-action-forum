@@ -69,7 +69,7 @@ class Report extends Model {
 
     /**
      * Generate the URL for the report.
-     *      * 
+     *      
      * @return string The URL for the report.
      */
     public function generateUrl(): string {
