@@ -160,7 +160,7 @@ class ProfileController extends Controller {
         }
 
         $user->role()->associate(
-            Role::firstWhere('name', $role === 'Admin' ? 'User' : 'Admin')
+            Role::firstWhere('name', $role === Role::ADMIN ? Role::USER : Role::ADMIN)
         );
 
         $user->update();
