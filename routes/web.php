@@ -140,11 +140,9 @@ Route::middleware('throttle:60,1')->group(function () {
                 ->middleware('throttle:1,1')
                 ->name('password.email');
 
-            Route::get('/', [PasswordResetController::class, 'index'])->name('password.request');
-
-            Route::post('/reset', [PasswordResetController::class, 'reset'])->name('password.update');
-
             Route::get('/{token}', [PasswordResetController::class, 'showReset'])->name('password.reset');
+            Route::post('/reset', [PasswordResetController::class, 'reset'])->name('password.update');
+            Route::get('/', [PasswordResetController::class, 'index'])->name('password.request');
         });
     });
 
