@@ -1,6 +1,6 @@
 import { Chip, Paper, Tooltip, Typography } from '@mui/material';
 import { Link, usePage } from '@inertiajs/inertia-react';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { Box } from '@mui/system';
 import moment from 'moment';
@@ -42,14 +42,6 @@ const ViewThread: React.FC = () => {
     const [togglingFollowing, setTogglingFollowing] = useState(false);
     const [togglingLock, setTogglingLock] = useState(false);
     const [togglingPin, setTogglingPin] = useState(false);
-
-    useEffect(() => {
-        // Allow the 'Grow' animation to occur and page length be fully
-        // defined before scrolling to the top of the page.
-        setTimeout(() => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }, 300);
-    }, []);
 
     const toggleThreadLocked = () => {
         if (togglingLock) {

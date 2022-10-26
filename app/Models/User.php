@@ -10,11 +10,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Auth\Passwords\CanResetPassword;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable implements MustVerifyEmail, ResettablePassword {
+class User extends Authenticatable implements ResettablePassword {
     use HasApiTokens, Notifiable, CanResetPassword, HasFactory;
 
     /**
@@ -54,6 +53,16 @@ class User extends Authenticatable implements MustVerifyEmail, ResettablePasswor
     protected $casts = [
         'is_suspended' => 'boolean',
     ];
+
+    /**
+     * Scope a query to only include undeleted users.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeUndeleted($query) {
+        return $query->where('email', '!=', config('user_management.ghost_user_email'));
+    }
 
     /**
      * Get the ghost user account.

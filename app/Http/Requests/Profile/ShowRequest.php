@@ -4,8 +4,6 @@ namespace App\Http\Requests\Profile;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-use App\Models\User;
-
 use Auth;
 
 class ShowRequest extends FormRequest {

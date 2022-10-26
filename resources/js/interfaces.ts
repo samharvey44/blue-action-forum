@@ -8,8 +8,9 @@ export interface IStyles {
 
 export interface IMeta {
     current_page: number;
-    total: number;
     last_page: number;
+    per_page: number;
+    total: number;
 }
 
 export interface IFile {
@@ -95,24 +96,33 @@ export interface IReaction {
     iconPath: string;
 }
 
+export interface IReport {
+    id: number;
+    createdAt: string;
+    url: string;
+    isProcessed: boolean;
+    reportType: string;
+    creator: IUser;
+}
+
+export interface IPaginatedReports {
+    data: IReport[];
+    meta: IMeta;
+}
+
 export interface IPaginatedComments {
     data: IComment[];
-    meta: {
-        current_page: number;
-        last_page: number;
-        per_page: number;
-        total: number;
-    };
+    meta: IMeta;
 }
 
 export interface IPaginatedThreads {
     data: IThread[];
-    meta: {
-        current_page: number;
-        last_page: number;
-        per_page: number;
-        total: number;
-    };
+    meta: IMeta;
+}
+
+export interface IPaginatedUsers {
+    data: IUser[];
+    meta: IMeta;
 }
 
 export interface ICommentReaction {

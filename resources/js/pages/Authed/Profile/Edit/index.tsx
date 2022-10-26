@@ -45,6 +45,8 @@ const EditProfile: React.FC = () => {
                     bio,
                 },
                 {
+                    preserveScroll: true,
+
                     onFinish: () => {
                         setSubmitting(false);
                     },

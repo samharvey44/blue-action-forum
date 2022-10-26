@@ -6,8 +6,10 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Auth\Events\Registered;
 
+use App\Listeners\ExpireSignupInvitation;
 use App\Listeners\ConvertToGhostUser;
 use App\Listeners\RemoveFromStorage;
+use App\Events\SignupInvitationUsed;
 use App\Events\ImageDeleting;
 use App\Events\UserDeleting;
 
@@ -28,6 +30,10 @@ class EventServiceProvider extends ServiceProvider {
 
         UserDeleting::class => [
             ConvertToGhostUser::class,
+        ],
+
+        SignupInvitationUsed::class => [
+            ExpireSignupInvitation::class,
         ],
     ];
 

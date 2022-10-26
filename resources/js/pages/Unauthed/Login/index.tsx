@@ -112,18 +112,6 @@ const Login: React.FC = () => {
                     />
                 </Box>
 
-                <Box sx={styles.signupContainer}>
-                    <Typography variant="subtitle1" sx={styles.signupText}>
-                        {"Don't have an account?"}
-                    </Typography>
-
-                    <Link href="/signup" style={styles.textLinkExt}>
-                        <Typography sx={styles.signupTextLink}>
-                            &nbsp;{'Sign up here!'}
-                        </Typography>
-                    </Link>
-                </Box>
-
                 <Box sx={styles.loginButtonContainer}>
                     <Button
                         startIcon={<LoginIcon />}

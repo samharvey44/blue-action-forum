@@ -27,21 +27,6 @@ export const useStyles = () =>
             justifyContent: 'center',
         },
 
-        signupContainer: {
-            display: 'flex',
-            alignItems: 'center',
-            marginTop: '10px',
-        },
-
-        signupText: {
-            marginLeft: 'auto',
-        },
-
-        signupTextLink: {
-            color: PRIMARY,
-            cursor: 'pointer',
-        },
-
         loginButton: {
             marginLeft: 'auto',
         },

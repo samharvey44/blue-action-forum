@@ -31,11 +31,7 @@ class LogLastSeen {
             return $returnNext;
         }
 
-        $user = User::find(Auth::id());
-
-        if (!$user) {
-            return $returnNext;
-        }
+        $user = Auth::user();
 
         $user->forceFill(['last_seen' => now()]);
         $user->update();

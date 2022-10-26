@@ -1,5 +1,5 @@
 import { Password, People, Warning } from '@mui/icons-material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     ButtonGroup,
     Typography,
@@ -11,14 +11,21 @@ import {
 
 import AppContainer from 'app/components/layout/AppContainer';
 import AuthedContainer from '../components/AuthedContainer';
+import GenerateSignup from './components/GenerateSignup';
 import { useStyles } from './hooks/useStyles';
+import Users from './components/Users';
 import { EAdminView } from './enums';
+import Reports from './components/Reports';
 
 const Admin: React.FC = () => {
     const styles = useStyles();
 
     const [currentView, setCurrentView] = useState(EAdminView.GenerateSignup);
-    const [dataLoading, setDataLoading] = useState(false);
+    const [dataLoading, setDataLoading] = useState(true);
+
+    useEffect(() => {
+        setDataLoading(true);
+    }, [currentView]);
 
     return (
         <AppContainer>
@@ -27,8 +34,8 @@ const Admin: React.FC = () => {
                     <Grid item xs={12}>
                         <Paper sx={styles.paper}>
                             <Box sx={styles.centeredContainer}>
-                                <Typography variant="h3">
-                                    Administration Panel
+                                <Typography variant="h4">
+                                    <b>Administration Panel</b>
                                 </Typography>
 
                                 <ButtonGroup sx={styles.buttonGroup}>
@@ -46,7 +53,7 @@ const Admin: React.FC = () => {
                                             );
                                         }}
                                     >
-                                        Signup Links
+                                        Signup
                                     </Button>
 
                                     <Button
@@ -82,7 +89,25 @@ const Admin: React.FC = () => {
                     </Grid>
 
                     <Grid item xs={12}>
-                        <Paper sx={styles.paper}></Paper>
+                        <Paper sx={styles.paper}>
+                            {currentView === EAdminView.GenerateSignup && (
+                                <GenerateSignup />
+                            )}
+
+                            {currentView === EAdminView.Users && (
+                                <Users
+                                    dataLoading={dataLoading}
+                                    setDataLoading={setDataLoading}
+                                />
+                            )}
+
+                            {currentView === EAdminView.Reports && (
+                                <Reports
+                                    dataLoading={dataLoading}
+                                    setDataLoading={setDataLoading}
+                                />
+                            )}
+                        </Paper>
                     </Grid>
                 </Grid>
             </AuthedContainer>

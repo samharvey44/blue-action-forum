@@ -23,6 +23,8 @@ class Kernel extends ConsoleKernel {
      */
     protected function schedule(Schedule $schedule) {
         $schedule->command('cache:gc')->dailyAt('3:00');
+
+        $schedule->command('signupInvitations:clearExpired')->dailyAt('3:15');
     }
 
     /**

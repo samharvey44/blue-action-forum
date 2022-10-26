@@ -89,6 +89,8 @@ const CommentsMap: React.FC<IProps> = ({
                 reaction: reactionId,
             },
             {
+                preserveScroll: true,
+
                 onFinish: () => {
                     setLeavingReaction(false);
                 },
@@ -100,6 +102,8 @@ const CommentsMap: React.FC<IProps> = ({
         setDeletingComment(true);
 
         Inertia.delete(`/comments/${commentId}`, {
+            preserveScroll: true,
+
             onFinish: () => {
                 setDeletingComment(false);
 
@@ -114,6 +118,8 @@ const CommentsMap: React.FC<IProps> = ({
         setReportingComment(true);
 
         Inertia.patch(`/comments/${commentId}/toggleReported`, undefined, {
+            preserveScroll: true,
+
             onFinish: () => {
                 setReportingComment(false);
 

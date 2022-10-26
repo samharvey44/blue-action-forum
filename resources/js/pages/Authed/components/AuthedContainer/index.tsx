@@ -1,6 +1,6 @@
 import { KeyboardReturn } from '@mui/icons-material';
-import { Box, Grow, Button } from '@mui/material';
 import { Link } from '@inertiajs/inertia-react';
+import { Box, Button } from '@mui/material';
 import React from 'react';
 
 import useHandleLogoutSuspended from 'app/hooks/request/handleLogoutSuspended';
@@ -19,46 +19,44 @@ const AuthedContainer: React.FC<IProps> = ({
     const styles = useStyles();
 
     return (
-        <Grow in>
-            <Box sx={styles.outerCenterContainer}>
-                <Box sx={styles.centerContainer}>
-                    {withBackButton && (
-                        <Box sx={styles.backButtonContainer}>
-                            {customReturnLink ? (
-                                // If we have a custom return link, we'll redirect to that
-                                // rather than to the last browser history entry.
-                                <Link
-                                    href={customReturnLink}
-                                    style={styles.customLink}
-                                >
-                                    <Button
-                                        startIcon={<KeyboardReturn />}
-                                        variant="contained"
-                                        color="primary"
-                                    >
-                                        Return
-                                    </Button>
-                                </Link>
-                            ) : (
+        <Box sx={styles.outerCenterContainer}>
+            <Box sx={styles.centerContainer}>
+                {withBackButton && (
+                    <Box sx={styles.backButtonContainer}>
+                        {customReturnLink ? (
+                            // If we have a custom return link, we'll redirect to that
+                            // rather than to the last browser history entry.
+                            <Link
+                                href={customReturnLink}
+                                style={styles.customLink}
+                            >
                                 <Button
                                     startIcon={<KeyboardReturn />}
-                                    disabled={!history.length}
-                                    onClick={() => {
-                                        history.back();
-                                    }}
                                     variant="contained"
                                     color="primary"
                                 >
                                     Return
                                 </Button>
-                            )}
-                        </Box>
-                    )}
+                            </Link>
+                        ) : (
+                            <Button
+                                startIcon={<KeyboardReturn />}
+                                disabled={!history.length}
+                                onClick={() => {
+                                    history.back();
+                                }}
+                                variant="contained"
+                                color="primary"
+                            >
+                                Return
+                            </Button>
+                        )}
+                    </Box>
+                )}
 
-                    {children}
-                </Box>
+                {children}
             </Box>
-        </Grow>
+        </Box>
     );
 };
 

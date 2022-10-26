@@ -39,7 +39,7 @@ class DeleteRequest extends FormRequest {
     private function deleteProfileData(): void {
         $profile = Auth::user()->profile->load('reports');
 
-        $profile->reports->each(fn ($report) => $report->delete());
+        $profile->reports->each->delete();
 
         if ((bool)$profile->profilePicture) {
             ImageDeleting::dispatch($profile->profilePicture);
@@ -56,14 +56,14 @@ class DeleteRequest extends FormRequest {
      * @return void
      */
     public function handleDelete(): void {
-        $user = Auth::user();
+        $user = Auth::user()->load('reads');
 
         DB::transaction(function () use ($user) {
             UserDeleting::dispatch($user);
 
             $this->deleteProfileData();
             $user->threadsFollowing()->detach();
-            $user->reads()->delete();
+            $user->reads->each->delete();
 
             $user->delete();
         });
