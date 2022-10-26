@@ -41,6 +41,8 @@ const AddCommentContainer: React.FC<IProps> = ({
                     replyingTo: replyingTo?.id ?? null,
                 },
                 {
+                    preserveScroll: true,
+
                     onSuccess: () => {
                         enqueueSnackbar('Comment created.', {
                             variant: 'success',

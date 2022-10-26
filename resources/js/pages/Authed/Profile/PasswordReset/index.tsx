@@ -1,3 +1,8 @@
+import { LockReset } from '@mui/icons-material';
+import { Inertia } from '@inertiajs/inertia';
+import { useSnackbar } from 'notistack';
+import React, { useState } from 'react';
+import { useFormik } from 'formik';
 import {
     Avatar,
     Box,
@@ -6,11 +11,6 @@ import {
     TextField,
     Typography,
 } from '@mui/material';
-import { LockReset } from '@mui/icons-material';
-import { Inertia } from '@inertiajs/inertia';
-import { useSnackbar } from 'notistack';
-import React, { useState } from 'react';
-import { useFormik } from 'formik';
 
 import AuthedContainer from '../../components/AuthedContainer';
 import AppContainer from 'app/components/layout/AppContainer';

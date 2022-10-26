@@ -1,4 +1,4 @@
-import { Paper, Grow, Box } from '@mui/material';
+import { Paper, Box } from '@mui/material';
 import React from 'react';
 
 import useHandleInertiaMessages from 'app/hooks/request/handleInertiaMessages';
@@ -10,11 +10,9 @@ const UnauthedContainer: React.FC = ({ children }) => {
     const styles = useStyles();
 
     return (
-        <Grow in>
-            <Box sx={styles.centerContainer}>
-                <Paper sx={styles.paper}>{children}</Paper>
-            </Box>
-        </Grow>
+        <Box sx={styles.centerContainer}>
+            <Paper sx={styles.paper}>{children}</Paper>
+        </Box>
     );
 };
 
