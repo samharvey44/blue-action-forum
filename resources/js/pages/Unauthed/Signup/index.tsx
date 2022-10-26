@@ -105,13 +105,13 @@ const Signup: React.FC = () => {
                     }
                 />
 
-                <Box sx={styles.loginContainer}>
-                    <Typography variant="subtitle1" sx={styles.loginText}>
+                <Box sx={styles.flexContainer}>
+                    <Typography variant="subtitle1" sx={styles.marginLeftText}>
                         {'Already have an account?'}
                     </Typography>
 
-                    <Link href="/login" style={styles.loginTextLinkExt}>
-                        <Typography sx={styles.loginTextLink}>
+                    <Link href="/login" style={styles.linkTextExt}>
+                        <Typography sx={styles.linkText}>
                             &nbsp;{'Sign in here!'}
                         </Typography>
                     </Link>
@@ -129,6 +129,21 @@ const Signup: React.FC = () => {
                     >
                         Signup
                     </Button>
+                </Box>
+
+                <Box sx={styles.flexContainer}>
+                    <Typography variant="subtitle1" sx={styles.marginLeftText}>
+                        By signing up, you confirm you have read and agreed to
+                        our{' '}
+                        <a
+                            target="_blank"
+                            href={`${window.location.origin}/privacy-policy.html`}
+                            style={styles.privacyPolicyLink}
+                            rel="noopener noreferrer"
+                        >
+                            Privacy Policy.
+                        </a>
+                    </Typography>
                 </Box>
             </form>
         </UnauthedContainer>

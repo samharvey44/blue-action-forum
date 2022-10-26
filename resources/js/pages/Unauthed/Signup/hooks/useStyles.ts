@@ -38,26 +38,32 @@ export const useStyles = () =>
             justifyContent: 'center',
         },
 
-        loginContainer: {
+        flexContainer: {
             display: 'flex',
             alignItems: 'center',
             marginTop: '10px',
         },
 
-        loginText: {
+        marginLeftText: {
             marginLeft: 'auto',
         },
 
-        loginTextLink: {
+        linkText: {
             color: PRIMARY,
             cursor: 'pointer',
+        },
+
+        privacyPolicyLink: {
+            color: PRIMARY,
+            cursor: 'pointer',
+            textDecoration: 'none',
         },
 
         signupButton: {
             marginLeft: 'auto',
         },
 
-        loginTextLinkExt: {
+        linkTextExt: {
             textDecoration: 'none',
         },
 
