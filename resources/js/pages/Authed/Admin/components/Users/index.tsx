@@ -52,16 +52,19 @@ const Users: React.FC<IProps> = ({ dataLoading, setDataLoading }) => {
             [children],
         );
 
-    const headers = [
-        'User ID',
-        'Email',
-        'Signed up on',
-        'Profile Created',
-        'Username',
-        'Last Seen',
-        'Suspended',
-        'User Role',
-    ];
+    const headers = useMemo(
+        () => [
+            'User ID',
+            'Email',
+            'Signed up on',
+            'Profile Created',
+            'Username',
+            'Last Seen',
+            'Suspended',
+            'User Role',
+        ],
+        [],
+    );
 
     const getUsers = useCallback(() => {
         setDataLoading(true);

@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
+use App\Http\Resources\ReportResource;
 use App\Models\Traits\HasCreator;
 
 use InvalidArgumentException;
@@ -30,6 +32,15 @@ class Report extends Model {
      */
     protected $with = [
         'creator',
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     * 
+     * @var array
+     */
+    protected $casts = [
+        'is_processed' => 'boolean',
     ];
 
     /**
@@ -102,5 +113,38 @@ class Report extends Model {
         }
 
         return $url;
+    }
+
+    /**
+     * Toggle the processed status of this report.
+     * 
+     * @return void
+     */
+    public function toggleProcessed(): void {
+        $this->update(['is_processed' => !$this->is_processed]);
+    }
+
+    /**
+     * Get a paginated collection of reports for the admin area.
+     * 
+     * @param ?bool $filter The processed status filter.
+     * @param int $page The page for pagination.
+     * @param int $rowsPerPage The rows per page for pagination.
+     * 
+     * @return AnonymousResourceCollection The collection of reports.
+     */
+    public static function getPaginatedCollection(?bool $filter, int $page, int $rowsPerPage): AnonymousResourceCollection {
+        $query = is_null($filter)
+            ? self::query()
+            : self::where('is_processed', $filter);
+
+        return ReportResource::collection(
+            $query->with('reportable')
+                ->orderByDesc('id')
+                ->paginate($rowsPerPage, page: $page)
+                ->loadMorph('reportable', [
+                    Comment::class => ['thread'],
+                ])
+        );
     }
 }

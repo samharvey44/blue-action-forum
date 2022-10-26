@@ -43,6 +43,7 @@ const ViewProfile: React.FC = () => {
     const styles = useStyles();
 
     const [isSuspended, setIsSuspended] = useState(user.isSuspended ?? false);
+    const [isSuper, setIsSuper] = useState(user.role.name === 'Super Admin');
     const [isAdmin, setIsAdmin] = useState(user.role.name === 'Admin');
     const [reportedByUser, setReportedByUser] = useState(
         user.profile?.isReportedByUser ?? false,
@@ -324,6 +325,7 @@ const ViewProfile: React.FC = () => {
                                     )}
 
                                 {userIsAdmin(authedUser) &&
+                                    !isSuper &&
                                     (isAdmin ? (
                                         <Tooltip title="Click to downgrade to user.">
                                             <GroupRemove

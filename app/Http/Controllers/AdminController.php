@@ -2,16 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Inertia\Response;
 use Inertia\Inertia;
 
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use App\Http\Requests\Admin\Reports\ToggleProcessedRequest;
 use App\Http\Requests\Admin\Reports\GetReportsRequest;
 use App\Http\Requests\Admin\Users\GetUsersRequest;
 use App\Http\Requests\Admin\IndexRequest;
-use App\Http\Resources\ReportResource;
 use App\Http\Resources\UserResource;
-use App\Models\Comment;
 use App\Models\Report;
 use App\Models\User;
 
@@ -52,17 +51,28 @@ class AdminController extends Controller {
      * @return AnonymousResourceCollection
      */
     public function getReports(GetReportsRequest $request): AnonymousResourceCollection {
-        $query = is_null($request->get('processedFilter'))
-            ? Report::query()
-            : Report::where('is_processed', $request->get('processedFilter'));
+        return Report::getPaginatedCollection(
+            $request->get('processedFilter'),
+            $request->get('page'),
+            $request->get('rowsPerPage')
+        );
+    }
 
-        return ReportResource::collection(
-            $query->with('reportable')
-                ->orderByDesc('id')
-                ->paginate($request->get('rowsPerPage'))
-                ->loadMorph('reportable', [
-                    Comment::class => ['thread'],
-                ])
+    /**
+     * Toggle the processed status of the given report.
+     * 
+     * @param ToggleProcessedRequest $request
+     * @param Report $report
+     * 
+     * @return AnonymousResourceCollection
+     */
+    public function toggleProcessed(ToggleProcessedRequest $request, Report $report): AnonymousResourceCollection {
+        $report->toggleProcessed();
+
+        return Report::getPaginatedCollection(
+            $request->get('processedFilter'),
+            $request->get('page'),
+            $request->get('rowsPerPage')
         );
     }
 }

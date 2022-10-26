@@ -36,4 +36,9 @@ export const useStyles = () =>
         loadingText: {
             marginTop: '10px',
         },
+
+        filterContainer: {
+            display: 'flex',
+            textAlign: 'left',
+        },
     });

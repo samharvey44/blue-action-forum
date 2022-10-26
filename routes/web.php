@@ -114,9 +114,14 @@ Route::middleware('throttle:60,1')->group(function () {
 
         Route::middleware('user.isAdmin')->group(function () {
             Route::prefix('/admin')->group(function () {
+                Route::prefix('/reports')->group(function () {
+                    Route::patch('/{report}', [AdminController::class, 'toggleProcessed']);
+
+                    Route::get('/', [AdminController::class, 'getReports']);
+                });
+
                 Route::put('/generateSignupUrl', [SignupInvitationController::class, 'generate']);
 
-                Route::get('/reports', [AdminController::class, 'getReports']);
                 Route::get('/users', [AdminController::class, 'getUsers']);
 
                 Route::get('/', [AdminController::class, 'index']);

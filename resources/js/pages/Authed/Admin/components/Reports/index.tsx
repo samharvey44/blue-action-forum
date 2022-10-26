@@ -5,9 +5,14 @@ import moment from 'moment';
 import axios from 'axios';
 import {
     Box,
+    Checkbox,
     CircularProgress,
+    FormControl,
     Grid,
+    InputLabel,
+    MenuItem,
     Paper,
+    Select,
     Table,
     TableBody,
     TableCell,
@@ -30,9 +35,7 @@ const Reports: React.FC<IProps> = ({ dataLoading, setDataLoading }) => {
     const [rowsPerPage, setRowsPerPage] = useState(20);
     const [currentPage, setCurrentPage] = useState(1);
 
-    const [processedFilter, setProcessedFilter] = useState<null | boolean>(
-        null,
-    );
+    const [processedFilter, setProcessedFilter] = useState<string | number>('');
 
     const TableHeaderCell: React.FC = ({ children }) =>
         useMemo(
@@ -44,13 +47,16 @@ const Reports: React.FC<IProps> = ({ dataLoading, setDataLoading }) => {
             [children],
         );
 
-    const headers = [
-        'Report ID',
-        'Reported At',
-        'Report Type',
-        'Processed',
-        'Link to Report',
-    ];
+    const headers = useMemo(
+        () => [
+            'Report ID',
+            'Reported On',
+            'Report Type',
+            'Processed',
+            'Link to Report',
+        ],
+        [],
+    );
 
     const getReports = useCallback(() => {
         setDataLoading(true);
@@ -84,8 +90,52 @@ const Reports: React.FC<IProps> = ({ dataLoading, setDataLoading }) => {
         getReports();
     }, [getReports]);
 
+    const handleToggleProcessed = (reportId: number) => {
+        setDataLoading(true);
+
+        axios
+            .patch(`/admin/reports/${reportId}`, {
+                page: currentPage,
+                processedFilter,
+                rowsPerPage,
+            })
+            .then(({ data }: { data: IPaginatedReports }) => {
+                setReports(data);
+            })
+            .catch(() => {
+                enqueueSnackbar('Failed to toggle processed status!');
+            })
+            .finally(() => {
+                setDataLoading(false);
+            });
+    };
+
     return (
         <Grid container spacing={3}>
+            <Grid item xs={12} md={6}>
+                <Box sx={styles.filterContainer}>
+                    <FormControl fullWidth>
+                        <InputLabel id="processedLabel">
+                            Select a filter...
+                        </InputLabel>
+
+                        <Select
+                            variant="filled"
+                            value={processedFilter}
+                            labelId="processedLabel"
+                            label="Select a filter..."
+                            onChange={(e) => {
+                                setProcessedFilter(e.target.value);
+                            }}
+                        >
+                            <MenuItem value={''}>None</MenuItem>
+                            <MenuItem value={0}>Unprocessed</MenuItem>
+                            <MenuItem value={1}>Processed</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Box>
+            </Grid>
+
             <Grid item xs={12}>
                 {dataLoading ? (
                     <Box sx={styles.loadingContainer}>
@@ -127,12 +177,28 @@ const Reports: React.FC<IProps> = ({ dataLoading, setDataLoading }) => {
                                                 {report.reportType}
                                             </TableCell>
                                             <TableCell align="center">
-                                                {report.isProcessed
-                                                    ? 'Yes'
-                                                    : 'No'}
+                                                <Checkbox
+                                                    checked={report.isProcessed}
+                                                    onChange={() => {
+                                                        if (dataLoading) {
+                                                            return;
+                                                        }
+
+                                                        handleToggleProcessed(
+                                                            report.id,
+                                                        );
+                                                    }}
+                                                />
                                             </TableCell>
                                             <TableCell align="center">
-                                                {report.url}
+                                                <a
+                                                    target="_blank"
+                                                    href={report.url}
+                                                    style={styles.url}
+                                                    rel="noopener noreferrer"
+                                                >
+                                                    {report.url}
+                                                </a>
                                             </TableCell>
                                         </TableRow>
                                     ))}
