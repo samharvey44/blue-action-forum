@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 use Auth;
 
-class ShowRequest extends FormRequest {
+class HandlePasswordResetRequest extends FormRequest {
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -23,7 +23,7 @@ class ShowRequest extends FormRequest {
      */
     public function rules(): array {
         return [
-            //
+            'password' => 'required|min:8|confirmed',
         ];
     }
 }

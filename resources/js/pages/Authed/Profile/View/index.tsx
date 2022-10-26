@@ -1,13 +1,3 @@
-import {
-    Block,
-    Delete,
-    Done,
-    Edit,
-    GroupAdd,
-    GroupRemove,
-    Report,
-    ReportProblem,
-} from '@mui/icons-material';
 import { Link, usePage } from '@inertiajs/inertia-react';
 import React, { Fragment, useState } from 'react';
 import { Inertia } from '@inertiajs/inertia';
@@ -15,6 +5,17 @@ import { useSnackbar } from 'notistack';
 import { Box } from '@mui/system';
 import moment from 'moment';
 import axios from 'axios';
+import {
+    Block,
+    Delete,
+    Done,
+    Edit,
+    GroupAdd,
+    GroupRemove,
+    Pin,
+    Report,
+    ReportProblem,
+} from '@mui/icons-material';
 import {
     Grid,
     Modal,
@@ -269,6 +270,14 @@ const ViewProfile: React.FC = () => {
                                         <Link href="/profiles/edit">
                                             <Tooltip title="Edit your profile.">
                                                 <Edit style={styles.editIcon} />
+                                            </Tooltip>
+                                        </Link>
+
+                                        <Link href="/profiles/password-reset">
+                                            <Tooltip title="Reset your password.">
+                                                <Pin
+                                                    style={styles.actionIcon}
+                                                />
                                             </Tooltip>
                                         </Link>
 

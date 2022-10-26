@@ -22,7 +22,7 @@ trait HasReports {
      * @return bool Whether this comment is currently reported.
      */
     public function isReported(): bool {
-        return (bool)$this->load('reports')->reports->filter(fn (Report $report) => !$report->is_processed)->count();
+        return (bool)$this->loadMissing('reports')->reports->filter(fn (Report $report) => !$report->is_processed)->count();
     }
 
     /**
@@ -31,6 +31,6 @@ trait HasReports {
      * @return bool Whether this class has been reported by the authed user.
      */
     public function isReportedByUser(): bool {
-        return (bool)$this->load('reports')->reports->filter(fn (Report $report) => $report->reportedByUser())->count();
+        return (bool)$this->loadMissing('reports')->reports->filter(fn (Report $report) => $report->reportedByUser())->count();
     }
 }

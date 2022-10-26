@@ -3,23 +3,27 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\JsonResponse;
 use Inertia\Response;
 use Inertia\Inertia;
 
 use App\Http\Requests\Profile\ChangeProfilePictureRequest;
+use App\Http\Requests\Profile\HandlePasswordResetRequest;
+use App\Http\Requests\Profile\ShowPasswordResetRequest;
 use App\Http\Requests\Profile\ToggleSuspendedRequest;
 use App\Http\Requests\Profile\ToggleReportedRequest;
+use App\Http\Requests\Profile\ToggleAdminRequest;
 use App\Http\Requests\Profile\DeleteRequest;
 use App\Http\Requests\Profile\UpdateRequest;
 use App\Http\Requests\Profile\IndexRequest;
 use App\Http\Requests\Profile\StoreRequest;
 use App\Http\Requests\Profile\EditRequest;
 use App\Http\Requests\Profile\ShowRequest;
-use App\Http\Requests\Profile\ToggleAdminRequest;
 use App\Http\Resources\UserResource;
 use App\Models\Profile;
 use App\Models\Role;
+
 use Auth;
 
 class ProfileController extends Controller {
@@ -166,5 +170,29 @@ class ProfileController extends Controller {
         $user->update();
 
         return $user->role->name === 'Admin';
+    }
+
+    /**
+     * Show the password reset page.
+     * 
+     * @param ShowPasswordResetRequest $request
+     * 
+     * @return Response
+     */
+    public function showPasswordReset(ShowPasswordResetRequest $request): Response {
+        return Inertia::render('Authed/Profile/PasswordReset/index');
+    }
+
+    /**
+     * Handle the password reset.
+     * 
+     * @param HandlePasswordResetRequest $request
+     * 
+     * @return void
+     */
+    public function handlePasswordReset(HandlePasswordResetRequest $request): void {
+        Auth::user()->forceFill(['password' => Hash::make($request->get('password'))]);
+
+        Auth::user()->update();
     }
 }

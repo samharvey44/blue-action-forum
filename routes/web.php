@@ -101,6 +101,11 @@ Route::middleware('throttle:60,1')->group(function () {
                     Route::get('/', [ProfileController::class, 'edit']);
                 });
 
+                Route::prefix('/password-reset')->group(function () {
+                    Route::put('/', [ProfileController::class, 'handlePasswordReset']);
+                    Route::get('/', [ProfileController::class, 'showPasswordReset']);
+                });
+
                 Route::prefix('/{profile}')->group(function () {
                     Route::patch('/toggleSuspended', [ProfileController::class, 'toggleSuspended'])->middleware('user.isAdmin');
                     Route::patch('/toggleAdmin', [ProfileController::class, 'toggleAdmin'])->middleware('user.isAdmin');
