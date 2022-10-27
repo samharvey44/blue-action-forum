@@ -48,7 +48,7 @@ const CommentsMap: React.FC<IProps> = ({
     const styles = useStyles();
     const theme = useTheme();
 
-    const isMd = useMediaQuery(theme.breakpoints.down('md'));
+    const isLg = useMediaQuery(theme.breakpoints.down('lg'));
 
     const replyContainer = useRef<HTMLDivElement | null>(null);
 
@@ -150,8 +150,8 @@ const CommentsMap: React.FC<IProps> = ({
                 }) => (
                     <Grid item xs={12} key={id} sx={styles.commentContainer}>
                         <Grid container spacing={3}>
-                            {!isMd && (
-                                <Grid item md={3}>
+                            {!isLg && (
+                                <Grid item lg={3}>
                                     <Paper sx={styles.userPaper}>
                                         <Box
                                             sx={styles.profilePictureContainer}
@@ -188,7 +188,10 @@ const CommentsMap: React.FC<IProps> = ({
                                                 href={`/profiles/${creator.profile?.id}`}
                                                 style={styles.profileLink}
                                             >
-                                                <Typography variant="h6">
+                                                <Typography
+                                                    variant="h6"
+                                                    sx={styles.username}
+                                                >
                                                     <b>
                                                         {
                                                             creator.profile
@@ -226,8 +229,8 @@ const CommentsMap: React.FC<IProps> = ({
                                 </Grid>
                             )}
 
-                            <Grid item xs={12} md={9}>
-                                {isMd && (
+                            <Grid item xs={12} lg={9}>
+                                {isLg && (
                                     <Box sx={styles.profileMdContainer}>
                                         <Avatar
                                             sx={styles.profilePictureMd}
@@ -242,7 +245,14 @@ const CommentsMap: React.FC<IProps> = ({
                                             variant="subtitle1"
                                             style={styles.profileText}
                                         >
-                                            {creator.profile?.username}
+                                            <Link
+                                                href={`/profiles/${creator.profile?.id}`}
+                                                style={styles.profileLink}
+                                            >
+                                                <b>
+                                                    {creator.profile?.username}
+                                                </b>
+                                            </Link>
                                             {creator.role.name !== 'User' && (
                                                 <span style={styles.roleText}>
                                                     {' - '} {creator.role.name}

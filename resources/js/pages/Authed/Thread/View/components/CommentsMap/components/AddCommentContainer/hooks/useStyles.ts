@@ -6,7 +6,7 @@ import { PRIMARY } from 'app/globals/colors';
 export const useStyles = () => {
     const theme = useTheme();
 
-    const isMd = useMediaQuery(theme.breakpoints.down('md'));
+    const isLg = useMediaQuery(theme.breakpoints.down('lg'));
 
     return useMakeStyles({
         paper: {
@@ -19,7 +19,7 @@ export const useStyles = () => {
         },
 
         commentFormContainer: {
-            width: isMd ? '80%' : '60%',
+            width: isLg ? '80%' : '60%',
         },
 
         commentField: {
@@ -39,6 +39,11 @@ export const useStyles = () => {
 
         createButton: {
             marginLeft: '10px',
+            marginTop: isLg ? '5px' : 'auto',
+        },
+
+        uploadButton: {
+            marginTop: isLg ? '5px' : 'auto',
         },
 
         hiddenImageUpload: {

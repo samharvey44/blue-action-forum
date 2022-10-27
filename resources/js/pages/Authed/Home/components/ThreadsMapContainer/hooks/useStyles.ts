@@ -42,6 +42,7 @@ export const useStyles = () => {
 
         category: {
             marginRight: '10px',
+            marginTop: '5px',
         },
 
         threadLink: {

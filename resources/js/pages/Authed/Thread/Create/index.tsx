@@ -196,7 +196,7 @@ const CreateThread: React.FC = () => {
                         <Grid container spacing={3} sx={styles.createGrid}>
                             <Grid item xs={12}>
                                 <Grid container>
-                                    <Grid item xs={6}>
+                                    <Grid item xs={12} md={6}>
                                         <TextField
                                             sx={styles.field}
                                             required
@@ -281,6 +281,7 @@ const CreateThread: React.FC = () => {
                                             fileUploadRef.current?.click();
                                         }}
                                         startIcon={<FileUpload />}
+                                        sx={styles.uploadButton}
                                         variant="contained"
                                         color="primary"
                                     >

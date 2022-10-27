@@ -1,7 +1,13 @@
+import { useMediaQuery, useTheme } from '@mui/material';
+
 import useMakeStyles from 'app/hooks/makeStyles';
 import { PRIMARY } from 'app/globals/colors';
 
 export const useStyles = () => {
+    const theme = useTheme();
+
+    const isLg = useMediaQuery(theme.breakpoints.down('lg'));
+
     return useMakeStyles({
         createPaper: {
             padding: '20px',
@@ -26,6 +32,7 @@ export const useStyles = () => {
 
         createButton: {
             marginLeft: '10px',
+            marginTop: isLg ? '5px' : 'auto',
         },
 
         hiddenImageUpload: {
@@ -75,6 +82,7 @@ export const useStyles = () => {
 
         category: {
             marginRight: '10px',
+            marginTop: '5px',
         },
 
         categoryHeader: {
@@ -85,6 +93,10 @@ export const useStyles = () => {
         categorySubHeader: {
             textAlign: 'left',
             marginTop: '10px',
+        },
+
+        uploadButton: {
+            marginTop: isLg ? '5px' : 'auto',
         },
     });
 };

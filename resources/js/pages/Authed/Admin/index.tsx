@@ -7,18 +7,23 @@ import {
     Paper,
     Box,
     Grid,
+    useTheme,
+    useMediaQuery,
 } from '@mui/material';
 
 import AppContainer from 'app/components/layout/AppContainer';
 import AuthedContainer from '../components/AuthedContainer';
 import GenerateSignup from './components/GenerateSignup';
 import { useStyles } from './hooks/useStyles';
+import Reports from './components/Reports';
 import Users from './components/Users';
 import { EAdminView } from './enums';
-import Reports from './components/Reports';
 
 const Admin: React.FC = () => {
     const styles = useStyles();
+    const theme = useTheme();
+
+    const isLg = useMediaQuery(theme.breakpoints.down('lg'));
 
     const [currentView, setCurrentView] = useState(EAdminView.GenerateSignup);
     const [dataLoading, setDataLoading] = useState(true);
@@ -52,6 +57,7 @@ const Admin: React.FC = () => {
                                                 EAdminView.GenerateSignup,
                                             );
                                         }}
+                                        size={isLg ? 'small' : 'medium'}
                                     >
                                         Signup
                                     </Button>
@@ -66,6 +72,7 @@ const Admin: React.FC = () => {
                                         onClick={() => {
                                             setCurrentView(EAdminView.Users);
                                         }}
+                                        size={isLg ? 'small' : 'medium'}
                                     >
                                         Users
                                     </Button>
@@ -80,6 +87,7 @@ const Admin: React.FC = () => {
                                         onClick={() => {
                                             setCurrentView(EAdminView.Reports);
                                         }}
+                                        size={isLg ? 'small' : 'medium'}
                                     >
                                         Reports
                                     </Button>

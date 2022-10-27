@@ -208,6 +208,7 @@ const AddCommentContainer: React.FC<IProps> = ({
                                 fileUploadRef.current?.click();
                             }}
                             startIcon={<FileUpload />}
+                            sx={styles.uploadButton}
                             variant="contained"
                             color="primary"
                         >

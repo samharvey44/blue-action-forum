@@ -10,6 +10,8 @@ InertiaProgress.init({
     color: PRIMARY,
 });
 
+history.scrollRestoration = 'manual';
+
 createInertiaApp({
     resolve: (name) => require(`./Pages/${name}`),
     setup({ el, App, props }) {
