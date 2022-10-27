@@ -133,6 +133,7 @@ export const useStyles = () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'flex-end',
+            flexWrap: 'wrap',
             width: '100%',
         },
 
@@ -142,12 +143,14 @@ export const useStyles = () => {
             height: '80px',
             width: '80px',
             objectFit: 'contain',
+            marginTop: '5px',
         },
 
         commentImageEnd: {
             cursor: 'pointer',
             width: '40px',
             objectFit: 'contain',
+            marginTop: '5px',
         },
 
         reactionsMapContainer: {
