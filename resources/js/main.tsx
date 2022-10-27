@@ -8,23 +8,17 @@ import useInitializeTheme from './hooks/initializeTheme';
 const Main: React.FC = ({ children }) => {
     const theme = useInitializeTheme();
 
-    let stale = false;
+    window.addEventListener('popstate', (event) => {
+        event.stopImmediatePropagation();
 
-    // Inertia.js caches page state on previous page visits.
-    // For a few areas of the application, this isn't really desired behaviour, as we could have outdated data.
-    // As a result, we'll ensure we have fresh data even when navigating back through history.
-    window.addEventListener('popstate', () => {
-        stale = true;
-    });
-
-    Inertia.on('navigate', (event) => {
-        const page = event.detail.page;
-
-        if (stale) {
-            Inertia.get(page.url, {}, { replace: true, preserveState: false });
-        }
-
-        stale = false;
+        Inertia.reload({
+            preserveState: false,
+            preserveScroll: false,
+            replace: true,
+            // @ts-expect-error https://github.com/inertiajs/inertia/issues/565
+            onSuccess: (page) => Inertia.setPage(page),
+            onError: () => (window.location.href = event.state.url),
+        });
     });
 
     return (
