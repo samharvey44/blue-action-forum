@@ -119,7 +119,7 @@ class Thread extends Model {
                 ->orderByDesc('is_pinned')
                 ->orderByDesc('id'),
 
-            'new' => $query->orderByDesc('is_pinned')->orderByDesc('id'),
+            'new' => $query->orderByDesc('id')->orderByDesc('is_pinned'),
 
             default => throw new InvalidArgumentException('Invalid filter supplied!', 422)
         };

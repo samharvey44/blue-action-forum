@@ -47,10 +47,12 @@ export const useStyles = () => {
         uploadedImageContainer: {
             position: 'relative',
             marginRight: '20px',
+            marginTop: isLg ? '10px' : 'auto',
         },
 
         uploadedImageContainerEnd: {
             position: 'relative',
+            marginTop: isLg ? '10px' : 'auto',
         },
 
         imageUploadsInfoContainer: {
