@@ -120,7 +120,6 @@ const Reports: React.FC<IProps> = ({ dataLoading, setDataLoading }) => {
                         </InputLabel>
 
                         <Select
-                            variant="filled"
                             value={processedFilter}
                             labelId="processedLabel"
                             label="Select a filter..."

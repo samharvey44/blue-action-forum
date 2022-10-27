@@ -25,6 +25,14 @@ class CategorySeeder extends Seeder {
                 ],
             ],
             [
+                'name' => 'Announcements',
+                'display_color' => '#736372',
+                'roles' => [
+                    Role::SUPER_ADMIN,
+                    Role::ADMIN,
+                ],
+            ],
+            [
                 'name' => 'New Chants',
                 'display_color' => '#F64740',
                 'roles' => [
@@ -32,7 +40,41 @@ class CategorySeeder extends Seeder {
                     Role::ADMIN,
                     Role::USER,
                 ],
-            ]
+            ],
+            [
+                'name' => 'Match Talk',
+                'display_color' => '#136F63',
+                'roles' => [
+                    Role::SUPER_ADMIN,
+                    Role::ADMIN,
+                    Role::USER,
+                ],
+            ],
+            [
+                'name' => 'Opinion',
+                'display_color' => '#3C0000',
+                'roles' => [
+                    Role::SUPER_ADMIN,
+                    Role::ADMIN,
+                    Role::USER,
+                ],
+            ],
+            [
+                'name' => 'Issues',
+                'display_color' => '#870058',
+                'roles' => [
+                    Role::SUPER_ADMIN,
+                    Role::ADMIN,
+                    Role::USER,
+                ],
+            ],
+            [
+                'name' => 'Maintenance',
+                'display_color' => '#3FA7D6',
+                'roles' => [
+                    Role::SUPER_ADMIN,
+                ],
+            ],
         ] as $category) {
             $roles = Role::all();
 

@@ -12,6 +12,8 @@ import {
     Grid,
     Box,
     CircularProgress,
+    useTheme,
+    useMediaQuery,
 } from '@mui/material';
 import {
     Add,
@@ -33,6 +35,9 @@ import { useStyles } from './hooks/useStyles';
 import { EFilter } from './enums';
 
 const Home: React.FC = () => {
+    const theme = useTheme();
+
+    const isMd = useMediaQuery(theme.breakpoints.down('md'));
     const { enqueueSnackbar } = useSnackbar();
     const periodOfDay = useGetPeriodOfDay();
     const authedUser = useGetAuthedUser();
@@ -226,6 +231,7 @@ const Home: React.FC = () => {
                                                         EFilter.Hot,
                                                     );
                                                 }}
+                                                size={isMd ? 'small' : 'medium'}
                                             >
                                                 Hot
                                             </Button>
@@ -250,6 +256,7 @@ const Home: React.FC = () => {
                                                         EFilter.Following,
                                                     );
                                                 }}
+                                                size={isMd ? 'small' : 'medium'}
                                             >
                                                 Following
                                             </Button>
@@ -274,6 +281,7 @@ const Home: React.FC = () => {
                                                         EFilter.New,
                                                     );
                                                 }}
+                                                size={isMd ? 'small' : 'medium'}
                                             >
                                                 New
                                             </Button>

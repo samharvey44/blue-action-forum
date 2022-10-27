@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 
-<!-- https://github.com/inertiajs/inertia/issues/84 -->
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" style="scroll-behavior: auto">
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1">

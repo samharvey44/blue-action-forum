@@ -1,8 +1,14 @@
+import { useMediaQuery, useTheme } from '@mui/material';
+
 import useMakeStyles from 'app/hooks/makeStyles';
 import { PRIMARY } from 'app/globals/colors';
 
-export const useStyles = () =>
-    useMakeStyles({
+export const useStyles = () => {
+    const theme = useTheme();
+
+    const isLg = useMediaQuery(theme.breakpoints.down('lg'));
+
+    return useMakeStyles({
         titlePaper: {
             padding: '20px',
             textAlign: 'center',
@@ -20,6 +26,7 @@ export const useStyles = () =>
 
         category: {
             marginRight: '10px',
+            marginTop: '5px',
         },
 
         outerCategoriesMapContainer: {
@@ -42,6 +49,7 @@ export const useStyles = () =>
             alignItems: 'center',
             flexWrap: 'wrap',
             justifyContent: 'flex-end',
+            marginTop: isLg ? '10px' : 'auto',
         },
 
         lockIcon: {
@@ -87,3 +95,4 @@ export const useStyles = () =>
             cursor: 'pointer',
         },
     });
+};

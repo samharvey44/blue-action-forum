@@ -7,7 +7,7 @@ import useMakeStyles from 'app/hooks/makeStyles';
 export const useStyles = () => {
     const theme = useTheme();
 
-    const isMd = useMediaQuery(theme.breakpoints.down('md'));
+    const isLg = useMediaQuery(theme.breakpoints.down('lg'));
 
     return useMakeStyles({
         commentContainer: {
@@ -24,7 +24,7 @@ export const useStyles = () => {
 
         contentPaper: {
             padding: '10px',
-            height: '100%',
+            height: isLg ? 'auto' : '100%',
         },
 
         profilePicture: {
@@ -109,6 +109,12 @@ export const useStyles = () => {
             marginLeft: '10px',
         },
 
+        username: {
+            wordWrap: 'break-word',
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+        },
+
         profileMetaContainer: {
             display: 'flex',
             alignItems: 'center',
@@ -176,7 +182,7 @@ export const useStyles = () => {
         },
 
         addCommentGridItem: {
-            marginTop: isMd ? '60px' : undefined,
+            marginTop: isLg ? '60px' : undefined,
         },
 
         commentActionsContainer: {
